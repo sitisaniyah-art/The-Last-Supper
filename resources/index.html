@@ -1,0 +1,45 @@
+---
+layout: default
+title: 学习资源
+---
+
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">学习资源库</h2>
+    
+    <!-- 筛选栏 -->
+    <div class="filter-bar">
+      <div class="filter-group">
+        <label>学科：</label>
+        <select id="category-filter">
+          <option value="all">全部</option>
+          <option value="数学">数学</option>
+          <option value="编程">编程</option>
+          <option value="英语">英语</option>
+          <option value="物理">物理</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label>年级：</label>
+        <select id="grade-filter">
+          <option value="all">全部</option>
+          <option value="大一">大一</option>
+          <option value="大二">大二</option>
+          <option value="大三">大三</option>
+          <option value="通用">通用</option>
+        </select>
+      </div>
+      
+      <div class="search-box">
+        <input type="text" id="resource-search" placeholder="搜索资源...">
+        <button><i class="fas fa-search"></i></button>
+      </div>
+    </div>
+    
+    <!-- 资源网格 -->
+    <div class="resources-grid" id="resources-grid">
+      <!-- 资源卡片会通过JS动态生成 -->
+    </div>
+  </div>
+</section>

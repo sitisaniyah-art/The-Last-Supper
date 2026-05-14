@@ -1,0 +1,27 @@
+- id: 1
+  title: 高等数学上册期末真题汇总
+  category: 数学
+  subcategory: 高等数学
+  grade: 大一
+  type: 真题
+  uploader: 学长A
+  date: 2024-05-01
+  downloads: 128
+  rating: 4.8
+  description: 包含近5年的期末真题及详细解答
+  link: https://pan.baidu.com/s/xxx
+  tags: [高数, 期末, 真题]
+
+- id: 2
+  title: Python入门到精通笔记
+  category: 编程
+  subcategory: Python
+  grade: 通用
+  type: 笔记
+  uploader: 学姐B
+  date: 2024-04-15
+  downloads: 256
+  rating: 4.9
+  description: 自己整理的Python学习笔记，从基础到进阶
+  link: https://github.com/xxx/python-notes
+  tags: [Python, 编程, 入门]

@@ -1,0 +1,84 @@
+# 表单名称，显示在模板选择页面
+name: 我要提问
+# 表单描述，告诉用户这个表单是用来做什么的
+description: 向学长学姐提问学习相关问题，我们会尽快回答
+# 自动添加到Issue标题前面的前缀
+title: "[问题] "
+# 自动添加到Issue的标签（这些标签需要先在仓库中创建好）
+labels: ["question", "unanswered"]
+# 自动分配给指定的人（可以写你的GitHub用户名）
+assignees: ["你的GitHub用户名"]
+
+# 表单主体内容，定义所有的输入字段
+body:
+  # 1. 说明性文字，不是输入框
+  - type: markdown
+    attributes:
+      value: |
+        👋 欢迎提问！请认真填写以下信息，越详细越容易得到准确的回答。
+        
+        💡 提问前请先搜索是否已经有类似的问题，避免重复提问。
+
+  # 2. 问题标题（单行文本输入框）
+  - type: input
+    id: question-title
+    attributes:
+      label: 问题标题
+      description: 用一句话概括你的问题
+      placeholder: 例如：高等数学极限怎么求？Python怎么安装？
+    validations:
+      required: true  # 设为必填项
+
+  # 3. 问题分类（下拉选择框）
+  - type: dropdown
+    id: category
+    attributes:
+      label: 问题分类
+      description: 选择问题所属的学科
+      options:
+        - 数学（高数/线代/概率论）
+        - 编程（Python/C++/Java）
+        - 英语（四六级/考研）
+        - 物理（大学物理）
+        - 专业课（根据你的专业添加）
+        - 学习方法
+        - 大学生活
+        - 其他
+    validations:
+      required: true
+
+  # 4. 问题描述（多行文本输入框）
+  - type: textarea
+    id: description
+    attributes:
+      label: 问题描述
+      description: 详细描述你遇到的问题，支持Markdown格式，可以插入代码和图片
+      placeholder: |
+        请详细描述你遇到的问题：
+        1. 你在做什么的时候遇到了这个问题？
+        2. 你已经尝试了哪些解决方法？
+        3. 你期望得到什么样的结果？
+        
+        可以直接粘贴图片到这里，GitHub会自动上传。
+    validations:
+      required: true
+
+  # 5. 你的昵称（可选）
+  - type: input
+    id: nickname
+    attributes:
+      label: 你的昵称（可选）
+      description: 匿名提问请留空
+      placeholder: 匿名
+    validations:
+      required: false
+
+  # 6. 联系方式（可选）
+  - type: input
+    id: contact
+    attributes:
+      label: 联系方式（可选）
+      description: 如果需要进一步沟通，可以留下你的QQ或微信
+      placeholder: 仅管理员可见
+    validations:
+      required: false

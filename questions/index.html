@@ -1,0 +1,342 @@
+---
+layout: default
+title: 疑问区
+---
+
+<section class="section">
+  <div class="container">
+    <!-- 页面头部：标题 + 提问按钮 -->
+    <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
+      <h2 class="section-title" style="margin: 0;">疑问区</h2>
+      <!-- 替换成你自己的GitHub表单链接 -->
+      <a href="https://github.com/你的用户名/你的仓库名/issues/new?assignees=你的用户名&labels=question%2Cunanswered&template=ask-question.yml&title=%5B%E9%97%AE%E9%A2%98%5D+" 
+         target="_blank" 
+         class="btn btn-primary">
+        <i class="fas fa-question-circle"></i> 我要提问
+      </a>
+    </div>
+    
+    <!-- 筛选栏 -->
+    <div class="filter-bar">
+      <div class="filter-group">
+        <label>状态：</label>
+        <select id="status-filter">
+          <option value="all">全部问题</option>
+          <option value="unanswered">待回答</option>
+          <option value="answered">已回答</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label>分类：</label>
+        <select id="category-filter">
+          <option value="all">全部分类</option>
+          <option value="数学">数学</option>
+          <option value="编程">编程</option>
+          <option value="英语">英语</option>
+          <option value="物理">物理</option>
+          <option value="学习方法">学习方法</option>
+          <option value="大学生活">大学生活</option>
+          <option value="其他">其他</option>
+        </select>
+      </div>
+      
+      <div class="search-box">
+        <input type="text" id="question-search" placeholder="搜索问题...">
+        <button><i class="fas fa-search"></i></button>
+      </div>
+    </div>
+    
+    <!-- 问题列表容器 -->
+    <div class="questions-list" id="questions-list">
+      <div class="loading">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>正在加载问题...</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 只保留展示和筛选逻辑，没有任何提交代码 -->
+<script>
+// 配置信息 - 只需要替换这两个值
+const GITHUB_USERNAME = '你的GitHub用户名';
+const GITHUB_REPO = '你的仓库名';
+
+// 全局存储所有问题数据
+let allQuestions = [];
+
+// 页面加载完成后执行
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadQuestions();
+  setupFilters();
+});
+
+// 从GitHub公开API获取问题列表（不需要任何令牌）
+async function loadQuestions() {
+  try {
+    // 获取所有带有"question"标签的开放Issue，最多100条
+    const response = await fetch(
+      `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/issues?labels=question&state=open&per_page=100`
+    );
+    
+    if (!response.ok) {
+      throw new Error('API请求失败');
+    }
+    
+    allQuestions = await response.json();
+    renderQuestions(allQuestions);
+    
+  } catch (error) {
+    console.error('加载问题失败:', error);
+    document.getElementById('questions-list').innerHTML = `
+      <div class="error">
+        <i class="fas fa-exclamation-triangle"></i>
+        <p>加载问题失败，请稍后刷新页面重试</p>
+      </div>
+    `;
+  }
+}
+
+// 渲染问题列表
+function renderQuestions(questions) {
+  const list = document.getElementById('questions-list');
+  
+  if (questions.length === 0) {
+    list.innerHTML = `
+      <div class="empty">
+        <i class="fas fa-comments"></i>
+        <p>暂无问题，快来成为第一个提问的人吧！</p>
+      </div>
+    `;
+    return;
+  }
+  
+  // 生成问题卡片HTML
+  list.innerHTML = questions.map(question => {
+    // 判断问题是否已回答（是否有"answered"标签）
+    const isAnswered = question.labels.some(label => label.name === 'answered');
+    
+    // 提取问题分类标签（排除系统标签）
+    const categoryLabel = question.labels.find(label => 
+      !['question', 'unanswered', 'answered'].includes(label.name)
+    );
+    const category = categoryLabel ? categoryLabel.name : '其他';
+    
+    // 格式化日期
+    const createDate = new Date(question.created_at).toLocaleDateString('zh-CN', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    
+    return `
+      <div class="question-card">
+        <div class="question-status ${isAnswered ? 'answered' : 'unanswered'}">
+          ${isAnswered ? '✓ 已回答' : '⏳ 待回答'}
+        </div>
+        
+        <div class="question-content">
+          <h3 class="question-title">
+            <a href="${question.html_url}" target="_blank" rel="noopener">
+              ${question.title.replace('[问题] ', '')}
+            </a>
+          </h3>
+          
+          <div class="question-meta">
+            <span><i class="fas fa-user"></i> ${question.user.login}</span>
+            <span><i class="fas fa-calendar"></i> ${createDate}</span>
+            <span><i class="fas fa-comments"></i> ${question.comments} 条讨论</span>
+            <span><i class="fas fa-tag"></i> ${category}</span>
+          </div>
+          
+          <p class="question-excerpt">
+            ${question.body.substring(0, 150).replace(/\n/g, ' ')}...
+          </p>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// 设置筛选功能
+function setupFilters() {
+  const statusFilter = document.getElementById('status-filter');
+  const categoryFilter = document.getElementById('category-filter');
+  const searchInput = document.getElementById('question-search');
+  
+  // 统一筛选函数
+  function applyFilters() {
+    const status = statusFilter.value;
+    const category = categoryFilter.value;
+    const searchTerm = searchInput.value.toLowerCase().trim();
+    
+    const filtered = allQuestions.filter(question => {
+      // 1. 状态筛选
+      const isAnswered = question.labels.some(label => label.name === 'answered');
+      const matchStatus = status === 'all' || 
+                         (status === 'answered' && isAnswered) || 
+                         (status === 'unanswered' && !isAnswered);
+      
+      // 2. 分类筛选
+      const categoryLabel = question.labels.find(label => 
+        !['question', 'unanswered', 'answered'].includes(label.name)
+      );
+      const questionCategory = categoryLabel ? categoryLabel.name : '其他';
+      const matchCategory = category === 'all' || questionCategory === category;
+      
+      // 3. 关键词搜索
+      const matchSearch = searchTerm === '' || 
+                         question.title.toLowerCase().includes(searchTerm) || 
+                         question.body.toLowerCase().includes(searchTerm);
+      
+      return matchStatus && matchCategory && matchSearch;
+    });
+    
+    renderQuestions(filtered);
+  }
+  
+  // 绑定事件
+  statusFilter.addEventListener('change', applyFilters);
+  categoryFilter.addEventListener('change', applyFilters);
+  searchInput.addEventListener('input', applyFilters);
+}
+</script>
+
+<!-- 添加配套的CSS样式（可以放到你的style.css中） -->
+<style>
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 40px;
+  padding: 20px;
+  background-color: var(--bg-alt);
+  border-radius: 8px;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-group label {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.filter-group select,
+.search-box input {
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+.search-box {
+  display: flex;
+  margin-left: auto;
+}
+
+.search-box button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.search-box button:hover {
+  background-color: #2563eb;
+}
+
+.question-card {
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.question-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.question-status {
+  flex-shrink: 0;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.question-status.answered {
+  background-color: #10b981;
+  color: white;
+}
+
+.question-status.unanswered {
+  background-color: #f59e0b;
+  color: white;
+}
+
+.question-content {
+  flex: 1;
+}
+
+.question-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.question-title a {
+  color: var(--text-color);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.question-title a:hover {
+  color: var(--primary-color);
+}
+
+.question-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+.question-excerpt {
+  color: var(--text-light);
+  line-height: 1.5;
+  margin-bottom: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.loading, .empty, .error {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-light);
+}
+
+.loading i, .empty i, .error i {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  display: block;
+}
+</style>
