@@ -4,211 +4,211 @@
 # =============================================
 
 - id: 1
-  title: 高等数学上册期末真题汇总（2019-2024）
-  category: 数学
-  subcategory: 高等数学
-  grade: 大一
-  type: 真题
-  uploader: 学长A
-  date: 2024-05-01
-  downloads: 328
-  rating: 4.8
-  description: 包含近5年的高等数学上册期末真题及详细解答，适合期末复习使用
-  link: "#"
-  tags: [高数, 期末, 真题, 大一]
+  title: "Boosting：基础与算法"
+  category: 编程
+  subcategory: 机器学习
+  grade: 通用
+  type: 书籍
+  uploader: 叮咚
+  date: 2026-05-15
+  downloads: 0
+  rating: 4.5
+  description: Boosting方法的基础理论与算法详解，涵盖AdaBoost等经典算法
+  link: "/机器学习/Boosting：基础与算法Boosting_ Foundations and Algorithms .pdf"
+  tags: [机器学习, Boosting, 算法, 书籍]
 
 - id: 2
-  title: Python入门到精通学习笔记
+  title: "人工智能基础"
   category: 编程
-  subcategory: Python
+  subcategory: 机器学习
   grade: 通用
-  type: 笔记
-  uploader: 学姐B
-  date: 2024-04-15
-  downloads: 456
-  rating: 4.9
-  description: 自己整理的Python学习笔记，从基础语法到进阶应用，附代码示例
-  link: "#"
-  tags: [Python, 编程, 入门, 笔记]
+  type: 书籍
+  uploader: 叮咚
+  date: 2026-05-15
+  downloads: 0
+  rating: 4.5
+  description: 人工智能基础知识体系，刘伟、李明编著，适合入门学习
+  link: "/机器学习/人工智能基础 -- 刘伟 李明 .pdf"
+  tags: [人工智能, 入门, 书籍]
 
 - id: 3
-  title: 线性代数课件及习题解答
-  category: 数学
-  subcategory: 线性代数
-  grade: 大一
-  type: 课件
-  uploader: 学长C
-  date: 2024-03-20
-  downloads: 215
-  rating: 4.6
-  description: 完整的线性代数课件，包含矩阵、行列式、向量空间等章节，附习题解答
-  link: "#"
-  tags: [线代, 课件, 习题, 大一]
+  title: "凸优化（Convex Optimization）"
+  category: 编程
+  subcategory: 机器学习
+  grade: 通用
+  type: 书籍
+  uploader: 叮咚
+  date: 2026-05-15
+  downloads: 0
+  rating: 4.8
+  description: 经典凸优化教材，由Boyd和Vandenberghe编写，机器学习数学基础必读
+  link: "/机器学习/凸优化Convex Optimization - Cambridge University Press .pdf"
+  tags: [凸优化, 数学, 优化理论, 书籍]
 
 - id: 4
-  title: 大学英语四级真题及听力材料（2020-2024）
-  category: 英语
-  subcategory: 四级
-  grade: 大一
-  type: 真题
-  uploader: 学姐D
-  date: 2024-06-10
-  downloads: 512
-  rating: 4.7
-  description: 四级历年真题合集，含听力音频和详细解析，适合备考冲刺
-  link: "#"
-  tags: [四级, 英语, 真题, 听力]
+  title: "动手学深度学习（Dive Into Deep Learning）"
+  category: 编程
+  subcategory: 机器学习
+  grade: 通用
+  type: 书籍
+  uploader: 叮咚
+  date: 2026-05-15
+  downloads: 0
+  rating: 4.9
+  description: 由李沐等人编写的深度学习实战教材，理论与代码结合，适合动手实践
+  link: "/机器学习/动手学深度学习Dive Into Deep Learning.pdf"
+  tags: [深度学习, 实战, PyTorch, 书籍]
 
 - id: 5
-  title: 数据结构与算法课程笔记
+  title: "南瓜书（Pumpkin Book）"
   category: 编程
-  subcategory: 数据结构
-  grade: 大二
-  type: 笔记
-  uploader: 学长A
-  date: 2024-04-01
-  downloads: 189
-  rating: 4.5
-  description: 数据结构课程笔记，涵盖链表、树、图、排序算法等核心内容
-  link: "#"
-  tags: [数据结构, 算法, 编程, 大二]
+  subcategory: 机器学习
+  grade: 通用
+  type: 书籍
+  uploader: 叮咚
+  date: 2026-05-15
+  downloads: 0
+  rating: 4.7
+  description: 周志华《机器学习》的公式推导与解析 companion，帮助理解西瓜书中的数学细节
+  link: "/机器学习/南瓜书Pumpkin_Book.pdf"
+  tags: [机器学习, 公式推导, 西瓜书, 书籍]
 
 - id: 6
-  title: 大学物理期末复习提纲
-  category: 物理
-  subcategory: 大学物理
-  grade: 大一
-  type: 笔记
-  uploader: 学姐E
-  date: 2024-05-15
-  downloads: 167
+  title: "在线学习与流数据处理（Introduction to Online Convex Optimization）"
+  category: 编程
+  subcategory: 机器学习
+  grade: 通用
+  type: 书籍
+  uploader: 叮咚
+  date: 2026-05-15
+  downloads: 0
   rating: 4.4
-  description: 大学物理各章节知识点总结，力学、热学、电磁学重点公式整理
-  link: "#"
-  tags: [物理, 期末, 公式, 大一]
+  description: 在线凸优化第二版，介绍流数据场景下的在线学习理论与算法
+  link: "/机器学习/在线学习与流数据处理Introduction to Online Convex Optimization, second edition.pdf"
+  tags: [在线学习, 流数据, 优化, 书籍]
 
 - id: 7
-  title: 高等数学下册期末真题及解析
-  category: 数学
-  subcategory: 高等数学
-  grade: 大一
-  type: 真题
-  uploader: 学长F
-  date: 2024-06-01
-  downloads: 298
-  rating: 4.7
-  description: 高数下册期末真题，包含级数、多元函数、重积分等章节的考试题目
-  link: "#"
-  tags: [高数, 期末, 真题, 下册]
+  title: "机器学习（周志华）"
+  category: 编程
+  subcategory: 机器学习
+  grade: 通用
+  type: 书籍
+  uploader: 叮咚
+  date: 2026-05-15
+  downloads: 0
+  rating: 4.9
+  description: 经典的"西瓜书"，周志华教授编著，系统介绍机器学习的基本概念和主要方法
+  link: "/机器学习/机器学习 周志华.pdf"
+  tags: [机器学习, 西瓜书, 经典, 书籍]
 
 - id: 8
-  title: Java面向对象程序设计课件
+  title: "机器学习基础（Deep Learning: Foundations and Concepts）"
   category: 编程
-  subcategory: Java
-  grade: 大二
-  type: 课件
-  uploader: 学长G
-  date: 2024-02-28
-  downloads: 134
-  rating: 4.3
-  description: Java课程课件，封装、继承、多态、接口、异常处理等完整章节
-  link: "#"
-  tags: [Java, 编程, OOP, 课件]
+  subcategory: 机器学习
+  grade: 通用
+  type: 书籍
+  uploader: 叮咚
+  date: 2026-05-15
+  downloads: 0
+  rating: 4.6
+  description: Bishop的深度学习基础教材，涵盖机器学习的核心概念和理论基础
+  link: "/机器学习/机器学习基础Deep Learning_ Foundations and Concept.pdf"
+  tags: [深度学习, 基础, Bishop, 书籍]
 
 - id: 9
-  title: 概率论与数理统计笔记
-  category: 数学
-  subcategory: 概率论
-  grade: 大二
-  type: 笔记
-  uploader: 学姐B
-  date: 2024-04-20
-  downloads: 203
-  rating: 4.6
-  description: 概率论课程笔记，概率分布、参数估计、假设检验等知识点详解
-  link: "#"
-  tags: [概率论, 数学, 笔记, 大二]
+  title: "机器学习数学（Mathematics for Machine Learning）"
+  category: 编程
+  subcategory: 机器学习
+  grade: 通用
+  type: 书籍
+  uploader: 叮咚
+  date: 2026-05-15
+  downloads: 0
+  rating: 4.7
+  description: 机器学习所需的数学基础知识，涵盖线性代数、概率论、最优化等
+  link: "/机器学习/机器学习数学Mathematics for Machine Learning.pdf"
+  tags: [数学, 线性代数, 概率论, 书籍]
 
 - id: 10
-  title: 六级写作高分模板及范文
-  category: 英语
-  subcategory: 六级
-  grade: 大二
-  type: 笔记
-  uploader: 学姐D
-  date: 2024-05-20
-  downloads: 345
-  rating: 4.8
-  description: 六级写作常用模板、高分句型、真题范文合集，考前必看
-  link: "#"
-  tags: [六级, 英语, 写作, 模板]
+  title: "矩阵微积分（The Matrix Calculus You Need for Deep Learning）"
+  category: 编程
+  subcategory: 机器学习
+  grade: 通用
+  type: 书籍
+  uploader: 叮咚
+  date: 2026-05-15
+  downloads: 0
+  rating: 4.5
+  description: 深度学习所需的矩阵微积分知识，理解反向传播的数学基础
+  link: "/机器学习/矩阵微积分The Matrix Calculus You Need for Deep Learning.pdf"
+  tags: [矩阵, 微积分, 深度学习, 书籍]
 
 - id: 11
-  title: C语言程序设计实验报告模板
+  title: "神经网络与深度学习"
   category: 编程
-  subcategory: C语言
-  grade: 大一
-  type: 笔记
-  uploader: 学长H
-  date: 2024-03-10
-  downloads: 276
-  rating: 4.2
-  description: C语言实验报告通用模板，含格式要求和常见实验参考代码
-  link: "#"
-  tags: [C语言, 实验报告, 编程, 大一]
+  subcategory: 机器学习
+  grade: 通用
+  type: 书籍
+  uploader: 叮咚
+  date: 2026-05-15
+  downloads: 0
+  rating: 4.6
+  description: 系统介绍神经网络与深度学习的基本原理、模型和应用
+  link: "/机器学习/神经网络与深度学习.pdf"
+  tags: [神经网络, 深度学习, 书籍]
 
 - id: 12
-  title: 马克思主义基本原理期末重点整理
-  category: 其他
-  subcategory: 思政
-  grade: 大一
-  type: 笔记
-  uploader: 学姐J
-  date: 2024-05-25
-  downloads: 189
-  rating: 4.1
-  description: 马原课程期末重点知识整理，选择题+论述题要点归纳
-  link: "#"
-  tags: [马原, 思政, 期末, 重点]
+  title: "模式识别与机器学习（PRML）"
+  category: 编程
+  subcategory: 机器学习
+  grade: 通用
+  type: 书籍
+  uploader: 叮咚
+  date: 2026-05-15
+  downloads: 0
+  rating: 4.8
+  description: Bishop的经典之作，从贝叶斯视角系统讲解模式识别与机器学习
+  link: "/机器学习/算法Bishop-Pattern-Recognition-and-Machine-Learning-2006.pdf"
+  tags: [PRML, 贝叶斯, 模式识别, 书籍]
 
 - id: 13
-  title: 离散数学课后习题详细解答
-  category: 数学
-  subcategory: 离散数学
-  grade: 大二
-  type: 习题
-  uploader: 学长C
-  date: 2024-04-05
-  downloads: 145
-  rating: 4.5
-  description: 离散数学教材课后习题完整解答，集合论、图论、逻辑等章节
-  link: "#"
-  tags: [离散数学, 习题, 解答, 大二]
+  title: "算法博弈论（Algorithmic Game Theory）"
+  category: 编程
+  subcategory: 机器学习
+  grade: 通用
+  type: 书籍
+  uploader: 叮咚
+  date: 2026-05-15
+  downloads: 0
+  rating: 4.3
+  description: 算法与博弈论交叉领域，介绍计算博弈论的核心理论和算法
+  link: "/机器学习/算法博弈论Algorithmic Game Theory .pdf"
+  tags: [博弈论, 算法, 书籍]
 
 - id: 14
-  title: Git与GitHub使用入门教程
+  title: "统计学完全教程（All of Statistics）"
   category: 编程
-  subcategory: 工具
+  subcategory: 机器学习
   grade: 通用
-  type: 笔记
-  uploader: 学长A
-  date: 2024-06-05
-  downloads: 387
-  rating: 4.9
-  description: 从零开始学习Git版本控制和GitHub协作，含常用命令和实战案例
-  link: "#"
-  tags: [Git, GitHub, 工具, 入门]
+  type: 书籍
+  uploader: 叮咚
+  date: 2026-05-15
+  downloads: 0
+  rating: 4.6
+  description: Larry Wasserman的统计学精简教程，涵盖概率论、统计推断、回归分析等
+  link: "/机器学习/统计学完全教程All of Statistics - A Concise Course in Statistical.pdf"
+  tags: [统计学, 概率论, 推断, 书籍]
 
 - id: 15
-  title: 大学物理实验报告合集
-  category: 物理
-  subcategory: 大学物理
-  grade: 大一
-  type: 笔记
-  uploader: 学姐E
-  date: 2024-05-30
-  downloads: 156
-  rating: 4.3
-  description: 大学物理常见实验的报告参考，含数据处理方法和误差分析
-  link: "#"
-  tags: [物理, 实验报告, 大一]
+  title: "深度学习（花书）"
+  category: 编程
+  subcategory: 机器学习
+  grade: 通用
+  type: 书籍
+  uploader: 叮咚
+  date: 2026-05-15
+  downloads: 0
+  rating: 4.9
+  description: Goodfellow、Bengio、Courville合著的深度学习圣经，全面系统讲解深度学习理论
+  link: "/机器学习/花书Deep Learning.pdf"
+  tags: [深度学习, 花书, 经典, 书籍]
