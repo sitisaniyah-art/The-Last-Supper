@@ -1,0 +1,88 @@
+name: 推荐好去处
+description: 推荐浙大紫金港附近好吃好玩的地方，让更多同学知道
+title: "[推荐] "
+labels: ["recommendation"]
+assignees: ["sitisaniyah-art"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢你愿意分享好去处！请尽量填写完整信息，方便其他同学参考。
+
+  - type: input
+    id: place-name
+    attributes:
+      label: 店名/地点名称
+      placeholder: 例如：堕落街烤冷面、瑞幸咖啡(云峰店)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: 分类
+      options:
+        - 美食
+        - 外卖
+        - 奶茶咖啡
+        - 约会聚餐
+        - 景点
+        - 娱乐
+        - 超市便利店
+    validations:
+      required: true
+
+  - type: input
+    id: address
+    attributes:
+      label: 地址
+      placeholder: 例如：紫金港校区堕落街中段
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 推荐理由
+      description: 说说你推荐这个地方的理由，有什么好吃的/好玩的？
+      placeholder: 例如：超好吃的烤冷面，加肠加蛋只要8块钱，分量足...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: rating
+    attributes:
+      label: 评分
+      options:
+        - "5 - 超级推荐"
+        - "4 - 很不错"
+        - "3 - 还可以"
+        - "2 - 一般般"
+        - "1 - 不推荐"
+    validations:
+      required: true
+
+  - type: input
+    id: price
+    attributes:
+      label: 人均消费
+      placeholder: 例如：人均15元
+    validations:
+      required: false
+
+  - type: input
+    id: opening-hours
+    attributes:
+      label: 营业时间
+      placeholder: 例如：10:00-22:00
+    validations:
+      required: false
+
+  - type: input
+    id: nickname
+    attributes:
+      label: 你的昵称（可选）
+      placeholder: 匿名
+    validations:
+      required: false

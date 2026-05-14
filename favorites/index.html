@@ -1,0 +1,149 @@
+---
+layout: single
+title: 我的收藏
+permalink: /favorites/
+author_profile: false
+---
+
+<h2 class="section-title"><i class="fas fa-heart" style="color:var(--danger-color);"></i> 我的收藏</h2>
+
+<p style="color:var(--text-light);margin-bottom:1.5rem;">你收藏的学习资源会显示在这里，方便随时查看和下载。</p>
+
+<!-- 收藏计数 -->
+<div id="fav-count" style="margin-bottom:1rem;color:var(--text-light);font-size:0.9rem;"></div>
+
+<!-- 收藏列表 -->
+<div class="resources-grid" id="favorites-grid"></div>
+
+<!-- 空状态 -->
+<div class="state-message" id="no-favorites" style="display:none;">
+  <i class="far fa-heart"></i>
+  <p>还没有收藏任何资源</p>
+  <p style="font-size:0.9rem;margin-top:0.5rem;">
+    前往 <a href="{{ '/resources/' | relative_url }}" style="color:var(--primary-color);">学习资源</a> 页面，点击
+    <i class="far fa-heart" style="color:var(--danger-color);"></i> 按钮即可收藏
+  </p>
+</div>
+
+<!-- 嵌入完整资源数据 -->
+<script>
+const allResources = [
+  {% for r in site.data.resources %}
+  {
+    "id": {{ r.id }},
+    "title": "{{ r.title | escape }}",
+    "category": "{{ r.category }}",
+    "subcategory": "{{ r.subcategory }}",
+    "grade": "{{ r.grade }}",
+    "type": "{{ r.type }}",
+    "uploader": "{{ r.uploader }}",
+    "date": "{{ r.date }}",
+    "downloads": {{ r.downloads }},
+    "rating": {{ r.rating }},
+    "description": "{{ r.description | escape }}",
+    "link": "{{ r.link }}",
+    "tags": {{ r.tags | jsonify }}
+  }{% unless forloop.last %},{% endunless %}
+  {% endfor %}
+];
+</script>
+<script src="{{ '/assets/js/favorites.js' | relative_url }}"></script>
+<script>
+var CATEGORY_ACCENTS = {
+  '数学': ['#6366f1', '#818cf8'],
+  '编程': ['#10b981', '#34d399'],
+  '英语': ['#f59e0b', '#fbbf24'],
+  '物理': ['#ef4444', '#f87171'],
+  '其他': ['#8b5cf6', '#a78bfa']
+};
+var MAX_DL = 0;
+allResources.forEach(function(r){ if(r.downloads>MAX_DL) MAX_DL=r.downloads; });
+if(!MAX_DL) MAX_DL=1;
+
+function favStars(rating){
+  var h='';
+  for(var i=1;i<=5;i++) h+='<i class="fas fa-star star'+(i<=Math.round(rating)?' filled':'')+'"></i>';
+  return h;
+}
+
+function favBuildCard(r){
+  var tags=r.tags.map(function(t){return '<span class="tag">'+t+'</span>';}).join('');
+  var acc=CATEGORY_ACCENTS[r.category]||CATEGORY_ACCENTS['其他'];
+  var pop=Math.round((r.downloads/MAX_DL)*100);
+  return '<div class="resource-card" id="fav-card-'+r.id+'" style="--card-accent:'+acc[0]+';--card-accent-end:'+acc[1]+';">'+
+    '<div class="resource-card-body">'+
+      '<div class="resource-header">'+
+        '<span class="resource-category-badge">'+r.category+'</span>'+
+        '<button class="favorite-btn active" data-id="'+r.id+'" title="取消收藏">'+
+          '<i class="fas fa-heart favorited"></i>'+
+        '</button>'+
+      '</div>'+
+      '<h3 class="resource-title">'+r.title+'</h3>'+
+      '<div class="resource-meta">'+
+        '<span class="meta-user"><i class="fas fa-user"></i> '+r.uploader+'</span>'+
+        '<span class="meta-date"><i class="fas fa-calendar"></i> '+r.date+'</span>'+
+        '<span class="resource-downloads"><i class="fas fa-arrow-down"></i> '+r.downloads+'</span>'+
+        '<span class="resource-rating">'+favStars(r.rating)+'<span class="rating-num">'+r.rating+'</span></span>'+
+      '</div>'+
+      '<p class="resource-description">'+r.description+'</p>'+
+      '<div class="resource-tags">'+tags+'</div>'+
+      '<div class="resource-popularity"><div class="resource-popularity-bar" style="width:'+pop+'%;"></div></div>'+
+    '</div>'+
+    '<div class="resource-actions">'+
+      '<a href="'+r.link+'" class="download-btn" target="_blank" rel="noopener"><i class="fas fa-download"></i> 下载资源</a>'+
+      '<span class="resource-grade">'+r.grade+' · '+r.subcategory+'</span>'+
+    '</div>'+
+  '</div>';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  renderFavorites();
+});
+
+function renderFavorites() {
+  var grid = document.getElementById('favorites-grid');
+  var empty = document.getElementById('no-favorites');
+  var countEl = document.getElementById('fav-count');
+
+  var favIds = Favorites.getAll();
+  var favResources = allResources.filter(function(r) {
+    return favIds.indexOf(r.id) !== -1;
+  });
+
+  if (favResources.length === 0) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    countEl.textContent = '';
+    return;
+  }
+
+  empty.style.display = 'none';
+  countEl.textContent = '已收藏 ' + favResources.length + ' 个资源';
+
+  grid.innerHTML = favResources.map(favBuildCard).join('');
+
+  grid.querySelectorAll('.favorite-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      var id = parseInt(this.getAttribute('data-id'));
+      Favorites.remove(id);
+
+      var card = document.getElementById('fav-card-' + id);
+      if (card) {
+        card.style.transition = 'opacity 0.3s, transform 0.3s';
+        card.style.opacity = '0';
+        card.style.transform = 'scale(0.95)';
+        setTimeout(function() {
+          card.remove();
+          if (Favorites.count() === 0) {
+            empty.style.display = 'block';
+            countEl.textContent = '';
+          } else {
+            countEl.textContent = '已收藏 ' + Favorites.count() + ' 个资源';
+          }
+        }, 300);
+      }
+    });
+  });
+}
+</script>

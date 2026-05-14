@@ -1,0 +1,321 @@
+---
+layout: single
+title: ZJU嗨玩榜
+permalink: /zju-fun/
+author_profile: false
+---
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+  <h2 class="section-title" style="margin:0;"><i class="fas fa-map-marker-alt" style="color:var(--danger-color);"></i> ZJU嗨玩榜</h2>
+  <a href="https://github.com/{{ site.github_username }}/{{ site.github_repo }}/issues/new?assignees={{ site.github_username }}&labels=recommendation&template=recommend-place.yml&title=%5B%E6%8E%A8%E8%8D%90%5D+"
+     target="_blank" rel="noopener" class="btn btn-primary" style="font-size:0.9rem;">
+    <i class="fas fa-plus-circle"></i> 我要推荐
+  </a>
+</div>
+<p style="color:var(--text-light);margin-bottom:2rem;line-height:1.7;">浙大紫金港校区附近吃喝玩乐好去处，由同学们亲身体验推荐。点击地址可跳转高德地图导航。</p>
+
+<!-- TOP5 排行榜 -->
+<h3 style="font-size:1.2rem;margin-bottom:1rem;"><i class="fas fa-crown" style="color:var(--accent-color);"></i> TOP 5 排行榜</h3>
+<div id="top5-container" class="top5-grid"></div>
+
+<hr style="margin:2.5rem 0;border:none;border-top:1px solid var(--border-color);">
+
+<!-- 筛选栏 -->
+<div class="filter-bar">
+  <div class="filter-group">
+    <label>分类：</label>
+    <select id="fun-category-filter">
+      <option value="all">全部分类</option>
+      <option value="美食">美食</option>
+      <option value="外卖">外卖</option>
+      <option value="奶茶咖啡">奶茶咖啡</option>
+      <option value="约会聚餐">约会聚餐</option>
+      <option value="景点">景点</option>
+      <option value="娱乐">娱乐</option>
+      <option value="超市便利店">超市便利店</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <label>排序：</label>
+    <select id="fun-sort-filter">
+      <option value="rating">最高评分</option>
+      <option value="date">最新推荐</option>
+      <option value="likes">最多点赞</option>
+    </select>
+  </div>
+  <div class="search-box">
+    <input type="text" id="fun-search" placeholder="搜索名称、地址、标签...">
+    <button><i class="fas fa-search"></i></button>
+  </div>
+</div>
+
+<!-- 结果统计 -->
+<div id="fun-count" style="margin-bottom:1rem;color:var(--text-light);font-size:0.9rem;"></div>
+
+<!-- 卡片网格 -->
+<div class="fun-grid" id="fun-grid"></div>
+
+<!-- 无结果 -->
+<div class="state-message" id="fun-no-results" style="display:none;">
+  <i class="fas fa-search"></i>
+  <p>没有找到匹配的地点，试试其他关键词？</p>
+</div>
+
+<!-- 嵌入数据 -->
+<script>
+const allPlaces = [
+  {% for p in site.data.zju-fun %}
+  {
+    "id": {{ p.id }},
+    "name": "{{ p.name | escape }}",
+    "category": "{{ p.category }}",
+    "subcategory": "{{ p.subcategory }}",
+    "rating": {{ p.rating }},
+    "like_count": {{ p.like_count }},
+    "address": "{{ p.address | escape }}",
+    "description": "{{ p.description | escape }}",
+    "recommender": "{{ p.recommender | escape }}",
+    "date": "{{ p.date }}",
+    "image": "{{ p.image }}",
+    "tags": {{ p.tags | jsonify }},
+    "opening_hours": "{{ p.opening_hours | escape }}",
+    "price": "{{ p.price | escape }}"
+  }{% unless forloop.last %},{% endunless %}
+  {% endfor %}
+];
+</script>
+<script src="{{ '/assets/js/favorites.js' | relative_url }}"></script>
+<script>
+(function() {
+  /* ============================================================
+     Likes — localStorage, prevents duplicate
+     ============================================================ */
+  var LIKE_KEY = 'tls_zju_likes';
+  function getLikes() {
+    try { return JSON.parse(localStorage.getItem(LIKE_KEY)) || {}; } catch(e) { return {}; }
+  }
+  function saveLikes(d) { localStorage.setItem(LIKE_KEY, JSON.stringify(d)); }
+  function isLiked(id) { return !!getLikes()[id]; }
+  function toggleLike(id) {
+    var likes = getLikes();
+    if (likes[id]) { delete likes[id]; saveLikes(likes); return false; }
+    likes[id] = true; saveLikes(likes); return true;
+  }
+
+  /* ============================================================
+     Star rendering
+     ============================================================ */
+  function stars(rating) {
+    var h = '';
+    for (var i = 1; i <= 5; i++) {
+      h += '<i class="fas fa-star zj-star' + (i <= Math.round(rating) ? ' filled' : '') + '"></i>';
+    }
+    return h;
+  }
+
+  /* ============================================================
+     Category accent colors
+     ============================================================ */
+  var CAT_COLORS = {
+    '美食': '#ef4444',
+    '外卖': '#f97316',
+    '奶茶咖啡': '#8b5cf6',
+    '景点': '#10b981',
+    '娱乐': '#f59e0b',
+    '超市便利店': '#06b6d4',
+    '约会聚餐': '#ec4899'
+  };
+  var CAT_ICONS = {
+    '美食': 'fa-utensils',
+    '外卖': 'fa-motorcycle',
+    '奶茶咖啡': 'fa-mug-hot',
+    '景点': 'fa-camera-retro',
+    '娱乐': 'fa-gamepad',
+    '超市便利店': 'fa-store',
+    '约会聚餐': 'fa-heart'
+  };
+
+  /* ============================================================
+     TOP5 rendering
+     ============================================================ */
+  function renderTop5() {
+    var sorted = allPlaces.slice().sort(function(a, b) { return b.rating - a.rating; }).slice(0, 5);
+    var container = document.getElementById('top5-container');
+    container.innerHTML = sorted.map(function(p, idx) {
+      var rank = idx + 1;
+      var color = CAT_COLORS[p.category] || '#6b7280';
+      var medal = rank === 1 ? 'fa-crown' : rank <= 3 ? 'fa-medal' : 'fa-trophy';
+      return '<div class="top5-item">' +
+        '<div class="top5-rank rank-' + rank + '"><i class="fas ' + medal + '"></i> ' + rank + '</div>' +
+        '<div class="top5-info">' +
+          '<strong>' + p.name + '</strong>' +
+          '<div class="top5-meta">' +
+            '<span class="zj-tag" style="background:' + color + '15;color:' + color + ';">' + p.category + '</span>' +
+            '<span class="zj-rating-sm">' + stars(p.rating) + ' <b>' + p.rating + '</b></span>' +
+          '</div>' +
+        '</div>' +
+        '<span class="top5-price">' + p.price + '</span>' +
+      '</div>';
+    }).join('');
+  }
+
+  /* ============================================================
+     Card rendering
+     ============================================================ */
+  function buildCard(p) {
+    var color = CAT_COLORS[p.category] || '#6b7280';
+    var icon = CAT_ICONS[p.category] || 'fa-map-pin';
+    var liked = isLiked(p.id);
+    var tagsHtml = p.tags.map(function(t) { return '<span class="tag">' + t + '</span>'; }).join('');
+    var mapUrl = 'https://uri.amap.com/marker?position=&name=' + encodeURIComponent(p.name) + '&address=' + encodeURIComponent(p.address);
+
+    return '<div class="zj-card">' +
+      '<div class="zj-card-img">' +
+        '<img src="' + p.image + '" alt="' + p.name + '" loading="lazy">' +
+        '<div class="zj-card-img-overlay">' +
+          '<span class="zj-tag" style="background:' + color + ';color:#fff;"><i class="fas ' + icon + '"></i> ' + p.category + '</span>' +
+          '<button class="zj-like-btn' + (liked ? ' active' : '') + '" data-id="' + p.id + '" title="' + (liked ? '取消点赞' : '点赞') + '">' +
+            '<i class="' + (liked ? 'fas' : 'far') + ' fa-heart"></i>' +
+            '<span class="zj-like-count">' + (p.like_count + (liked ? 1 : 0)) + '</span>' +
+          '</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="zj-card-body">' +
+        '<h3 class="zj-card-title">' + p.name + '</h3>' +
+        '<div class="zj-card-rating">' + stars(p.rating) + '<span class="zj-rating-num">' + p.rating + '</span></div>' +
+        '<a class="zj-card-address" href="' + mapUrl + '" target="_blank" rel="noopener" title="在高德地图中打开导航">' +
+          '<i class="fas fa-map-marker-alt"></i> ' + p.address +
+        '</a>' +
+        '<p class="zj-card-desc">' + p.description + '</p>' +
+        '<div class="zj-card-details">' +
+          '<span><i class="fas fa-clock"></i> ' + p.opening_hours + '</span>' +
+          '<span><i class="fas fa-yen-sign"></i> ' + p.price + '</span>' +
+        '</div>' +
+        '<div class="zj-card-tags">' + tagsHtml + '</div>' +
+      '</div>' +
+      '<div class="zj-card-footer">' +
+        '<span class="zj-card-recommender"><i class="fas fa-user-circle"></i> ' + p.recommender + ' · ' + p.date + '</span>' +
+        '<div class="zj-card-actions">' +
+          '<button class="zj-action-btn zj-comment-btn" data-name="' + encodeURIComponent(p.name) + '" title="评论"><i class="fas fa-comment"></i></button>' +
+          '<button class="zj-action-btn zj-share-btn" data-id="' + p.id + '" data-name="' + encodeURIComponent(p.name) + '" title="分享"><i class="fas fa-share-alt"></i></button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  /* ============================================================
+     Filter + Sort + Search
+     ============================================================ */
+  function filterAndSort() {
+    var cat  = document.getElementById('fun-category-filter').value;
+    var sort = document.getElementById('fun-sort-filter').value;
+    var term = document.getElementById('fun-search').value.toLowerCase().trim();
+
+    var result = allPlaces.filter(function(p) {
+      var matchCat = cat === 'all' || p.category === cat;
+      var matchSearch = term === '' ||
+        p.name.toLowerCase().includes(term) ||
+        p.address.toLowerCase().includes(term) ||
+        p.description.toLowerCase().includes(term) ||
+        (p.tags && p.tags.some(function(t) { return t.toLowerCase().includes(term); }));
+      return matchCat && matchSearch;
+    });
+
+    if (sort === 'rating')      result.sort(function(a, b) { return b.rating - a.rating; });
+    else if (sort === 'date')   result.sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
+    else if (sort === 'likes')  result.sort(function(a, b) {
+      return (b.like_count + (isLiked(b.id) ? 1 : 0)) - (a.like_count + (isLiked(a.id) ? 1 : 0));
+    });
+
+    renderGrid(result);
+  }
+
+  function renderGrid(places) {
+    var grid = document.getElementById('fun-grid');
+    var empty = document.getElementById('fun-no-results');
+    var countEl = document.getElementById('fun-count');
+
+    if (places.length === 0) {
+      grid.innerHTML = '';
+      empty.style.display = 'block';
+      countEl.textContent = '';
+      return;
+    }
+
+    empty.style.display = 'none';
+    countEl.textContent = '共 ' + places.length + ' 个推荐';
+    grid.innerHTML = places.map(buildCard).join('');
+    bindEvents(grid);
+  }
+
+  /* ============================================================
+     Event binding
+     ============================================================ */
+  function bindEvents(container) {
+    // Like buttons
+    container.querySelectorAll('.zj-like-btn').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var id = parseInt(this.getAttribute('data-id'));
+        var nowLiked = toggleLike(id);
+        var place = allPlaces.find(function(p) { return p.id === id; });
+        var count = place ? place.like_count + (nowLiked ? 1 : 0) : 0;
+        this.classList.toggle('active', nowLiked);
+        this.querySelector('i').className = nowLiked ? 'fas fa-heart' : 'far fa-heart';
+        this.querySelector('.zj-like-count').textContent = count;
+        this.title = nowLiked ? '取消点赞' : '点赞';
+        // Pulse
+        this.classList.add('pulse');
+        var self = this;
+        setTimeout(function() { self.classList.remove('pulse'); }, 350);
+      });
+    });
+
+    // Comment buttons — scroll to Giscus
+    container.querySelectorAll('.zj-comment-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var name = decodeURIComponent(this.getAttribute('data-name'));
+        var giscus = document.querySelector('.giscus');
+        if (giscus) {
+          giscus.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          alert('评论区加载中，请稍后再试。你也可以直接在页面底部找到评论框。');
+        }
+      });
+    });
+
+    // Share buttons
+    container.querySelectorAll('.zj-share-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var name = decodeURIComponent(this.getAttribute('data-name'));
+        var url = window.location.href;
+        var text = '浙大嗨玩榜推荐：' + name + ' — 来自最后的晚餐学习社区';
+        if (navigator.share) {
+          navigator.share({ title: name, text: text, url: url }).catch(function() {});
+        } else {
+          // Fallback: copy to clipboard
+          var dummy = document.createElement('textarea');
+          dummy.value = text + '\n' + url;
+          document.body.appendChild(dummy);
+          dummy.select();
+          document.execCommand('copy');
+          document.body.removeChild(dummy);
+          alert('链接已复制到剪贴板！');
+        }
+      });
+    });
+  }
+
+  /* ============================================================
+     Init
+     ============================================================ */
+  document.addEventListener('DOMContentLoaded', function() {
+    renderTop5();
+    filterAndSort();
+
+    document.getElementById('fun-category-filter').addEventListener('change', filterAndSort);
+    document.getElementById('fun-sort-filter').addEventListener('change', filterAndSort);
+    document.getElementById('fun-search').addEventListener('input', filterAndSort);
+  });
+})();
+</script>

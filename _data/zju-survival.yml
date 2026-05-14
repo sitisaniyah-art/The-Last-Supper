@@ -1,0 +1,475 @@
+# =============================================
+# ZJU生存指南数据
+# =============================================
+
+# --- 分类定义 ---
+categories:
+  - id: freshman
+    name: "新生必看"
+    icon: "fa-fire"
+    emoji: "🔥"
+  - id: study
+    name: "学习考试"
+    icon: "fa-book"
+    emoji: "📚"
+  - id: campus-life
+    name: "校园生活"
+    icon: "fa-home"
+    emoji: "🏠"
+  - id: resources
+    name: "校内资源"
+    icon: "fa-laptop"
+    emoji: "💻"
+  - id: transport
+    name: "出行交通"
+    icon: "fa-bus"
+    emoji: "🚌"
+  - id: finance
+    name: "财务相关"
+    icon: "fa-yen-sign"
+    emoji: "💰"
+  - id: tools
+    name: "实用工具"
+    icon: "fa-wrench"
+    emoji: "🛠️"
+  - id: faq
+    name: "常见问题"
+    icon: "fa-question-circle"
+    emoji: "❓"
+
+# --- 指南条目 ---
+guides:
+  # 新生必看
+  - title: "2024级浙江大学新生完全指南"
+    category: "freshman"
+    source: "CC98精华帖"
+    description: "最全面的新生入学指南，包含报到流程、住宿安排、军训攻略、选课技巧等所有你需要知道的信息"
+    url: "https://www.cc98.org/topic/123456"
+    tags: ["新生", "入学", "必备"]
+    date: "2024-06-01"
+    need_intranet: true
+
+  - title: "浙大选课完全攻略"
+    category: "freshman"
+    source: "学长学姐整理"
+    description: "选课系统使用方法、抢课技巧、热门课程推荐与避坑指南，新生必读"
+    url: "https://example.com/xuanke"
+    tags: ["选课", "课程", "攻略"]
+    date: "2024-05-20"
+    need_intranet: false
+
+  - title: "军训生存手册"
+    category: "freshman"
+    source: "CC98精华帖"
+    description: "军训必备物品清单、防晒技巧、站军姿不累的秘诀、拉歌大全"
+    url: "https://www.cc98.org/topic/234567"
+    tags: ["军训", "新生", "攻略"]
+    date: "2024-06-15"
+    need_intranet: true
+
+  - title: "紫金港校区地图与建筑指南"
+    category: "freshman"
+    source: "官网"
+    description: "校区详细地图，各学院楼、食堂、宿舍、图书馆位置标注，迷路星人必备"
+    url: "http://map.zju.edu.cn"
+    tags: ["地图", "校园", "导航"]
+    date: "2024-01-10"
+    need_intranet: false
+
+  # 学习考试
+  - title: "浙江大学课程评价汇总"
+    category: "study"
+    source: "CC98精华帖"
+    description: "历年课程评价、老师评分、考试难度分析，选课前必看"
+    url: "https://www.cc98.org/topic/345678"
+    tags: ["课程", "评价", "考试"]
+    date: "2024-06-10"
+    need_intranet: true
+
+  - title: "期末考试复习资料汇总"
+    category: "study"
+    source: "CC98精华帖"
+    description: "各科期末考试真题、复习笔记、重点整理，按学院分类"
+    url: "https://www.cc98.org/topic/456789"
+    tags: ["期末", "真题", "复习"]
+    date: "2024-06-08"
+    need_intranet: true
+
+  - title: "保研经验帖合集"
+    category: "study"
+    source: "CC98精华帖"
+    description: "历年保研经验分享，包含夏令营申请、面试技巧、各学院保研率"
+    url: "https://www.cc98.org/topic/567890"
+    tags: ["保研", "经验", "升学"]
+    date: "2024-05-25"
+    need_intranet: true
+
+  - title: "考研资料与经验汇总"
+    category: "study"
+    source: "学长学姐整理"
+    description: "浙大考研参考书目、历年分数线、复试经验、备考时间规划"
+    url: "https://example.com/kaoyan"
+    tags: ["考研", "经验", "升学"]
+    date: "2024-05-15"
+    need_intranet: false
+
+  - title: "教务系统使用指南"
+    category: "study"
+    source: "官网"
+    description: "教务管理系统操作说明，选课、查成绩、评教、打印成绩单"
+    url: "http://zjuam.zju.edu.cn"
+    tags: ["教务", "系统", "操作"]
+    date: "2024-01-05"
+    need_intranet: false
+
+  # 校园生活
+  - title: "紫金港宿舍生存指南"
+    category: "campus-life"
+    source: "CC98精华帖"
+    description: "各宿舍区介绍、床位选择、空调洗衣机使用、宿舍公约、违禁物品清单"
+    url: "https://www.cc98.org/topic/678901"
+    tags: ["宿舍", "生活", "指南"]
+    date: "2024-06-05"
+    need_intranet: true
+
+  - title: "紫金港食堂测评大全"
+    category: "campus-life"
+    source: "学长学姐整理"
+    description: "月牙楼、银泉、临湖等所有食堂测评，含推荐菜品和避雷清单"
+    url: "https://example.com/canteen"
+    tags: ["食堂", "美食", "测评"]
+    date: "2024-05-30"
+    need_intranet: false
+
+  - title: "校医院就诊指南"
+    category: "campus-life"
+    source: "官网"
+    description: "校医院位置、挂号流程、转诊手续、医保报销、常见药品购买"
+    url: "http://hospital.zju.edu.cn"
+    tags: ["医院", "医疗", "报销"]
+    date: "2024-03-15"
+    need_intranet: false
+
+  - title: "校园快递收发指南"
+    category: "campus-life"
+    source: "学长学姐整理"
+    description: "校内各快递点位置、营业时间、取件码使用、大件快递注意事项"
+    url: "https://example.com/express"
+    tags: ["快递", "物流", "生活"]
+    date: "2024-04-20"
+    need_intranet: false
+
+  # 校内资源
+  - title: "CC98论坛完全使用指南"
+    category: "resources"
+    source: "学长学姐整理"
+    description: "CC98注册方法、积分规则、发帖技巧、热门板块推荐、如何找到有用的信息"
+    url: "https://www.cc98.org"
+    tags: ["CC98", "论坛", "指南"]
+    date: "2024-06-12"
+    need_intranet: true
+
+  - title: "浙大VPN使用教程"
+    category: "resources"
+    source: "官网"
+    description: "VPN安装配置、校外访问校内资源方法、常见连接问题解决"
+    url: "http://vpn.zju.edu.cn"
+    tags: ["VPN", "网络", "教程"]
+    date: "2024-02-28"
+    need_intranet: false
+
+  - title: "图书馆资源使用攻略"
+    category: "resources"
+    source: "CC98精华帖"
+    description: "图书借阅规则、电子资源访问、论文数据库使用、自习室预约"
+    url: "https://www.cc98.org/topic/789012"
+    tags: ["图书馆", "资源", "论文"]
+    date: "2024-05-18"
+    need_intranet: true
+
+  - title: "浙大云盘与正版软件"
+    category: "resources"
+    source: "官网"
+    description: "浙大云盘使用、Office/Adobe等正版软件下载、MATLAB授权申请"
+    url: "http://software.zju.edu.cn"
+    tags: ["云盘", "软件", "正版"]
+    date: "2024-04-10"
+    need_intranet: false
+
+  # 出行交通
+  - title: "浙大校车时刻表与路线"
+    category: "transport"
+    source: "官网"
+    description: "紫金港↔玉泉/西溪/华家池等校区校车时刻、上车点、票价"
+    url: "http://bus.zju.edu.cn"
+    tags: ["校车", "时刻表", "校区"]
+    date: "2024-06-01"
+    need_intranet: false
+
+  - title: "紫金港周边交通指南"
+    category: "transport"
+    source: "学长学姐整理"
+    description: "地铁2号线/5号线站点、公交线路、去火车站/机场最方便的方式"
+    url: "https://example.com/transport"
+    tags: ["地铁", "公交", "出行"]
+    date: "2024-05-10"
+    need_intranet: false
+
+  - title: "杭州地铁出行攻略"
+    category: "transport"
+    source: "学长学姐整理"
+    description: "地铁沿线景点/商场推荐、学生优惠卡办理、换乘技巧"
+    url: "https://example.com/metro"
+    tags: ["地铁", "攻略", "优惠"]
+    date: "2024-04-25"
+    need_intranet: false
+
+  # 财务相关
+  - title: "学费与住宿费缴纳指南"
+    category: "finance"
+    source: "官网"
+    description: "缴费时间、缴费方式、助学贷款申请、缓缴学费流程"
+    url: "http://fee.zju.edu.cn"
+    tags: ["学费", "缴费", "贷款"]
+    date: "2024-06-20"
+    need_intranet: false
+
+  - title: "奖助学金申请全攻略"
+    category: "finance"
+    source: "CC98精华帖"
+    description: "国家奖学金/励志奖学金/助学金申请条件、流程、材料清单、面试经验"
+    url: "https://www.cc98.org/topic/890123"
+    tags: ["奖学金", "助学金", "申请"]
+    date: "2024-05-28"
+    need_intranet: true
+
+  - title: "校园卡使用与充值指南"
+    category: "finance"
+    source: "官网"
+    description: "校园卡办理、充值方式、挂失补办、消费限额、门禁使用"
+    url: "http://ecard.zju.edu.cn"
+    tags: ["校园卡", "充值", "门禁"]
+    date: "2024-03-20"
+    need_intranet: false
+
+  # 实用工具
+  - title: "浙大学生必备APP合集"
+    category: "tools"
+    source: "学长学姐整理"
+    description: "钉钉/学习通/知到/浙大APP等必备应用安装与使用说明"
+    url: "https://example.com/apps"
+    tags: ["APP", "手机", "必备"]
+    date: "2024-06-10"
+    need_intranet: false
+
+  - title: "论文写作工具与模板"
+    category: "tools"
+    source: "学长学姐整理"
+    description: "LaTeX模板、论文查重、文献管理、排版工具推荐"
+    url: "https://example.com/paper-tools"
+    tags: ["论文", "工具", "模板"]
+    date: "2024-05-15"
+    need_intranet: false
+
+  # 常见问题
+  - title: "新生常见问题FAQ"
+    category: "faq"
+    source: "学长学姐整理"
+    description: "户口迁移、党组织关系、档案转接、体检安排等新生常见问题解答"
+    url: "https://example.com/faq-freshman"
+    tags: ["FAQ", "新生", "问题"]
+    date: "2024-06-18"
+    need_intranet: false
+
+  - title: "浙大问题反馈渠道汇总"
+    category: "faq"
+    source: "官网"
+    description: "校长信箱、教务处电话、学工部联系方式、意见箱位置"
+    url: "http://feedback.zju.edu.cn"
+    tags: ["反馈", "投诉", "渠道"]
+    date: "2024-04-01"
+    need_intranet: false
+
+# --- 实用网站导航 ---
+websites:
+  # 教务类
+  - name: "学在浙大"
+    icon: "fas fa-graduation-cap"
+    description: "在线课程平台、课程资源"
+    url: "https://courses.zju.edu.cn"
+    category: "教务类"
+
+  - name: "教务管理系统"
+    icon: "fas fa-clipboard-list"
+    description: "选课、查成绩、评教"
+    url: "http://zjuam.zju.edu.cn"
+    category: "教务类"
+
+  - name: "浙江大学主页"
+    icon: "fas fa-university"
+    description: "学校官网、新闻通知"
+    url: "https://www.zju.edu.cn"
+    category: "教务类"
+
+  # 学习类
+  - name: "浙江大学图书馆"
+    icon: "fas fa-book-reader"
+    description: "图书借阅、电子资源、论文"
+    url: "http://lib.zju.edu.cn"
+    category: "学习类"
+
+  - name: "中国知网"
+    icon: "fas fa-file-alt"
+    description: "学术论文、期刊检索"
+    url: "https://www.cnki.net"
+    category: "学习类"
+
+  - name: "Web of Science"
+    icon: "fas fa-globe"
+    description: "国际学术论文检索"
+    url: "https://webofscience.com"
+    category: "学习类"
+
+  # 生活类
+  - name: "CC98论坛"
+    icon: "fas fa-comments"
+    description: "浙大最大的校内论坛"
+    url: "https://www.cc98.org"
+    category: "生活类"
+
+  - name: "飘渺水云间"
+    icon: "fas fa-water"
+    description: "校内BBS，二手交易"
+    url: "https://www.freecity.cn"
+    category: "生活类"
+
+  - name: "校园卡服务"
+    icon: "fas fa-id-card"
+    description: "充值、挂失、查询"
+    url: "http://ecard.zju.edu.cn"
+    category: "生活类"
+
+  - name: "校医院"
+    icon: "fas fa-hospital"
+    description: "挂号、就诊、医保"
+    url: "http://hospital.zju.edu.cn"
+    category: "生活类"
+
+  # 工具类
+  - name: "浙大VPN"
+    icon: "fas fa-shield-alt"
+    description: "校外访问校内资源"
+    url: "http://vpn.zju.edu.cn"
+    category: "工具类"
+
+  - name: "正版软件中心"
+    icon: "fas fa-download"
+    description: "Office、MATLAB等"
+    url: "http://software.zju.edu.cn"
+    category: "工具类"
+
+  - name: "浙大邮箱"
+    icon: "fas fa-envelope"
+    description: "校内邮箱系统"
+    url: "https://mail.zju.edu.cn"
+    category: "工具类"
+
+  - name: "浙大云盘"
+    icon: "fas fa-cloud"
+    description: "文件存储与分享"
+    url: "https://pan.zju.edu.cn"
+    category: "工具类"
+
+  # --- 新增教务类 ---
+  - name: "现代教务管理系统"
+    icon: "fas fa-desktop"
+    description: "选课、考试安排、成绩查询"
+    url: "http://jwbinfosys.zju.edu.cn"
+    category: "教务类"
+
+  - name: "素质拓展平台"
+    icon: "fas fa-trophy"
+    description: "第二课堂、素质学分管理"
+    url: "http://sztz.zju.edu.cn"
+    category: "教务类"
+
+  - name: "三算育人平台"
+    icon: "fas fa-chalkboard-teacher"
+    description: "综合能力培养平台"
+    url: "http://eta.zju.edu.cn"
+    category: "教务类"
+
+  - name: "查老师信息"
+    icon: "fas fa-user-tie"
+    description: "老师评分、课程评价查询"
+    url: "http://chalaoshi.netlify.app"
+    category: "教务类"
+
+  - name: "智慧团建"
+    icon: "fas fa-users-cog"
+    description: "团组织关系管理"
+    url: "https://zhtj.youth.cn/zhtj/"
+    category: "教务类"
+
+  - name: "团在浙大"
+    icon: "fas fa-flag"
+    description: "校内团务系统（需内网）"
+    url: "http://10.202.82.70/"
+    category: "教务类"
+
+  # --- 新增学习类 ---
+  - name: "CC98论坛"
+    icon: "fas fa-comments"
+    description: "校内最大论坛，课程评价、经验分享"
+    url: "https://www.cc98.org"
+    category: "学习类"
+
+  - name: "求是潮"
+    icon: "fas fa-wave-square"
+    description: "校内资源共享平台（Share板块）"
+    url: "http://www.qsc.zju.edu.cn/"
+    category: "学习类"
+
+  - name: "图书馆查询"
+    icon: "fas fa-search"
+    description: "馆藏检索、借阅记录查询"
+    url: "http://libweb.zju.edu.cn/libweb/"
+    category: "学习类"
+
+  - name: "自习室查询"
+    icon: "fas fa-chair"
+    description: "教室空闲情况实时查询"
+    url: "http://jxzygl.zju.edu.cn/jxzwsyqk/jszycx_tj.aspx"
+    category: "学习类"
+
+  # --- 新增生活类 ---
+  - name: "校园信息平台"
+    icon: "fas fa-info-circle"
+    description: "紫金港校园信息聚合"
+    url: "http://www.tuotuzju.com/"
+    category: "生活类"
+
+  # --- 新增工具类 ---
+  - name: "校园网VPN"
+    icon: "fas fa-wifi"
+    description: "校外访问校内资源（替代旧VPN）"
+    url: "http://myvpn.zju.edu.cn"
+    category: "工具类"
+
+  - name: "充电桩查询"
+    icon: "fas fa-bolt"
+    description: "校园电动车充电桩位置与状态"
+    url: "https://charger.philfan.cn/"
+    category: "工具类"
+
+  - name: "ZJUERS"
+    icon: "fas fa-link"
+    description: "浙大学生工具集合"
+    url: "https://zjuers.com"
+    category: "工具类"
+
+  - name: "ZJU短链"
+    icon: "fas fa-external-link-alt"
+    description: "浙大官方短链接服务"
+    url: "https://go.zju.edu.cn"
+    category: "工具类"

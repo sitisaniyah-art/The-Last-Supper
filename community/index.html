@@ -1,0 +1,99 @@
+---
+layout: single
+title: 社区
+permalink: /community/
+author_profile: false
+---
+
+<h2 class="section-title"><i class="fas fa-users"></i> 社区</h2>
+
+<!-- 公告栏 -->
+<h3 style="font-size:1.3rem;margin-bottom:1rem;"><i class="fas fa-bullhorn" style="color:var(--primary-color);"></i> 公告栏</h3>
+
+{% assign pinned = site.data.announcements | where: "pinned", true %}
+{% assign normal = site.data.announcements | where: "pinned", false %}
+
+{% for a in pinned %}
+<div class="announcement-card pinned">
+  <div class="announcement-title">
+    <i class="fas fa-thumbtack" style="color:var(--primary-color);font-size:0.85rem;"></i>
+    {{ a.title }}
+  </div>
+  <div class="announcement-date">{{ a.date }}</div>
+  <p style="margin:0;color:var(--text-light);line-height:1.6;">{{ a.content }}</p>
+</div>
+{% endfor %}
+
+{% for a in normal %}
+<div class="announcement-card">
+  <div class="announcement-title">{{ a.title }}</div>
+  <div class="announcement-date">{{ a.date }}</div>
+  <p style="margin:0;color:var(--text-light);line-height:1.6;">{{ a.content }}</p>
+</div>
+{% endfor %}
+
+<hr style="margin:2.5rem 0;border:none;border-top:1px solid var(--border-color);">
+
+<!-- 快捷入口 -->
+<div class="feature-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+  <div class="feature-card" style="padding:1.5rem;">
+    <i class="fas fa-book-open" style="font-size:2rem;"></i>
+    <h3>学习资源</h3>
+    <p>浏览和下载各科学习资料</p>
+    <a href="{{ '/resources/' | relative_url }}" class="btn btn-outline" style="font-size:0.85rem;">前往 &rarr;</a>
+  </div>
+  <div class="feature-card" style="padding:1.5rem;">
+    <i class="fas fa-question-circle" style="font-size:2rem;"></i>
+    <h3>疑问区</h3>
+    <p>提问或解答学习问题</p>
+    <a href="{{ '/questions/' | relative_url }}" class="btn btn-outline" style="font-size:0.85rem;">前往 &rarr;</a>
+  </div>
+  <div class="feature-card" style="padding:1.5rem;">
+    <i class="fas fa-hands-helping" style="font-size:2rem;"></i>
+    <h3>贡献资源</h3>
+    <p>上传资料，帮助更多同学</p>
+    <a href="{{ '/contribute/' | relative_url }}" class="btn btn-outline" style="font-size:0.85rem;">前往 &rarr;</a>
+  </div>
+</div>
+
+<hr style="margin:2.5rem 0;border:none;border-top:1px solid var(--border-color);">
+
+<!-- 贡献榜 Top 5 -->
+<h3 style="font-size:1.3rem;margin-bottom:1rem;"><i class="fas fa-trophy" style="color:var(--accent-color);"></i> 贡献榜 Top 5</h3>
+
+<div style="overflow-x:auto;">
+  <table class="leaderboard-table">
+    <thead>
+      <tr>
+        <th class="leaderboard-rank">排名</th>
+        <th>贡献者</th>
+        <th>资源</th>
+        <th>回答</th>
+        <th>积分</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% assign sorted = site.data.contributors | sort: "points" | reverse %}
+      {% for c in sorted limit:5 %}
+      <tr>
+        <td class="leaderboard-rank">
+          {% if forloop.index == 1 %}<i class="fas fa-crown" style="color:#f59e0b;"></i>
+          {% elsif forloop.index == 2 %}<i class="fas fa-medal" style="color:#94a3b8;"></i>
+          {% elsif forloop.index == 3 %}<i class="fas fa-medal" style="color:#cd7f32;"></i>
+          {% else %}{{ forloop.index }}{% endif %}
+        </td>
+        <td>
+          <img class="leaderboard-avatar" src="{{ c.avatar }}" alt="{{ c.name }}" loading="lazy">
+          <strong>{{ c.name }}</strong>
+        </td>
+        <td>{{ c.resources }}</td>
+        <td>{{ c.answers }}</td>
+        <td class="leaderboard-points">{{ c.points }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<p style="text-align:right;margin-top:0.5rem;">
+  <a href="{{ '/contribute/' | relative_url }}" style="color:var(--primary-color);font-size:0.9rem;">查看完整排行榜 &rarr;</a>
+</p>

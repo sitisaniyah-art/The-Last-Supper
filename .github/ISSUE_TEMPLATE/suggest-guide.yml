@@ -1,0 +1,102 @@
+name: 推荐生存指南资源
+description: 推荐一篇有用的生存指南、CC98帖子或实用网站
+title: "[生存指南] "
+labels: ["survival-guide"]
+assignees:
+  - sitisaniyah-art
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢你推荐有用的生存指南资源！请填写以下信息。
+
+  - type: input
+    id: title
+    attributes:
+      label: 资源标题
+      description: 指南、帖子或网站的名称
+      placeholder: 例如：紫金港外卖测评大全
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: 所属分类
+      options:
+        - 新生必看
+        - 学习考试
+        - 校园生活
+        - 校内资源
+        - 出行交通
+        - 财务相关
+        - 实用工具
+        - 常见问题
+    validations:
+      required: true
+
+  - type: dropdown
+    id: source
+    attributes:
+      label: 资源来源
+      options:
+        - CC98精华帖
+        - 官网
+        - 学长学姐整理
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 资源简介
+      description: 简单描述这个资源的内容和价值
+      placeholder: 请用一两句话描述这个资源能帮助同学们解决什么问题
+    validations:
+      required: true
+
+  - type: input
+    id: url
+    attributes:
+      label: 资源链接
+      description: 指南或网站的URL地址
+      placeholder: https://www.cc98.org/topic/xxxxxx
+    validations:
+      required: true
+
+  - type: input
+    id: tags
+    attributes:
+      label: 标签
+      description: 用逗号分隔的关键词标签
+      placeholder: 例如：外卖,测评,美食
+    validations:
+      required: false
+
+  - type: dropdown
+    id: intranet
+    attributes:
+      label: 是否需要校内网访问
+      options:
+        - "否"
+        - "是"
+    validations:
+      required: true
+
+  - type: input
+    id: nickname
+    attributes:
+      label: 你的昵称
+      description: 用于致谢（可选）
+      placeholder: 学长/学姐
+    validations:
+      required: false
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: 补充说明
+      description: 其他想说的（可选）
+    validations:
+      required: false

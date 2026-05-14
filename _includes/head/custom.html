@@ -1,0 +1,82 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}">
+<script>
+(function(){
+  var t=localStorage.getItem('theme');
+  if(t==='dark') document.documentElement.setAttribute('data-theme','dark');
+})();
+</script>
+<!-- Site-wide announcement bar -->
+<script>
+(function(){
+  var announcements=[
+    {% assign sorted_announcements = site.data.announcements | sort: "date" | reverse %}
+    {% for a in sorted_announcements %}
+    {"title":"{{ a.title | escape }}","date":"{{ a.date }}","content":"{{ a.content | escape }}","pinned":{{ a.pinned | default: false }}}{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ];
+  if(!announcements.length) return;
+
+  var STORAGE_KEY='tls_announcement_dismissed';
+
+  function getDismissed(){
+    try{return JSON.parse(localStorage.getItem(STORAGE_KEY))||{};}catch(e){return{};}
+  }
+  function saveDismissed(d){
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(d));
+  }
+
+  // Pick best announcement: pinned first, then most recent
+  var pinned=announcements.filter(function(a){return a.pinned;});
+  var best=pinned.length?pinned[0]:announcements[0];
+
+  // Check dismissal
+  var dismissed=getDismissed();
+  var now=Date.now();
+
+  if(best.pinned){
+    // Pinned: dismissed only if same title dismissed within 24h
+    var pk='pinned_'+best.title;
+    if(dismissed[pk]&&(now-dismissed[pk]<24*60*60*1000)) return;
+  }else{
+    // Regular: any dismissal within 24h hides it
+    if(dismissed._last&&(now-dismissed._last<24*60*60*1000)) return;
+  }
+
+  // Build bar HTML
+  var pinnedIcon=best.pinned?'<i class="fas fa-bullhorn tls-announcement-icon"></i>':'<i class="fas fa-info-circle tls-announcement-icon"></i>';
+  var html='<div id="tls-announcement-bar" class="tls-announcement-bar'+(best.pinned?' tls-announcement-pinned':'')+'">'+
+    '<div class="tls-announcement-inner">'+
+      pinnedIcon+
+      '<span class="tls-announcement-text"><strong>'+best.title+'</strong> — '+best.content+'</span>'+
+      '<button id="tls-announcement-close" class="tls-announcement-close" aria-label="关闭公告">'+
+        '<i class="fas fa-times"></i>'+
+      '</button>'+
+    '</div>'+
+  '</div>';
+
+  // Inject as early as possible
+  function inject(){
+    document.body.insertAdjacentHTML('afterbegin',html);
+    document.body.classList.add('has-announcement-bar');
+
+    document.getElementById('tls-announcement-close').addEventListener('click',function(){
+      var bar=document.getElementById('tls-announcement-bar');
+      bar.style.transform='translateY(-100%)';
+      bar.style.opacity='0';
+      setTimeout(function(){
+        bar.remove();
+        document.body.classList.remove('has-announcement-bar');
+      },300);
+
+      var d=getDismissed();
+      d._last=now;
+      if(best.pinned) d['pinned_'+best.title]=now;
+      saveDismissed(d);
+    });
+  }
+
+  if(document.body) inject();
+  else document.addEventListener('DOMContentLoaded',inject);
+})();
+</script>

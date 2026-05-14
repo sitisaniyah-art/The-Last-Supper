@@ -1,0 +1,917 @@
+# =============================================
+# ZJU嗨玩榜 — 浙大紫金港附近吃喝玩乐推荐
+# =============================================
+
+# --- 原始推荐 ---
+- id: 1
+  name: "堕落街烤冷面"
+  category: "美食"
+  subcategory: "堕落街 · 小吃"
+  rating: 4.8
+  like_count: 128
+  address: "紫金港校区堕落街中段"
+  description: "超好吃的烤冷面，加肠加蛋只要8块钱，老板人很好，分量足，是浙大学子的夜宵首选"
+  recommender: "大三学长"
+  date: "2024-05-15"
+  image: "https://picsum.photos/600/400?random=1"
+  tags: ["便宜", "好吃", "夜宵", "堕落街"]
+  opening_hours: "10:00-23:00"
+  price: "人均10元"
+
+- id: 2
+  name: "瑞幸咖啡(云峰店)"
+  category: "奶茶咖啡"
+  subcategory: "咖啡"
+  rating: 4.5
+  like_count: 96
+  address: "紫金港校区云峰学园3舍楼下"
+  description: "便宜好喝的咖啡，每天一杯提神醒脑，生椰拿铁和冰美式是爆款，学生有优惠"
+  recommender: "大二学姐"
+  date: "2024-05-10"
+  image: "https://picsum.photos/600/400?random=2"
+  tags: ["便宜", "快捷", "咖啡", "云峰"]
+  opening_hours: "7:00-22:00"
+  price: "人均15元"
+
+- id: 3
+  name: "月牙楼食堂"
+  category: "美食"
+  subcategory: "食堂"
+  rating: 4.6
+  like_count: 203
+  address: "紫金港校区月牙楼一楼"
+  description: "紫金港最热门的食堂之一，菜品丰富，麻辣香锅和铁板烧是招牌，性价比超高"
+  recommender: "研一学姐"
+  date: "2024-05-08"
+  image: "https://picsum.photos/600/400?random=3"
+  tags: ["食堂", "便宜", "好吃", "麻辣香锅"]
+  opening_hours: "6:30-20:00"
+  price: "人均12元"
+
+- id: 4
+  name: "启真湖畔"
+  category: "景点"
+  subcategory: "校园景观"
+  rating: 4.9
+  like_count: 312
+  address: "紫金港校区启真湖"
+  description: "浙大最美的地方，湖光山色，傍晚散步超舒服，是约会和拍照的绝佳去处"
+  recommender: "大四学长"
+  date: "2024-05-01"
+  image: "https://picsum.photos/600/400?random=4"
+  tags: ["免费", "风景", "约会", "拍照"]
+  opening_hours: "全天开放"
+  price: "免费"
+
+- id: 5
+  name: "一点点(三墩店)"
+  category: "奶茶咖啡"
+  subcategory: "奶茶"
+  rating: 4.4
+  like_count: 87
+  address: "三墩镇古墩路777号"
+  description: "经典奶茶品牌，波霸奶茶和四季春茶是必点，甜度三分糖刚刚好"
+  recommender: "大二学妹"
+  date: "2024-04-28"
+  image: "https://picsum.photos/600/400?random=5"
+  tags: ["奶茶", "便宜", "经典", "三墩"]
+  opening_hours: "9:00-22:30"
+  price: "人均12元"
+
+- id: 6
+  name: "印象城"
+  category: "娱乐"
+  subcategory: "商场"
+  rating: 4.3
+  like_count: 156
+  address: "西湖区古墩路588号"
+  description: "离紫金港最近的大型商场，有电影院、KTV、各种餐饮和购物，周末放松好去处"
+  recommender: "大三学姐"
+  date: "2024-04-20"
+  image: "https://picsum.photos/600/400?random=6"
+  tags: ["商场", "电影", "KTV", "购物"]
+  opening_hours: "10:00-22:00"
+  price: "人均80元"
+
+- id: 7
+  name: "外婆家(城西银泰店)"
+  category: "美食"
+  subcategory: "中餐"
+  rating: 4.5
+  like_count: 134
+  address: "西湖区丰潭路380号城西银泰城"
+  description: "性价比超高的杭帮菜，茶香鸡和外婆红烧肉必点，聚餐首选，建议提前排号"
+  recommender: "研二学长"
+  date: "2024-04-15"
+  image: "https://picsum.photos/600/400?random=7"
+  tags: ["聚餐", "杭帮菜", "好吃", "银泰"]
+  opening_hours: "10:30-21:30"
+  price: "人均55元"
+
+- id: 8
+  name: "网鱼网咖(三墩店)"
+  category: "娱乐"
+  subcategory: "网咖"
+  rating: 4.2
+  like_count: 78
+  address: "三墩镇灯彩街567号"
+  description: "环境不错的网咖，配置高网速快，适合打游戏和赶作业，通宵有优惠"
+  recommender: "大二学长"
+  date: "2024-04-10"
+  image: "https://picsum.photos/600/400?random=8"
+  tags: ["网咖", "游戏", "通宵", "三墩"]
+  opening_hours: "24小时"
+  price: "人均15元/小时"
+
+- id: 9
+  name: "全家便利店(紫金港店)"
+  category: "超市便利店"
+  subcategory: "便利店"
+  rating: 4.1
+  like_count: 65
+  address: "紫金港校区南大门对面"
+  description: "24小时营业，关东煮和饭团是深夜学习的能量补给，还有各种零食饮料"
+  recommender: "大一学弟"
+  date: "2024-04-05"
+  image: "https://picsum.photos/600/400?random=9"
+  tags: ["便利店", "24小时", "关东煮", "南门"]
+  opening_hours: "24小时"
+  price: "人均15元"
+
+- id: 10
+  name: "古茗(西溪银泰店)"
+  category: "奶茶咖啡"
+  subcategory: "奶茶"
+  rating: 4.6
+  like_count: 109
+  address: "西湖区文一西路与紫金港路交叉口"
+  description: "超A芝士葡萄和杨枝甘露是招牌，用料实在，甜度适中，排队也值得"
+  recommender: "大三学姐"
+  date: "2024-03-28"
+  image: "https://picsum.photos/600/400?random=10"
+  tags: ["奶茶", "好喝", "水果茶", "古茗"]
+  opening_hours: "9:00-22:00"
+  price: "人均16元"
+
+# =============================================
+# 堕落街（主食篇）
+# =============================================
+
+- id: 11
+  name: "膳当家黄焖鸡米饭"
+  category: "美食"
+  subcategory: "堕落街 · 主食"
+  rating: 4.5
+  like_count: 88
+  address: "紫金港校区堕落街"
+  description: "黄焖鸡、鸡爪煲都好吃，辣度可选，微辣友好，中辣偏辣，支持堂食和外卖"
+  recommender: "学姐推荐"
+  date: "2024-06-01"
+  image: "https://picsum.photos/600/400?random=11"
+  tags: ["堕落街", "黄焖鸡", "微辣友好", "堂食外卖"]
+  opening_hours: "10:00-22:00"
+  price: "人均20元"
+
+- id: 12
+  name: "老妈妈卷饼"
+  category: "美食"
+  subcategory: "堕落街 · 主食"
+  rating: 4.6
+  like_count: 95
+  address: "紫金港校区堕落街"
+  description: "几乎无踩雷，可加/不加葱和香菜，微辣几乎不辣，仅堂食，排队常见"
+  recommender: "学长推荐"
+  date: "2024-06-01"
+  image: "https://picsum.photos/600/400?random=12"
+  tags: ["堕落街", "卷饼", "无踩雷", "堂食"]
+  opening_hours: "10:00-21:00"
+  price: "人均12元"
+
+- id: 13
+  name: "庭鲜潮汕牛肉火锅"
+  category: "美食"
+  subcategory: "堕落街 · 火锅"
+  rating: 4.4
+  like_count: 72
+  address: "紫金港校区堕落街"
+  description: "肉菜新鲜，季节限定烤鱼、小龙虾也很推荐，仅堂食"
+  recommender: "学姐推荐"
+  date: "2024-06-01"
+  image: "https://picsum.photos/600/400?random=13"
+  tags: ["堕落街", "火锅", "新鲜", "堂食"]
+  opening_hours: "11:00-22:00"
+  price: "人均60元"
+
+- id: 14
+  name: "张亮麻辣烫"
+  category: "美食"
+  subcategory: "堕落街 · 麻辣烫"
+  rating: 4.2
+  like_count: 60
+  address: "紫金港校区堕落街"
+  description: "连锁常规水平，不踩雷，堂食外卖均可，想吃麻辣烫时的稳妥选择"
+  recommender: "学长推荐"
+  date: "2024-06-01"
+  image: "https://picsum.photos/600/400?random=14"
+  tags: ["堕落街", "麻辣烫", "连锁", "堂食外卖"]
+  opening_hours: "10:00-22:00"
+  price: "人均25元"
+
+- id: 15
+  name: "陈八两面家"
+  category: "美食"
+  subcategory: "堕落街 · 面食"
+  rating: 4.3
+  like_count: 55
+  address: "紫金港校区堕落街"
+  description: "价格偏贵，香干肉丝干拌面好吃，略咸，堂食外卖均可"
+  recommender: "学姐推荐"
+  date: "2024-06-01"
+  image: "https://picsum.photos/600/400?random=15"
+  tags: ["堕落街", "面条", "干拌面", "堂食外卖"]
+  opening_hours: "10:00-21:30"
+  price: "人均25元"
+
+- id: 16
+  name: "舞麦日料"
+  category: "美食"
+  subcategory: "堕落街 · 日料"
+  rating: 3.8
+  like_count: 32
+  address: "紫金港校区堕落街"
+  description: "日料店，价格偏高，口味一般，性价比不高，仅堂食"
+  recommender: "学长推荐"
+  date: "2024-06-01"
+  image: "https://picsum.photos/600/400?random=16"
+  tags: ["堕落街", "日料", "价格偏高", "堂食"]
+  opening_hours: "11:00-21:00"
+  price: "人均65元"
+
+- id: 17
+  name: "喜仕屋"
+  category: "美食"
+  subcategory: "堕落街 · 日料"
+  rating: 3.9
+  like_count: 28
+  address: "紫金港校区堕落街"
+  description: "日料，价格适中但口味普通，想吃日料的备选"
+  recommender: "学姐推荐"
+  date: "2024-06-01"
+  image: "https://picsum.photos/600/400?random=17"
+  tags: ["堕落街", "日料", "适中", "堂食"]
+  opening_hours: "11:00-21:00"
+  price: "人均45元"
+
+# =============================================
+# 堕落街（甜品 / 小吃篇）
+# =============================================
+
+- id: 18
+  name: "堕落街烤冷面(夜宵摊)"
+  category: "美食"
+  subcategory: "堕落街 · 小吃"
+  rating: 4.7
+  like_count: 110
+  address: "紫金港校区堕落街夜宵区"
+  description: "实惠好吃，高峰时段需排队，外带外卖均可，堕落街必打卡"
+  recommender: "学姐推荐"
+  date: "2024-06-02"
+  image: "https://picsum.photos/600/400?random=18"
+  tags: ["堕落街", "小吃", "实惠", "排队"]
+  opening_hours: "16:00-23:30"
+  price: "人均8元"
+
+- id: 19
+  name: "凉友花哥饮品"
+  category: "奶茶咖啡"
+  subcategory: "堕落街 · 饮品"
+  rating: 4.3
+  like_count: 68
+  address: "紫金港校区堕落街"
+  description: "主打双皮奶，口味偏甜，外带外卖均可，适合当下午茶"
+  recommender: "学妹推荐"
+  date: "2024-06-02"
+  image: "https://picsum.photos/600/400?random=19"
+  tags: ["堕落街", "双皮奶", "甜品", "饮品"]
+  opening_hours: "10:00-22:00"
+  price: "人均12元"
+
+- id: 20
+  name: "mbakery 麦贝克"
+  category: "美食"
+  subcategory: "堕落街 · 烘焙"
+  rating: 4.5
+  like_count: 76
+  address: "紫金港校区堕落街"
+  description: "水果千层分量大，适合宿舍拼单，仅外带"
+  recommender: "学姐推荐"
+  date: "2024-06-02"
+  image: "https://picsum.photos/600/400?random=20"
+  tags: ["堕落街", "烘焙", "千层", "宿舍拼单"]
+  opening_hours: "9:00-21:00"
+  price: "人均25元"
+
+- id: 21
+  name: "诗蘇世家"
+  category: "美食"
+  subcategory: "堕落街 · 烘焙"
+  rating: 4.4
+  like_count: 63
+  address: "紫金港校区堕落街"
+  description: "蜂蜜黄油小面包实惠好吃，热量较高，仅外带"
+  recommender: "学长推荐"
+  date: "2024-06-02"
+  image: "https://picsum.photos/600/400?random=21"
+  tags: ["堕落街", "面包", "实惠", "外带"]
+  opening_hours: "8:00-21:00"
+  price: "人均10元"
+
+- id: 22
+  name: "堕落街西瓜汁"
+  category: "奶茶咖啡"
+  subcategory: "堕落街 · 饮品"
+  rating: 4.6
+  like_count: 92
+  address: "紫金港校区堕落街"
+  description: "大杯/超大杯可选，价格便宜，夏天必备，仅外带"
+  recommender: "学妹推荐"
+  date: "2024-06-02"
+  image: "https://picsum.photos/600/400?random=22"
+  tags: ["堕落街", "西瓜汁", "便宜", "夏天"]
+  opening_hours: "10:00-22:00"
+  price: "人均5元"
+
+- id: 23
+  name: "北国三千里"
+  category: "美食"
+  subcategory: "堕落街 · 甜品"
+  rating: 4.2
+  like_count: 45
+  address: "紫金港校区堕落街"
+  description: "酸奶好吃，价格偏贵，外带外卖均可"
+  recommender: "学姐推荐"
+  date: "2024-06-02"
+  image: "https://picsum.photos/600/400?random=23"
+  tags: ["堕落街", "酸奶", "甜品", "偏贵"]
+  opening_hours: "10:00-21:00"
+  price: "人均18元"
+
+- id: 24
+  name: "临榆炸鸡腿"
+  category: "美食"
+  subcategory: "堕落街 · 小吃"
+  rating: 4.7
+  like_count: 105
+  address: "紫金港校区堕落街"
+  description: "好吃，撒料可选，辣味偏辣，可混搭口味，外带外卖均可"
+  recommender: "学长推荐"
+  date: "2024-06-02"
+  image: "https://picsum.photos/600/400?random=24"
+  tags: ["堕落街", "炸鸡", "小吃", "辣"]
+  opening_hours: "10:00-23:00"
+  price: "人均15元"
+
+# =============================================
+# 北街美食
+# =============================================
+
+- id: 25
+  name: "青蔬麻辣烫"
+  category: "美食"
+  subcategory: "北街 · 麻辣烫"
+  rating: 4.4
+  like_count: 70
+  address: "紫金港校区北街"
+  description: "汤底选择多，口味不错，仅堂食"
+  recommender: "学姐推荐"
+  date: "2024-06-03"
+  image: "https://picsum.photos/600/400?random=25"
+  tags: ["北街", "麻辣烫", "汤底多", "堂食"]
+  opening_hours: "10:00-22:00"
+  price: "人均22元"
+
+- id: 26
+  name: "北街烧烤"
+  category: "美食"
+  subcategory: "北街 · 烧烤"
+  rating: 4.3
+  like_count: 65
+  address: "紫金港校区北街"
+  description: "价格适中，正常盐度偏咸，可做减盐、调整辣度，能送到隔壁青蔬麻辣烫"
+  recommender: "学长推荐"
+  date: "2024-06-03"
+  image: "https://picsum.photos/600/400?random=26"
+  tags: ["北街", "烧烤", "可调口味", "堂食"]
+  opening_hours: "17:00-23:00"
+  price: "人均35元"
+
+- id: 27
+  name: "The Tony's"
+  category: "美食"
+  subcategory: "北街 · 西餐"
+  rating: 4.6
+  like_count: 85
+  address: "紫金港校区北街"
+  description: "印度菜+西餐，口味正宗，咖喱、黄油小饼、烤春鸡、大虾都很推荐，人气较高"
+  recommender: "学姐推荐"
+  date: "2024-06-03"
+  image: "https://picsum.photos/600/400?random=27"
+  tags: ["北街", "印度菜", "西餐", "正宗", "人气高"]
+  opening_hours: "11:00-21:30"
+  price: "人均55元"
+
+- id: 28
+  name: "杰里烘焙"
+  category: "美食"
+  subcategory: "北街 · 烘焙"
+  rating: 4.7
+  like_count: 98
+  address: "紫金港校区北街"
+  description: "紫金港"烘焙王"，学长开的店，蒜香吐司、胡萝卜吐司超受欢迎，仅外带"
+  recommender: "学长推荐"
+  date: "2024-06-03"
+  image: "https://picsum.photos/600/400?random=28"
+  tags: ["北街", "烘焙", "吐司", "学长开的", "外带"]
+  opening_hours: "8:00-21:00"
+  price: "人均15元"
+
+- id: 29
+  name: "小满面包烘焙社"
+  category: "美食"
+  subcategory: "北街 · 烘焙"
+  rating: 4.4
+  like_count: 58
+  address: "紫金港校区北街"
+  description: "主打切角蛋糕，朵朵平台常有优惠券，仅外带"
+  recommender: "学妹推荐"
+  date: "2024-06-03"
+  image: "https://picsum.photos/600/400?random=29"
+  tags: ["北街", "蛋糕", "优惠券", "外带"]
+  opening_hours: "9:00-21:00"
+  price: "人均20元"
+
+# =============================================
+# 剑桥公社美食
+# =============================================
+
+- id: 30
+  name: "肉本家炭火烤肉"
+  category: "美食"
+  subcategory: "剑桥公社 · 烤肉"
+  rating: 4.5
+  like_count: 82
+  address: "紫金港校区剑桥公社"
+  description: "韩式烤肉，价格中偏贵，冰沙很推荐，仅堂食"
+  recommender: "学长推荐"
+  date: "2024-06-04"
+  image: "https://picsum.photos/600/400?random=30"
+  tags: ["剑桥公社", "烤肉", "韩式", "冰沙", "堂食"]
+  opening_hours: "11:00-22:00"
+  price: "人均75元"
+
+- id: 31
+  name: "黔夺夺贵州酸汤火锅"
+  category: "美食"
+  subcategory: "剑桥公社 · 火锅"
+  rating: 4.8
+  like_count: 115
+  address: "紫金港校区剑桥公社"
+  description: "强推！酸汤泡饭+脆哨是招牌，超绝，仅堂食"
+  recommender: "学姐推荐"
+  date: "2024-06-04"
+  image: "https://picsum.photos/600/400?random=31"
+  tags: ["剑桥公社", "酸汤火锅", "强推", "招牌", "堂食"]
+  opening_hours: "11:00-22:00"
+  price: "人均55元"
+
+- id: 32
+  name: "粤周记顺德粥底锅"
+  category: "美食"
+  subcategory: "剑桥公社 · 粤菜"
+  rating: 4.0
+  like_count: 40
+  address: "紫金港校区剑桥公社"
+  description: "口味一般，按盘子结算费用，仅堂食"
+  recommender: "学长推荐"
+  date: "2024-06-04"
+  image: "https://picsum.photos/600/400?random=32"
+  tags: ["剑桥公社", "粥底锅", "粤菜", "堂食"]
+  opening_hours: "11:00-21:30"
+  price: "人均50元"
+
+- id: 33
+  name: "京东盛老北京铜锅涮肉"
+  category: "美食"
+  subcategory: "剑桥公社 · 火锅"
+  rating: 4.5
+  like_count: 78
+  address: "紫金港校区剑桥公社"
+  description: "自助火锅，价格实惠，肉、海鲜、蔬菜都新鲜，仅堂食"
+  recommender: "学姐推荐"
+  date: "2024-06-04"
+  image: "https://picsum.photos/600/400?random=33"
+  tags: ["剑桥公社", "自助火锅", "实惠", "新鲜", "堂食"]
+  opening_hours: "11:00-22:00"
+  price: "人均65元"
+
+- id: 34
+  name: "德宏面馆"
+  category: "美食"
+  subcategory: "剑桥公社 · 面食"
+  rating: 4.4
+  like_count: 70
+  address: "紫金港校区剑桥公社"
+  description: "热干面、鸡丝凉面好吃，推荐点外卖（距离较远），堂食外卖均可"
+  recommender: "学长推荐"
+  date: "2024-06-04"
+  image: "https://picsum.photos/600/400?random=34"
+  tags: ["剑桥公社", "面食", "热干面", "推荐外卖"]
+  opening_hours: "10:00-21:30"
+  price: "人均20元"
+
+- id: 35
+  name: "泉市鲜活牛肉店"
+  category: "美食"
+  subcategory: "剑桥公社 · 牛肉"
+  rating: 4.5
+  like_count: 73
+  address: "紫金港校区剑桥公社"
+  description: "肉很新鲜，卤肉饭超好吃，仅堂食"
+  recommender: "学姐推荐"
+  date: "2024-06-04"
+  image: "https://picsum.photos/600/400?random=35"
+  tags: ["剑桥公社", "牛肉", "卤肉饭", "新鲜", "堂食"]
+  opening_hours: "10:30-21:00"
+  price: "人均30元"
+
+# =============================================
+# 外卖合集（部分含堂食）
+# =============================================
+
+- id: 36
+  name: "尊宝披萨"
+  category: "外卖"
+  subcategory: "披萨"
+  rating: 4.3
+  like_count: 60
+  address: "紫金港周边配送"
+  description: "平价披萨，几乎无踩雷，外卖首选"
+  recommender: "学长推荐"
+  date: "2024-06-05"
+  image: "https://picsum.photos/600/400?random=36"
+  tags: ["外卖", "披萨", "平价", "无踩雷"]
+  opening_hours: "10:00-22:00"
+  price: "人均30元"
+
+- id: 37
+  name: "和府捞面"
+  category: "外卖"
+  subcategory: "面食"
+  rating: 4.2
+  like_count: 50
+  address: "紫金港周边配送"
+  description: "苦塌菜、卤肉饭、北海道肉末饭好吃健康，擂椒皮蛋拌面偏油"
+  recommender: "学姐推荐"
+  date: "2024-06-05"
+  image: "https://picsum.photos/600/400?random=37"
+  tags: ["外卖", "面食", "健康", "偏油"]
+  opening_hours: "10:00-21:30"
+  price: "人均35元"
+
+- id: 38
+  name: "窑鸡王"
+  category: "外卖"
+  subcategory: "烤鸡"
+  rating: 4.4
+  like_count: 68
+  address: "紫金港周边配送"
+  description: "半只鸡就能吃饱，性价比高，外卖推荐"
+  recommender: "学长推荐"
+  date: "2024-06-05"
+  image: "https://picsum.photos/600/400?random=38"
+  tags: ["外卖", "烤鸡", "性价比", "管饱"]
+  opening_hours: "10:00-22:00"
+  price: "人均25元"
+
+- id: 39
+  name: "湘先生米小姐"
+  category: "外卖"
+  subcategory: "湘菜"
+  rating: 4.1
+  like_count: 45
+  address: "紫金港周边配送"
+  description: "湘菜，分量大偏油，整体还行"
+  recommender: "学姐推荐"
+  date: "2024-06-05"
+  image: "https://picsum.photos/600/400?random=39"
+  tags: ["外卖", "湘菜", "分量大", "偏油"]
+  opening_hours: "10:30-21:00"
+  price: "人均30元"
+
+- id: 40
+  name: "星平鸡饭"
+  category: "外卖"
+  subcategory: "海南鸡饭"
+  rating: 4.5
+  like_count: 72
+  address: "紫金港周边配送"
+  description: "海南鸡饭、豉油鸡、白切鸡好吃，价格偏贵"
+  recommender: "学长推荐"
+  date: "2024-06-05"
+  image: "https://picsum.photos/600/400?random=40"
+  tags: ["外卖", "鸡饭", "好吃", "偏贵"]
+  opening_hours: "10:30-21:00"
+  price: "人均38元"
+
+- id: 41
+  name: "老娘舅"
+  category: "外卖"
+  subcategory: "中式快餐"
+  rating: 4.0
+  like_count: 42
+  address: "紫金港周边配送"
+  description: "价格偏高，包装精致，鱼香肉丝、梅干菜扣肉推荐，腌笃鲜一般"
+  recommender: "学姐推荐"
+  date: "2024-06-05"
+  image: "https://picsum.photos/600/400?random=41"
+  tags: ["外卖", "快餐", "包装好", "偏贵"]
+  opening_hours: "10:00-21:00"
+  price: "人均32元"
+
+- id: 42
+  name: "海底捞下饭火锅菜"
+  category: "外卖"
+  subcategory: "火锅"
+  rating: 4.5
+  like_count: 80
+  address: "紫金港周边配送"
+  description: "几十块就能吃火锅，包装好还送桌垫，外卖体验极佳"
+  recommender: "学长推荐"
+  date: "2024-06-05"
+  image: "https://picsum.photos/600/400?random=42"
+  tags: ["外卖", "火锅", "海底捞", "包装好"]
+  opening_hours: "10:00-22:00"
+  price: "人均35元"
+
+- id: 43
+  name: "鸡柳大人"
+  category: "外卖"
+  subcategory: "小吃"
+  rating: 4.4
+  like_count: 65
+  address: "紫金港周边配送 / 堕落街小摊"
+  description: "鸡柳、炸空心年糕好吃，微糖微辣最合适，堕落街也有小摊"
+  recommender: "学妹推荐"
+  date: "2024-06-05"
+  image: "https://picsum.photos/600/400?random=43"
+  tags: ["外卖", "小吃", "炸鸡", "堕落街"]
+  opening_hours: "10:00-22:30"
+  price: "人均15元"
+
+- id: 44
+  name: "喜姐炸串"
+  category: "外卖"
+  subcategory: "小吃"
+  rating: 4.3
+  like_count: 55
+  address: "紫金港周边配送"
+  description: "可点套餐，价格中偏上，甘梅红薯条、掌中宝推荐"
+  recommender: "学姐推荐"
+  date: "2024-06-05"
+  image: "https://picsum.photos/600/400?random=44"
+  tags: ["外卖", "炸串", "套餐", "推荐"]
+  opening_hours: "10:00-22:00"
+  price: "人均22元"
+
+- id: 45
+  name: "杭景元·东北老式麻辣烫"
+  category: "外卖"
+  subcategory: "麻辣烫"
+  rating: 4.1
+  like_count: 40
+  address: "紫金港周边配送"
+  description: "中规中矩，胜在价格实惠"
+  recommender: "学长推荐"
+  date: "2024-06-05"
+  image: "https://picsum.photos/600/400?random=45"
+  tags: ["外卖", "麻辣烫", "实惠", "东北"]
+  opening_hours: "10:00-22:00"
+  price: "人均20元"
+
+- id: 46
+  name: "粥皇港式茶餐厅"
+  category: "外卖"
+  subcategory: "粤菜"
+  rating: 4.4
+  like_count: 58
+  address: "紫金港周边配送"
+  description: "海鲜粥鲜、用料足，肠粉不错，适合恢复期吃"
+  recommender: "学姐推荐"
+  date: "2024-06-05"
+  image: "https://picsum.photos/600/400?random=46"
+  tags: ["外卖", "粥", "港式", "恢复期"]
+  opening_hours: "8:00-21:00"
+  price: "人均28元"
+
+- id: 47
+  name: "李记淮南牛肉汤"
+  category: "外卖"
+  subcategory: "汤品"
+  rating: 4.3
+  like_count: 50
+  address: "紫金港周边配送"
+  description: "汤鲜，酥饼很脆，冬天暖胃首选"
+  recommender: "学长推荐"
+  date: "2024-06-05"
+  image: "https://picsum.photos/600/400?random=47"
+  tags: ["外卖", "牛肉汤", "酥饼", "暖胃"]
+  opening_hours: "8:00-21:00"
+  price: "人均18元"
+
+- id: 48
+  name: "河间驴肉火烧"
+  category: "外卖"
+  subcategory: "特色小吃"
+  rating: 4.2
+  like_count: 38
+  address: "紫金港周边配送"
+  description: "番茄疙瘩汤好喝，驴肉火烧味道特殊，看个人口味"
+  recommender: "学妹推荐"
+  date: "2024-06-05"
+  image: "https://picsum.photos/600/400?random=48"
+  tags: ["外卖", "驴肉", "特色", "口味看人"]
+  opening_hours: "9:00-21:00"
+  price: "人均20元"
+
+- id: 49
+  name: "私町Osaka寿司"
+  category: "外卖"
+  subcategory: "日料"
+  rating: 4.2
+  like_count: 42
+  address: "紫金港周边配送 / 有堂食"
+  description: "价格偏贵，鳗鱼饭推荐，有堂食选项"
+  recommender: "学长推荐"
+  date: "2024-06-05"
+  image: "https://picsum.photos/600/400?random=49"
+  tags: ["外卖", "寿司", "鳗鱼饭", "有堂食"]
+  opening_hours: "10:30-21:30"
+  price: "人均45元"
+
+# =============================================
+# 商场门店（多人聚餐向）
+# =============================================
+
+- id: 50
+  name: "韩宫宴烤肉"
+  category: "约会聚餐"
+  subcategory: "商场 · 韩式烤肉"
+  rating: 4.6
+  like_count: 90
+  address: "紫金港周边商场"
+  description: "个人心中top级韩式烤肉，芝士玉米粒必点，可一人食但不推荐"
+  recommender: "学姐推荐"
+  date: "2024-06-06"
+  image: "https://picsum.photos/600/400?random=50"
+  tags: ["聚餐", "烤肉", "韩式", "必点"]
+  opening_hours: "11:00-22:00"
+  price: "人均95元"
+
+- id: 51
+  name: "牛new寿喜烧"
+  category: "约会聚餐"
+  subcategory: "商场 · 自助"
+  rating: 4.5
+  like_count: 85
+  address: "紫金港周边商场"
+  description: "连锁自助，周末/节假日人多，寿喜锅、肉类、甜品都不错，可大众点评取号，咸鱼买券更划算"
+  recommender: "学长推荐"
+  date: "2024-06-06"
+  image: "https://picsum.photos/600/400?random=51"
+  tags: ["聚餐", "自助", "寿喜烧", "周末人多"]
+  opening_hours: "11:00-22:00"
+  price: "人均120元"
+
+- id: 52
+  name: "老外婆 / 新发现"
+  category: "约会聚餐"
+  subcategory: "商场 · 江浙菜"
+  rating: 4.4
+  like_count: 75
+  address: "紫金港周边商场"
+  description: "江浙菜，口味不错，适合多人聚餐，有外卖选项"
+  recommender: "学姐推荐"
+  date: "2024-06-06"
+  image: "https://picsum.photos/600/400?random=52"
+  tags: ["聚餐", "江浙菜", "多人", "有外卖"]
+  opening_hours: "10:30-21:30"
+  price: "人均65元"
+
+- id: 53
+  name: "太二酸菜鱼"
+  category: "约会聚餐"
+  subcategory: "商场 · 酸菜鱼"
+  rating: 4.5
+  like_count: 88
+  address: "紫金港周边商场"
+  description: "不算很辣，适合2-3人吃，排队常见"
+  recommender: "学长推荐"
+  date: "2024-06-06"
+  image: "https://picsum.photos/600/400?random=53"
+  tags: ["聚餐", "酸菜鱼", "2-3人", "排队"]
+  opening_hours: "11:00-21:30"
+  price: "人均80元"
+
+- id: 54
+  name: "小南椰原生态椰子鸡"
+  category: "约会聚餐"
+  subcategory: "商场 · 椰子鸡"
+  rating: 4.4
+  like_count: 70
+  address: "紫金港周边商场"
+  description: "煲仔饭好吃，鸡肉嫩，适合2-3人"
+  recommender: "学姐推荐"
+  date: "2024-06-06"
+  image: "https://picsum.photos/600/400?random=54"
+  tags: ["聚餐", "椰子鸡", "煲仔饭", "2-3人"]
+  opening_hours: "11:00-21:30"
+  price: "人均85元"
+
+# =============================================
+# 约会 / 生日聚餐（漂亮饭）
+# =============================================
+
+- id: 55
+  name: "反正(杭州中心店)"
+  category: "约会聚餐"
+  subcategory: "约会 · 西餐"
+  rating: 4.7
+  like_count: 95
+  address: "杭州中心"
+  description: "价格偏贵但口味好，牛排、提拉米苏推荐，服务好，适合约会"
+  recommender: "学姐推荐"
+  date: "2024-06-07"
+  image: "https://picsum.photos/600/400?random=55"
+  tags: ["约会", "西餐", "牛排", "服务好"]
+  opening_hours: "11:00-22:00"
+  price: "人均200元"
+
+- id: 56
+  name: "小筑里融合花园餐厅"
+  category: "约会聚餐"
+  subcategory: "生日 · 花园餐厅"
+  rating: 4.3
+  like_count: 62
+  address: "紫金港附近"
+  description: "独栋洋房，环境漂亮，适合生日聚餐，口味一般"
+  recommender: "学妹推荐"
+  date: "2024-06-07"
+  image: "https://picsum.photos/600/400?random=56"
+  tags: ["生日", "花园", "环境好", "洋房"]
+  opening_hours: "11:00-21:30"
+  price: "人均150元"
+
+- id: 57
+  name: "茴悦(杭州中心店)"
+  category: "约会聚餐"
+  subcategory: "约会 · 西餐"
+  rating: 4.4
+  like_count: 68
+  address: "杭州中心"
+  description: "价格中上，酸奶碗好吃，西餐不算正宗，环境优美，适合约会"
+  recommender: "学姐推荐"
+  date: "2024-06-07"
+  image: "https://picsum.photos/600/400?random=57"
+  tags: ["约会", "西餐", "环境优美", "酸奶碗"]
+  opening_hours: "11:00-22:00"
+  price: "人均130元"
+
+- id: 58
+  name: "缦云里花园西餐"
+  category: "约会聚餐"
+  subcategory: "生日 · 西餐"
+  rating: 4.3
+  like_count: 55
+  address: "紫金港附近"
+  description: "紫金港附近有店，环境好，适合生日聚餐，口味还行，价格偏上"
+  recommender: "学长推荐"
+  date: "2024-06-07"
+  image: "https://picsum.photos/600/400?random=58"
+  tags: ["生日", "西餐", "环境好", "紫金港附近"]
+  opening_hours: "11:00-21:30"
+  price: "人均140元"
+
+- id: 59
+  name: "nanasawa garden"
+  category: "约会聚餐"
+  subcategory: "约会 · 咖啡西餐"
+  rating: 4.5
+  like_count: 72
+  address: "天目里"
+  description: "位置难找，环境安静，改良西餐，印花咖啡是特色，可微信预定花束"
+  recommender: "学姐推荐"
+  date: "2024-06-07"
+  image: "https://picsum.photos/600/400?random=59"
+  tags: ["约会", "天目里", "安静", "花束", "特色咖啡"]
+  opening_hours: "10:00-21:00"
+  price: "人均120元"

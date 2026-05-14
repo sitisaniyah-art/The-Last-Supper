@@ -1,0 +1,322 @@
+---
+layout: single
+title: ZJU生存指南
+permalink: /zju-survival/
+author_profile: false
+---
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+  <h2 class="section-title" style="margin:0;"><i class="fas fa-book-open" style="color:var(--primary-color);"></i> ZJU生存指南</h2>
+  <a href="https://github.com/{{ site.github_username }}/{{ site.github_repo }}/issues/new?assignees={{ site.github_username }}&labels=survival-guide&template=suggest-guide.yml&title=%5B%E7%94%9F%E5%AD%98%E6%8C%87%E5%8D%97%5D+"
+     target="_blank" rel="noopener" class="btn btn-primary" style="font-size:0.9rem;">
+    <i class="fas fa-plus-circle"></i> 推荐资源
+  </a>
+</div>
+<p style="color:var(--text-light);margin-bottom:2rem;line-height:1.7;">
+  汇集浙江大学学生必备的生存信息、CC98精华帖和各类实用网站导航，帮助你在ZJU的学习和生活更加顺利。
+</p>
+
+<!-- 搜索栏 -->
+<div class="survival-search-bar">
+  <div class="survival-search-box">
+    <i class="fas fa-search"></i>
+    <input type="text" id="survival-search" placeholder="搜索指南标题、描述、标签...">
+  </div>
+  <div class="survival-source-filter">
+    <button class="survival-source-btn active" data-source="all">全部</button>
+    <button class="survival-source-btn" data-source="CC98精华帖">CC98</button>
+    <button class="survival-source-btn" data-source="官网">官网</button>
+    <button class="survival-source-btn" data-source="学长学姐整理">学长学姐</button>
+  </div>
+</div>
+
+<!-- 主体双栏布局 -->
+<div class="survival-layout">
+  <!-- 左侧边栏 -->
+  <aside class="survival-sidebar" id="survival-sidebar">
+    <div class="survival-sidebar-title">分类导航</div>
+    <nav class="survival-nav">
+      <button class="survival-nav-item active" data-category="all">
+        <i class="fas fa-th-large"></i> 全部指南
+        <span class="survival-nav-count" id="count-all"></span>
+      </button>
+      {% for cat in site.data.zju-survival.categories %}
+      <button class="survival-nav-item" data-category="{{ cat.id }}">
+        <i class="fas {{ cat.icon }}"></i> {{ cat.name }}
+        <span class="survival-nav-count" id="count-{{ cat.id }}"></span>
+      </button>
+      {% endfor %}
+    </nav>
+
+    <!-- 快捷网站 -->
+    <div class="survival-sidebar-title" style="margin-top:1.5rem;">快捷网站</div>
+    <div class="survival-quick-links">
+      {% for w in site.data.zju-survival.websites %}
+      <a href="{{ w.url }}" target="_blank" rel="noopener" class="survival-quick-link" title="{{ w.description }}">
+        <i class="{{ w.icon }}"></i>
+        <span>{{ w.name }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </aside>
+
+  <!-- 右侧内容 -->
+  <main class="survival-content">
+    <!-- CC98 特别区域 -->
+    <div class="survival-cc98-banner">
+      <div class="survival-cc98-header">
+        <i class="fas fa-fire" style="color:var(--danger-color);"></i>
+        <h3>CC98 精华帖</h3>
+      </div>
+      <p style="color:var(--text-light);font-size:0.9rem;margin-bottom:0.75rem;line-height:1.6;">
+        CC98是浙大最大的校内论坛，汇集了无数学长学姐的经验分享。部分帖子需要校内网或VPN访问。
+        <a href="https://www.cc98.org" target="_blank" rel="noopener" style="color:var(--primary-color);text-decoration:none;font-weight:600;">
+          前往CC98 <i class="fas fa-external-link-alt" style="font-size:0.75rem;"></i>
+        </a>
+      </p>
+      <div class="survival-cc98-tips">
+        <span class="survival-cc98-tip"><i class="fas fa-wifi"></i> 校外访问需连接VPN</span>
+        <span class="survival-cc98-tip"><i class="fas fa-user-plus"></i> 新生可用学号注册</span>
+        <span class="survival-cc98-tip"><i class="fas fa-shield-alt"></i> <a href="http://vpn.zju.edu.cn" target="_blank" rel="noopener" style="color:inherit;">VPN使用教程</a></span>
+      </div>
+    </div>
+
+    <!-- 结果统计 -->
+    <div id="survival-count" style="margin-bottom:1rem;color:var(--text-light);font-size:0.9rem;"></div>
+
+    <!-- 指南卡片网格 -->
+    <div class="survival-grid" id="survival-grid"></div>
+
+    <!-- 无结果 -->
+    <div class="state-message" id="survival-no-results" style="display:none;">
+      <i class="fas fa-search"></i>
+      <p>没有找到匹配的指南，试试其他关键词？</p>
+    </div>
+
+    <!-- 实用网站导航（底部完整版） -->
+    <hr style="margin:2.5rem 0;border:none;border-top:1px solid var(--border-color);">
+    <h3 style="font-size:1.2rem;margin-bottom:1.25rem;"><i class="fas fa-compass" style="color:var(--primary-color);"></i> 实用网站导航</h3>
+    <div class="survival-website-grid" id="survival-website-grid"></div>
+  </main>
+</div>
+
+<!-- 嵌入数据 -->
+<script>
+var allGuides = [
+  {% for g in site.data.zju-survival.guides %}
+  {
+    "title": "{{ g.title | escape }}",
+    "category": "{{ g.category }}",
+    "source": "{{ g.source }}",
+    "description": "{{ g.description | escape }}",
+    "url": "{{ g.url }}",
+    "tags": {{ g.tags | jsonify }},
+    "date": "{{ g.date }}",
+    "need_intranet": {{ g.need_intranet }}
+  }{% unless forloop.last %},{% endunless %}
+  {% endfor %}
+];
+
+var allCategories = [
+  {% for c in site.data.zju-survival.categories %}
+  { "id": "{{ c.id }}", "name": "{{ c.name }}", "icon": "{{ c.icon }}", "emoji": "{{ c.emoji }}" }{% unless forloop.last %},{% endunless %}
+  {% endfor %}
+];
+
+var allWebsites = [
+  {% for w in site.data.zju-survival.websites %}
+  {
+    "name": "{{ w.name | escape }}",
+    "icon": "{{ w.icon }}",
+    "description": "{{ w.description | escape }}",
+    "url": "{{ w.url }}",
+    "category": "{{ w.category }}"
+  }{% unless forloop.last %},{% endunless %}
+  {% endfor %}
+];
+</script>
+<script>
+(function() {
+  /* ============================================================
+     Category info map
+     ============================================================ */
+  var catMap = {};
+  allCategories.forEach(function(c) { catMap[c.id] = c; });
+
+  var CAT_COLORS = {
+    'freshman': '#ef4444',
+    'study': '#2563eb',
+    'campus-life': '#10b981',
+    'resources': '#8b5cf6',
+    'transport': '#f59e0b',
+    'finance': '#06b6d4',
+    'tools': '#6366f1',
+    'faq': '#ec4899'
+  };
+
+  /* ============================================================
+     Update sidebar counts
+     ============================================================ */
+  function updateCounts() {
+    var allCount = allGuides.length;
+    document.getElementById('count-all').textContent = allCount;
+    allCategories.forEach(function(c) {
+      var el = document.getElementById('count-' + c.id);
+      if (el) {
+        var count = allGuides.filter(function(g) { return g.category === c.id; }).length;
+        el.textContent = count;
+      }
+    });
+  }
+
+  /* ============================================================
+     Highlight search terms
+     ============================================================ */
+  function highlight(text, term) {
+    if (!term) return text;
+    var escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    var re = new RegExp('(' + escaped + ')', 'gi');
+    return text.replace(re, '<mark style="background-color:rgba(37,99,235,0.2);color:inherit;padding:0 2px;border-radius:2px;">$1</mark>');
+  }
+
+  /* ============================================================
+     Build guide card
+     ============================================================ */
+  function buildGuideCard(g, term) {
+    var cat = catMap[g.category] || {};
+    var color = CAT_COLORS[g.category] || '#6b7280';
+    var tagsHtml = (g.tags || []).map(function(t) {
+      return '<span class="tag">' + highlight(t, term) + '</span>';
+    }).join('');
+    var intranetBadge = g.need_intranet
+      ? '<span class="survival-intranet-badge" title="需要校内网或VPN访问"><i class="fas fa-wifi"></i> 需内网</span>'
+      : '';
+    var sourceColors = {
+      'CC98精华帖': '#ef4444',
+      '官网': '#10b981',
+      '学长学姐整理': '#8b5cf6'
+    };
+    var sourceColor = sourceColors[g.source] || '#6b7280';
+
+    return '<div class="survival-card" style="border-left:3px solid ' + color + ';">' +
+      '<div class="survival-card-header">' +
+        '<span class="survival-card-cat" style="background:' + color + '15;color:' + color + ';">' +
+          (cat.emoji || '') + ' ' + (cat.name || g.category) +
+        '</span>' +
+        '<span class="survival-card-source" style="background:' + sourceColor + '15;color:' + sourceColor + ';">' +
+          g.source +
+        '</span>' +
+        intranetBadge +
+      '</div>' +
+      '<h4 class="survival-card-title">' + highlight(g.title, term) + '</h4>' +
+      '<p class="survival-card-desc">' + highlight(g.description, term) + '</p>' +
+      '<div class="survival-card-tags">' + tagsHtml + '</div>' +
+      '<div class="survival-card-footer">' +
+        '<span class="survival-card-date"><i class="far fa-calendar-alt"></i> ' + g.date + '</span>' +
+        '<a href="' + g.url + '" target="_blank" rel="noopener" class="survival-card-link">' +
+          '<i class="fas fa-external-link-alt"></i> 查看' +
+        '</a>' +
+      '</div>' +
+    '</div>';
+  }
+
+  /* ============================================================
+     Filter + render
+     ============================================================ */
+  var currentCategory = 'all';
+  var currentSource = 'all';
+
+  function filterAndRender() {
+    var term = document.getElementById('survival-search').value.toLowerCase().trim();
+
+    var result = allGuides.filter(function(g) {
+      var matchCat = currentCategory === 'all' || g.category === currentCategory;
+      var matchSource = currentSource === 'all' || g.source === currentSource;
+      var matchSearch = term === '' ||
+        g.title.toLowerCase().includes(term) ||
+        g.description.toLowerCase().includes(term) ||
+        (g.tags && g.tags.some(function(t) { return t.toLowerCase().includes(term); }));
+      return matchCat && matchSource && matchSearch;
+    });
+
+    // Sort by date descending
+    result.sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
+
+    var grid = document.getElementById('survival-grid');
+    var empty = document.getElementById('survival-no-results');
+    var countEl = document.getElementById('survival-count');
+
+    if (result.length === 0) {
+      grid.innerHTML = '';
+      empty.style.display = 'block';
+      countEl.textContent = '';
+      return;
+    }
+
+    empty.style.display = 'none';
+    var catLabel = currentCategory === 'all' ? '全部分类' : (catMap[currentCategory] ? catMap[currentCategory].name : currentCategory);
+    countEl.textContent = catLabel + ' · 共 ' + result.length + ' 条指南';
+    grid.innerHTML = result.map(function(g) { return buildGuideCard(g, term); }).join('');
+  }
+
+  /* ============================================================
+     Render website grid
+     ============================================================ */
+  function renderWebsites() {
+    var grid = document.getElementById('survival-website-grid');
+    var grouped = {};
+    allWebsites.forEach(function(w) {
+      if (!grouped[w.category]) grouped[w.category] = [];
+      grouped[w.category].push(w);
+    });
+
+    var html = '';
+    Object.keys(grouped).forEach(function(cat) {
+      html += '<div class="survival-website-group">';
+      html += '<div class="survival-website-group-title">' + cat + '</div>';
+      html += '<div class="survival-website-items">';
+      grouped[cat].forEach(function(w) {
+        html += '<a href="' + w.url + '" target="_blank" rel="noopener" class="survival-website-card" title="' + w.description + '">' +
+          '<i class="' + w.icon + '"></i>' +
+          '<strong>' + w.name + '</strong>' +
+          '<span>' + w.description + '</span>' +
+        '</a>';
+      });
+      html += '</div></div>';
+    });
+    grid.innerHTML = html;
+  }
+
+  /* ============================================================
+     Event binding
+     ============================================================ */
+  document.addEventListener('DOMContentLoaded', function() {
+    updateCounts();
+    renderWebsites();
+    filterAndRender();
+
+    // Search
+    document.getElementById('survival-search').addEventListener('input', filterAndRender);
+
+    // Category sidebar
+    document.querySelectorAll('.survival-nav-item').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.survival-nav-item').forEach(function(b) { b.classList.remove('active'); });
+        this.classList.add('active');
+        currentCategory = this.getAttribute('data-category');
+        filterAndRender();
+      });
+    });
+
+    // Source filter
+    document.querySelectorAll('.survival-source-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.survival-source-btn').forEach(function(b) { b.classList.remove('active'); });
+        this.classList.add('active');
+        currentSource = this.getAttribute('data-source');
+        filterAndRender();
+      });
+    });
+  });
+})();
+</script>

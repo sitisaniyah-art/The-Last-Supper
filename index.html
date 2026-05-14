@@ -1,0 +1,76 @@
+---
+layout: single
+title: 首页
+permalink: /
+author_profile: false
+read_time: false
+share: false
+---
+
+<div style="text-align:center;padding:3rem 1rem 2rem;">
+  <h1 style="font-size:2.5rem;font-weight:800;margin-bottom:0.5rem;">
+    <i class="fas fa-utensils" style="color:var(--primary-color);"></i> 最后的晚餐
+  </h1>
+  <p style="font-size:1.2rem;color:var(--text-light);max-width:600px;margin:0 auto 2rem;line-height:1.7;">
+    学长学姐为你准备的学习资源互助社区<br>
+    分享知识，解答疑惑，一起进步
+  </p>
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+    <a href="{{ '/resources/' | relative_url }}" class="btn btn-primary">
+      <i class="fas fa-book-open"></i> 浏览资源
+    </a>
+    <a href="{{ '/questions/' | relative_url }}" class="btn btn-outline">
+      <i class="fas fa-question-circle"></i> 我要提问
+    </a>
+  </div>
+</div>
+
+<div class="feature-grid">
+  <div class="feature-card">
+    <i class="fas fa-book-open"></i>
+    <h3>学习资源</h3>
+    <p>高数、线代、编程、英语等多学科资源，按年级和类型分类整理，轻松找到你需要的资料</p>
+    <a href="{{ '/resources/' | relative_url }}" class="btn btn-outline" style="font-size:0.85rem;">浏览资源 &rarr;</a>
+  </div>
+  <div class="feature-card">
+    <i class="fas fa-comments"></i>
+    <h3>疑问区</h3>
+    <p>遇到学习难题？在这里提问，学长学姐为你解答。支持匿名提问，也可以附上截图</p>
+    <a href="{{ '/questions/' | relative_url }}" class="btn btn-outline" style="font-size:0.85rem;">去提问 &rarr;</a>
+  </div>
+  <div class="feature-card">
+    <i class="fas fa-users"></i>
+    <h3>社区贡献</h3>
+    <p>查看贡献排行榜，上传你的学习笔记和资料，帮助更多同学一起进步</p>
+    <a href="{{ '/community/' | relative_url }}" class="btn btn-outline" style="font-size:0.85rem;">加入我们 &rarr;</a>
+  </div>
+</div>
+
+<hr style="margin:3rem 0;border:none;border-top:1px solid var(--border-color);">
+
+<div style="text-align:center;">
+  <h2 style="font-size:1.5rem;margin-bottom:1.5rem;">如何使用？</h2>
+  <div class="feature-grid" style="max-width:800px;margin:0 auto;">
+    <div style="text-align:center;padding:1rem;">
+      <div style="width:48px;height:48px;background:var(--primary-light);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:0.75rem;">
+        <i class="fas fa-search" style="color:var(--primary-color);font-size:1.2rem;"></i>
+      </div>
+      <h4 style="margin-bottom:0.5rem;">搜索资源</h4>
+      <p style="color:var(--text-light);font-size:0.9rem;">按学科、年级、类型筛选，快速找到目标资料</p>
+    </div>
+    <div style="text-align:center;padding:1rem;">
+      <div style="width:48px;height:48px;background:var(--primary-light);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:0.75rem;">
+        <i class="fas fa-download" style="color:var(--primary-color);font-size:1.2rem;"></i>
+      </div>
+      <h4 style="margin-bottom:0.5rem;">下载使用</h4>
+      <p style="color:var(--text-light);font-size:0.9rem;">获取课件、真题、笔记等学习资料</p>
+    </div>
+    <div style="text-align:center;padding:1rem;">
+      <div style="width:48px;height:48px;background:var(--primary-light);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:0.75rem;">
+        <i class="fas fa-hands-helping" style="color:var(--primary-color);font-size:1.2rem;"></i>
+      </div>
+      <h4 style="margin-bottom:0.5rem;">分享回馈</h4>
+      <p style="color:var(--text-light);font-size:0.9rem;">上传你的笔记，回答同学问题，一起建设社区</p>
+    </div>
+  </div>
+</div>

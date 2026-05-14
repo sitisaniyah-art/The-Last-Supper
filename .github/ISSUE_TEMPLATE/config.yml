@@ -1,0 +1,20 @@
+# 是否允许用户创建空白Issue（强烈建议设为false，强制使用模板）
+blank_issues_enabled: false
+
+# 模板选择页面显示的链接
+contact_links:
+  - name: 查看已有问题
+    url: https://github.com/sitisaniyah-art/The-Last-Supper/issues
+    about: 先搜索是否已经有类似的问题
+
+  - name: 查看学习资源
+    url: https://sitisaniyah-art.github.io/The-Last-Supper/resources/
+    about: 先在资源库中查找相关资料
+
+  - name: 浏览嗨玩榜
+    url: https://sitisaniyah-art.github.io/The-Last-Supper/zju-fun/
+    about: 查看浙大紫金港附近吃喝玩乐推荐
+
+  - name: 浏览生存指南
+    url: https://sitisaniyah-art.github.io/The-Last-Supper/zju-survival/
+    about: 查看浙大学生必备生存信息

@@ -1,0 +1,71 @@
+# Site Settings
+title: 最后的晚餐
+subtitle: 学习资源互助社区
+description: 最后的晚餐专用资源互助聚集地，为学弟学妹提供学习资源分享和问答服务
+url: "https://sitisaniyah-art.github.io"
+baseurl: "/The-Last-Supper"
+github_username: "sitisaniyah-art"
+github_repo: "The-Last-Supper"
+
+# Theme
+remote_theme: mmistakes/minimal-mistakes
+minimal_mistakes_skin: "default"
+
+# Plugins
+plugins:
+  - jekyll-remote-theme
+  - jekyll-include-cache
+  - jekyll-paginate
+
+# Site Settings
+locale: "zh-CN"
+permalink: /:categories/:title/
+paginate: 15
+paginate_path: /page:num/
+search: true
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      values:
+        layout: single
+        author_profile: false
+        read_time: false
+        share: false
+        related: false
+  - scope:
+      path: "_pages"
+      values:
+        layout: single
+        sidebar:
+          nav: "docs"
+
+# Build
+include:
+  - _pages
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - LICENSE
+  - README.md
+  - vendor
+  - ".gitignore"
+
+# Outputting
+markdown: kramdown
+highlighter: rouge
+
+# Collections
+collections:
+  resources:
+    output: true
+    permalink: /resources/:path/
+
+# Social / Footer
+footer:
+  links:
+    - label: "GitHub"
+      icon: "fab fa-fw fa-github"
+      url: "https://github.com/sitisaniyah-art/The-Last-Supper"

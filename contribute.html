@@ -1,11 +1,92 @@
-- name: 学长A
-  avatar: https://github.com/xxx.png
-  resources: 15
-  answers: 32
-  points: 120
+---
+layout: single
+title: 贡献资源
+permalink: /contribute/
+author_profile: false
+---
 
-- name: 学姐B
-  avatar: https://github.com/yyy.png
-  resources: 10
-  answers: 45
-  points: 115
+<h2 class="section-title"><i class="fas fa-hands-helping"></i> 贡献资源</h2>
+
+<p style="color:var(--text-light);line-height:1.7;margin-bottom:2rem;">
+  这个平台由学长学姐共同建设，你的每一份贡献都能帮助到更多的学弟学妹。以下是贡献资源的步骤：
+</p>
+
+<div class="step-list">
+  <div class="step-item">
+    <h3 style="margin-bottom:0.5rem;">Fork 本仓库</h3>
+    <p style="color:var(--text-light);line-height:1.6;">
+      访问 <a href="https://github.com/sitisaniyah-art/The-Last-Supper" target="_blank">GitHub 仓库</a>，点击右上角的 Fork 按钮，将仓库复制到你的账号下。
+    </p>
+  </div>
+  <div class="step-item">
+    <h3 style="margin-bottom:0.5rem;">添加资源数据</h3>
+    <p style="color:var(--text-light);line-height:1.6;">
+      编辑 <code>_data/resources.yml</code> 文件，在末尾添加你的资源信息。格式如下：
+    </p>
+    <pre style="background:var(--bg-alt);padding:1rem;border-radius:var(--radius);overflow-x:auto;font-size:0.85rem;margin-top:0.75rem;"><code>- id: 16
+  title: 你的资源标题
+  category: 数学          # 数学/编程/英语/物理/其他
+  subcategory: 高等数学    # 具体学科
+  grade: 大一             # 大一/大二/大三/通用
+  type: 真题              # 真题/课件/笔记/习题
+  uploader: 你的昵称
+  date: 2024-06-01
+  downloads: 0
+  rating: 0
+  description: 资源的详细描述
+  link: https://你的下载链接
+  tags: [标签1, 标签2]</code></pre>
+  </div>
+  <div class="step-item">
+    <h3 style="margin-bottom:0.5rem;">提交 Pull Request</h3>
+    <p style="color:var(--text-light);line-height:1.6;">
+      修改完成后，提交 Pull Request。我们会尽快审核并合并你的贡献。
+    </p>
+  </div>
+</div>
+
+<hr style="margin:2.5rem 0;border:none;border-top:1px solid var(--border-color);">
+
+<h2 class="section-title"><i class="fas fa-trophy"></i> 贡献排行榜</h2>
+
+<p style="color:var(--text-light);margin-bottom:1.5rem;">感谢以下同学的无私贡献！</p>
+
+<div style="overflow-x:auto;">
+  <table class="leaderboard-table">
+    <thead>
+      <tr>
+        <th class="leaderboard-rank">排名</th>
+        <th>贡献者</th>
+        <th>资源数</th>
+        <th>回答数</th>
+        <th>积分</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% assign sorted = site.data.contributors | sort: "points" | reverse %}
+      {% for c in sorted %}
+      <tr>
+        <td class="leaderboard-rank">
+          {% if forloop.index == 1 %}
+            <i class="fas fa-crown" style="color:#f59e0b;"></i>
+          {% elsif forloop.index == 2 %}
+            <i class="fas fa-medal" style="color:#94a3b8;"></i>
+          {% elsif forloop.index == 3 %}
+            <i class="fas fa-medal" style="color:#cd7f32;"></i>
+          {% else %}
+            {{ forloop.index }}
+          {% endif %}
+        </td>
+        <td>
+          <img class="leaderboard-avatar" src="{{ c.avatar }}" alt="{{ c.name }}" loading="lazy">
+          <strong>{{ c.name }}</strong>
+          {% if c.bio %}<br><small style="color:var(--text-lighter);">{{ c.bio }}</small>{% endif %}
+        </td>
+        <td>{{ c.resources }}</td>
+        <td>{{ c.answers }}</td>
+        <td class="leaderboard-points">{{ c.points }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,75 @@
+# =============================================
+# 贡献者排行数据
+# =============================================
+
+- name: 学长A
+  github: sitisaniyah-art
+  avatar: https://github.com/sitisaniyah-art.png
+  resources: 15
+  answers: 32
+  points: 120
+  join_date: "2024-01"
+  bio: "计算机科学专业，热爱分享编程和数学资源"
+
+- name: 学姐B
+  github: contributor-b
+  avatar: https://avatars.githubusercontent.com/u/2?v=4
+  resources: 10
+  answers: 45
+  points: 115
+  join_date: "2024-02"
+  bio: "数学专业，擅长高数和线代"
+
+- name: 学长C
+  github: contributor-c
+  avatar: https://avatars.githubusercontent.com/u/3?v=4
+  resources: 8
+  answers: 28
+  points: 88
+  join_date: "2024-02"
+  bio: "软件工程专业，专注数据结构与算法"
+
+- name: 学姐D
+  github: contributor-d
+  avatar: https://avatars.githubusercontent.com/u/4?v=4
+  resources: 7
+  answers: 35
+  points: 85
+  join_date: "2024-03"
+  bio: "英语六级600+，分享英语备考经验"
+
+- name: 学姐E
+  github: contributor-e
+  avatar: https://avatars.githubusercontent.com/u/5?v=4
+  resources: 6
+  answers: 22
+  points: 70
+  join_date: "2024-03"
+  bio: "物理专业，大学物理课程笔记达人"
+
+- name: 学长F
+  github: contributor-f
+  avatar: https://avatars.githubusercontent.com/u/6?v=4
+  resources: 5
+  answers: 18
+  points: 58
+  join_date: "2024-04"
+  bio: "大二学长，热心解答高数问题"
+
+- name: 学长G
+  github: contributor-g
+  avatar: https://avatars.githubusercontent.com/u/7?v=4
+  resources: 4
+  answers: 15
+  points: 47
+  join_date: "2024-04"
+  bio: "Java后端开发方向，分享Java学习资源"
+
+- name: 学姐J
+  github: contributor-j
+  avatar: https://avatars.githubusercontent.com/u/8?v=4
+  resources: 3
+  answers: 12
+  points: 36
+  join_date: "2024-05"
+  bio: "文科生，擅长整理思政课笔记"

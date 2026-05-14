@@ -1,45 +1,90 @@
 ---
-layout: default
+layout: single
 title: 学习资源
+permalink: /resources/
+author_profile: false
 ---
 
-<section class="section">
-  <div class="container">
-    <h2 class="section-title">学习资源库</h2>
-    
-    <!-- 筛选栏 -->
-    <div class="filter-bar">
-      <div class="filter-group">
-        <label>学科：</label>
-        <select id="category-filter">
-          <option value="all">全部</option>
-          <option value="数学">数学</option>
-          <option value="编程">编程</option>
-          <option value="英语">英语</option>
-          <option value="物理">物理</option>
-        </select>
-      </div>
-      
-      <div class="filter-group">
-        <label>年级：</label>
-        <select id="grade-filter">
-          <option value="all">全部</option>
-          <option value="大一">大一</option>
-          <option value="大二">大二</option>
-          <option value="大三">大三</option>
-          <option value="通用">通用</option>
-        </select>
-      </div>
-      
-      <div class="search-box">
-        <input type="text" id="resource-search" placeholder="搜索资源...">
-        <button><i class="fas fa-search"></i></button>
-      </div>
-    </div>
-    
-    <!-- 资源网格 -->
-    <div class="resources-grid" id="resources-grid">
-      <!-- 资源卡片会通过JS动态生成 -->
-    </div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+  <h2 class="section-title" style="margin:0;"><i class="fas fa-book-open"></i> 学习资源库</h2>
+  <a href="{{ '/contribute/' | relative_url }}" class="btn btn-primary" style="font-size:0.9rem;">
+    <i class="fas fa-plus"></i> 贡献资源
+  </a>
+</div>
+
+<!-- 筛选栏 -->
+<div class="filter-bar">
+  <div class="filter-group">
+    <label>学科：</label>
+    <select id="category-filter">
+      <option value="all">全部学科</option>
+      <option value="数学">数学</option>
+      <option value="编程">编程</option>
+      <option value="英语">英语</option>
+      <option value="物理">物理</option>
+      <option value="其他">其他</option>
+    </select>
   </div>
-</section>
+  <div class="filter-group">
+    <label>年级：</label>
+    <select id="grade-filter">
+      <option value="all">全部年级</option>
+      <option value="大一">大一</option>
+      <option value="大二">大二</option>
+      <option value="大三">大三</option>
+      <option value="通用">通用</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <label>类型：</label>
+    <select id="type-filter">
+      <option value="all">全部类型</option>
+      <option value="真题">真题</option>
+      <option value="课件">课件</option>
+      <option value="笔记">笔记</option>
+      <option value="习题">习题</option>
+    </select>
+  </div>
+  <div class="search-box">
+    <input type="text" id="resource-search" placeholder="搜索资源名称、标签...">
+    <button><i class="fas fa-search"></i></button>
+  </div>
+</div>
+
+<!-- 资源统计 -->
+<div id="resource-count" style="margin-bottom:1rem;color:var(--text-light);font-size:0.9rem;"></div>
+
+<!-- 资源网格 -->
+<div class="resources-grid" id="resources-grid"></div>
+
+<!-- 无结果提示 -->
+<div class="state-message" id="no-results" style="display:none;">
+  <i class="fas fa-search"></i>
+  <p>没有找到匹配的资源，试试其他关键词？</p>
+</div>
+
+<!-- 将 YAML 数据通过 Liquid 嵌入为 JSON -->
+<script>
+const allResources = [
+  {% for r in site.data.resources %}
+  {
+    "id": {{ r.id }},
+    "title": "{{ r.title | escape }}",
+    "category": "{{ r.category }}",
+    "subcategory": "{{ r.subcategory }}",
+    "grade": "{{ r.grade }}",
+    "type": "{{ r.type }}",
+    "uploader": "{{ r.uploader }}",
+    "date": "{{ r.date }}",
+    "downloads": {{ r.downloads }},
+    "rating": {{ r.rating }},
+    "description": "{{ r.description | escape }}",
+    "link": "{{ r.link }}",
+    "tags": {{ r.tags | jsonify }}
+  }{% unless forloop.last %},{% endunless %}
+  {% endfor %}
+];
+</script>
+<script src="{{ '/assets/js/favorites.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/lib/filter-resources.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/resources.js' | relative_url }}"></script>

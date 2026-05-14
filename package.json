@@ -1,0 +1,12 @@
+{
+  "name": "the-last-supper",
+  "version": "1.0.0",
+  "private": true,
+  "description": "最后的晚餐学习资源互助社区",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
