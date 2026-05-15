@@ -1,0 +1,123 @@
+name: 处理用户提交
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  process:
+    runs-on: ubuntu-latest
+    # 仅处理带特定 label 的 Issue
+    if: >
+      contains(github.event.issue.labels.*.name, 'recommendation') ||
+      contains(github.event.issue.labels.*.name, 'resource-submission') ||
+      contains(github.event.issue.labels.*.name, 'survival-guide')
+
+    permissions:
+      issues: write
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout 代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Step 1: 违规检测
+      - name: 内容审核
+        id: moderation
+        run: node .github/scripts/moderation-check.js
+        continue-on-error: true
+
+      # 审核不通过 → 关闭 Issue 并回复
+      - name: 审核不通过 - 关闭 Issue
+        if: steps.moderation.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const reasons = `${{ steps.moderation.outputs.moderation_reasons }}`;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `## ❌ 内容审核未通过\n\n您的提交未通过自动审核，原因如下：\n\n${reasons.split('\n').map(r => r ? `- ${r}` : '').join('\n')}\n\n请修改后重新提交。如有疑问，请联系管理员。`
+            });
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              state: 'closed',
+              state_reason: 'not_planned'
+            });
+
+      # Step 2: 解析 Issue 并生成 YAML（仅审核通过时）
+      - name: 解析提交内容
+        if: steps.moderation.outcome == 'success'
+        id: parse
+        run: node .github/scripts/process-issue.js
+
+      # Step 3: 更新贡献者积分
+      - name: 更新贡献者积分
+        if: steps.moderation.outcome == 'success' && steps.parse.outputs.success == 'true'
+        run: node .github/scripts/update-contributors.js
+
+      # Step 4: 创建分支、提交、推送、创建 PR
+      - name: 创建 PR
+        if: steps.moderation.outcome == 'success' && steps.parse.outputs.success == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # 配置 git
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # 创建分支
+          BRANCH="auto/submission-${{ github.event.issue.number }}"
+          git checkout -b "$BRANCH"
+
+          # 提交更改
+          git add _data/
+          git commit -m "feat: 添加用户提交 - ${{ steps.parse.outputs.entry_title }}"
+
+          # 推送分支
+          git push origin "$BRANCH"
+
+          # 创建 PR
+          ENTRY_TYPE="${{ steps.parse.outputs.entry_type }}"
+          TYPE_LABEL="推荐"
+          if [ "$ENTRY_TYPE" = "survival-guide" ]; then
+            TYPE_LABEL="生存指南"
+          fi
+
+          gh pr create \
+            --title "feat: 新增${TYPE_LABEL} - ${{ steps.parse.outputs.entry_title }}" \
+            --body "## 自动提交 PR
+
+          来自 Issue #${{ github.event.issue.number }} 的${TYPE_LABEL}提交。
+
+          **内容标题：** ${{ steps.parse.outputs.entry_title }}
+          **条目 ID：** ${{ steps.parse.outputs.entry_id }}
+          **审核状态：** ✅ 已通过自动审核
+
+          ---
+          请管理员审核后手动合并。" \
+            --base "master" \
+            --head "$BRANCH"
+
+      # 解析失败 → 回复错误信息
+      - name: 解析失败 - 回复错误
+        if: steps.moderation.outcome == 'success' && steps.parse.outputs.success == 'false'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const errors = `${{ steps.parse.outputs.errors }}`;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `## ❌ 提交信息有误\n\n您的提交存在以下问题：\n\n${errors.split('; ').map(e => e ? `- ${e}` : '').join('\n')}\n\n请修改 Issue 内容后重新提交。`
+            });
