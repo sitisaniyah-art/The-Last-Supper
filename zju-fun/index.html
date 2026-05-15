@@ -88,19 +88,59 @@ const allPlaces = [
 <script>
 (function() {
   /* ============================================================
-     Likes — localStorage, prevents duplicate
+     Likes — localStorage, Auth-aware with user tracking
+     Data format: { [id]: true } (anonymous) or { [id]: ["user1","user2"] } (logged in)
      ============================================================ */
   var LIKE_KEY = 'tls_zju_likes';
   function getLikes() {
     try { return JSON.parse(localStorage.getItem(LIKE_KEY)) || {}; } catch(e) { return {}; }
   }
-  function saveLikes(d) { localStorage.setItem(LIKE_KEY, JSON.stringify(d)); }
-  function isLiked(id) { return !!getLikes()[id]; }
+  function saveLikes(d) {
+    localStorage.setItem(LIKE_KEY, JSON.stringify(d));
+    if (typeof Auth !== 'undefined' && Auth.isLoggedIn()) {
+      Auth.updateField('likes', d);
+    }
+  }
+  function isLiked(id) {
+    var likes = getLikes();
+    if (typeof Auth !== 'undefined' && Auth.isLoggedIn()) {
+      var username = Auth.getUsername();
+      return Array.isArray(likes[id]) && likes[id].indexOf(username) !== -1;
+    }
+    return !!likes[id];
+  }
+  function getLikeCount(id, baseCount) {
+    var likes = getLikes();
+    if (typeof Auth !== 'undefined' && Auth.isLoggedIn()) {
+      return baseCount + (Array.isArray(likes[id]) ? likes[id].length : 0);
+    }
+    return baseCount + (likes[id] ? 1 : 0);
+  }
   function toggleLike(id) {
     var likes = getLikes();
+    if (typeof Auth !== 'undefined' && Auth.isLoggedIn()) {
+      var username = Auth.getUsername();
+      if (!Array.isArray(likes[id])) likes[id] = [];
+      var idx = likes[id].indexOf(username);
+      if (idx !== -1) { likes[id].splice(idx, 1); saveLikes(likes); return false; }
+      likes[id].push(username); saveLikes(likes); return true;
+    }
+    // Anonymous fallback
     if (likes[id]) { delete likes[id]; saveLikes(likes); return false; }
     likes[id] = true; saveLikes(likes); return true;
   }
+  // Migrate old format { [id]: true } to new format
+  (function migrateLikes() {
+    var likes = getLikes();
+    var changed = false;
+    for (var id in likes) {
+      if (likes[id] === true && typeof Auth !== 'undefined' && Auth.isLoggedIn()) {
+        likes[id] = [];
+        changed = true;
+      }
+    }
+    if (changed) localStorage.setItem(LIKE_KEY, JSON.stringify(likes));
+  })();
 
   /* ============================================================
      Star rendering
@@ -176,7 +216,7 @@ const allPlaces = [
           '<span class="zj-tag" style="background:' + color + ';color:#fff;"><i class="fas ' + icon + '"></i> ' + p.category + '</span>' +
           '<button class="zj-like-btn' + (liked ? ' active' : '') + '" data-id="' + p.id + '" title="' + (liked ? '取消点赞' : '点赞') + '">' +
             '<i class="' + (liked ? 'fas' : 'far') + ' fa-heart"></i>' +
-            '<span class="zj-like-count">' + (p.like_count + (liked ? 1 : 0)) + '</span>' +
+            '<span class="zj-like-count">' + getLikeCount(p.id, p.like_count) + '</span>' +
           '</button>' +
         '</div>' +
       '</div>' +
@@ -224,7 +264,7 @@ const allPlaces = [
     if (sort === 'rating')      result.sort(function(a, b) { return b.rating - a.rating; });
     else if (sort === 'date')   result.sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
     else if (sort === 'likes')  result.sort(function(a, b) {
-      return (b.like_count + (isLiked(b.id) ? 1 : 0)) - (a.like_count + (isLiked(a.id) ? 1 : 0));
+      return getLikeCount(b.id, b.like_count) - getLikeCount(a.id, a.like_count);
     });
 
     renderGrid(result);
