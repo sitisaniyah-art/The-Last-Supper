@@ -767,23 +767,62 @@ var PixelChar = (function() {
     _resetIdle();
   }
 
-  // ==================== Drag ====================
-  function _startDrag(e) {
-    if (_dragging || _selectorOpen) return;
-    _dragging = true;
-    _container.classList.add('dragging');
+  // ==================== Drag & Long Press (unified) ====================
+  var _mouseDown = false;
+  var _mouseStart = { x: 0, y: 0 };
+  var _dragThreshold = 5; // px to start drag
+
+  function _onPointerDown(e) {
+    if (_selectorOpen) return;
+    _mouseDown = true;
     var clientX = e.touches ? e.touches[0].clientX : e.clientX;
     var clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    _mouseStart.x = clientX;
+    _mouseStart.y = clientY;
     var rect = _container.getBoundingClientRect();
     _dragOffset.x = clientX - rect.left;
     _dragOffset.y = clientY - rect.top;
     _container.style.transition = 'none';
-    e.preventDefault();
+
+    // Start long press timer
+    _longPressing = true;
+    var indicator = document.getElementById('char-longpress-indicator');
+    if (indicator) indicator.classList.add('active');
+    var progress = indicator ? indicator.querySelector('.lp-progress') : null;
+    if (progress) {
+      progress.style.transition = 'none';
+      progress.style.strokeDashoffset = '100.5';
+      // Force reflow
+      progress.getBoundingClientRect();
+      progress.style.transition = 'stroke-dashoffset 1s linear';
+      progress.style.strokeDashoffset = '0';
+    }
+    _longPressTimer = setTimeout(function() {
+      if (_longPressing && !_dragging) {
+        _showSelector();
+      }
+      _cancelLongPress();
+    }, 1000);
+
+    if (e.type === 'touchstart') e.preventDefault();
   }
-  function _onDrag(e) {
-    if (!_dragging) return;
+
+  function _onPointerMove(e) {
+    if (!_mouseDown) return;
     var clientX = e.touches ? e.touches[0].clientX : e.clientX;
     var clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    var dx = clientX - _mouseStart.x;
+    var dy = clientY - _mouseStart.y;
+
+    // Check if movement exceeds threshold
+    if (!_dragging && (Math.abs(dx) > _dragThreshold || Math.abs(dy) > _dragThreshold)) {
+      // Cancel long press, start drag
+      _cancelLongPress();
+      _dragging = true;
+      _container.classList.add('dragging');
+    }
+
+    if (!_dragging) return;
     var x = clientX - _dragOffset.x;
     var y = clientY - _dragOffset.y;
     x = Math.max(0, Math.min(window.innerWidth - 60, x));
@@ -793,16 +832,20 @@ var PixelChar = (function() {
     _container.style.bottom = 'auto';
     _container.style.right = 'auto';
   }
-  function _endDrag() {
-    if (!_dragging) return;
-    _dragging = false;
-    _container.classList.remove('dragging');
-    _container.style.transition = '';
+
+  function _onPointerUp() {
+    _mouseDown = false;
+    if (_dragging) {
+      _dragging = false;
+      _container.classList.remove('dragging');
+      _container.style.transition = '';
+    }
+    _cancelLongPress();
   }
 
   // ==================== Long Press ====================
   function _startLongPress(e) {
-    if (_dragging || _selectorOpen) return;
+    if (_selectorOpen) return;
     _longPressing = true;
     var indicator = document.getElementById('char-longpress-indicator');
     if (indicator) indicator.classList.add('active');
@@ -1060,17 +1103,13 @@ var PixelChar = (function() {
     _body.addEventListener('click', _onBodyClick);
     _body.addEventListener('dblclick', _onDblClick);
 
-    // Drag
-    _body.addEventListener('mousedown', function(e) { _startDrag(e); });
-    _body.addEventListener('touchstart', function(e) { _startDrag(e); }, { passive: false });
-    document.addEventListener('mousemove', function(e) { _onDrag(e); _trackMouseSpeed(e); });
-    document.addEventListener('touchmove', function(e) { _onDrag(e); }, { passive: false });
-    document.addEventListener('mouseup', function() { _endDrag(); _cancelLongPress(); });
-    document.addEventListener('touchend', function() { _endDrag(); _cancelLongPress(); });
-
-    // Long press for character selector
-    _body.addEventListener('mousedown', function(e) { _startLongPress(e); });
-    _body.addEventListener('touchstart', function(e) { _startLongPress(e); }, { passive: true });
+    // Drag + Long Press (unified)
+    _body.addEventListener('mousedown', _onPointerDown);
+    _body.addEventListener('touchstart', _onPointerDown, { passive: false });
+    document.addEventListener('mousemove', function(e) { _onPointerMove(e); _trackMouseSpeed(e); });
+    document.addEventListener('touchmove', function(e) { _onPointerMove(e); }, { passive: false });
+    document.addEventListener('mouseup', _onPointerUp);
+    document.addEventListener('touchend', _onPointerUp);
 
     // Eye follow
     document.addEventListener('mousemove', _eyeFollow);
