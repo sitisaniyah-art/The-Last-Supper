@@ -14,10 +14,28 @@ var CATEGORY_ACCENTS = {
   '其他': ['#8b5cf6', '#a78bfa']
 };
 
+/* Download tracking */
+var DL_KEY = 'tls_downloads';
+function getDownloads() {
+  try { return JSON.parse(localStorage.getItem(DL_KEY)) || {}; } catch(e) { return {}; }
+}
+function trackDownload(id) {
+  var dl = getDownloads();
+  dl[id] = (dl[id] || 0) + 1;
+  localStorage.setItem(DL_KEY, JSON.stringify(dl));
+  if (typeof Auth !== 'undefined' && Auth.isLoggedIn()) {
+    Auth.updateField('downloads', dl);
+  }
+}
+function getLocalDownloadCount(id) {
+  return getDownloads()[id] || 0;
+}
+
 /* Max downloads across all resources (for popularity bar) */
 var MAX_DOWNLOADS = 0;
 allResources.forEach(function(r) {
-  if (r.downloads > MAX_DOWNLOADS) MAX_DOWNLOADS = r.downloads;
+  var total = r.downloads + getLocalDownloadCount(r.id);
+  if (total > MAX_DOWNLOADS) MAX_DOWNLOADS = total;
 });
 if (MAX_DOWNLOADS === 0) MAX_DOWNLOADS = 1;
 
@@ -38,7 +56,8 @@ function buildCardHTML(r) {
   var heartClass = fav ? 'fas fa-heart favorited' : 'far fa-heart';
   var heartTitle = fav ? '取消收藏' : '收藏';
   var accents = CATEGORY_ACCENTS[r.category] || CATEGORY_ACCENTS['其他'];
-  var popularity = Math.round((r.downloads / MAX_DOWNLOADS) * 100);
+  var totalDl = r.downloads + getLocalDownloadCount(r.id);
+  var popularity = Math.round((totalDl / MAX_DOWNLOADS) * 100);
 
   return '<div class="resource-card" style="--card-accent:' + accents[0] + ';--card-accent-end:' + accents[1] + ';">' +
     '<div class="resource-card-body">' +
@@ -52,7 +71,7 @@ function buildCardHTML(r) {
       '<div class="resource-meta">' +
         '<span class="meta-user"><i class="fas fa-user"></i> ' + r.uploader + '</span>' +
         '<span class="meta-date"><i class="fas fa-calendar"></i> ' + r.date + '</span>' +
-        '<span class="resource-downloads"><i class="fas fa-arrow-down"></i> ' + r.downloads + '</span>' +
+        '<span class="resource-downloads"><i class="fas fa-arrow-down"></i> ' + totalDl + '</span>' +
         '<span class="resource-rating">' + renderStars(r.rating) + '<span class="rating-num">' + r.rating + '</span></span>' +
       '</div>' +
       '<p class="resource-description">' + r.description + '</p>' +
@@ -60,7 +79,7 @@ function buildCardHTML(r) {
       '<div class="resource-popularity"><div class="resource-popularity-bar" style="width:' + popularity + '%;"></div></div>' +
     '</div>' +
     '<div class="resource-actions">' +
-      '<a href="' + r.link + '" class="download-btn" target="_blank" rel="noopener"><i class="fas fa-download"></i> 下载资源</a>' +
+      '<a href="' + r.link + '" class="download-btn" target="_blank" rel="noopener" onclick="trackDownload(' + r.id + ')"><i class="fas fa-download"></i> 下载资源</a>' +
       '<span class="resource-grade">' + r.grade + ' · ' + r.subcategory + '</span>' +
     '</div>' +
   '</div>';
