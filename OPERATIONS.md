@@ -88,7 +88,7 @@ npm test
 ### 前置知识要求
 
 - **YAML 语法** — 所有数据文件的格式
-- **Liquid 模板引擎** — Jekyll 的模板语言（`{% %}` 和 `{{ }}`）
+- **Liquid 模板引擎** — Jekyll 的模板语言（{% raw %}`{% %}`{% endraw %} 和 {% raw %}`{{ }}`{% endraw %}）
 - **HTML/CSS/JS 基础** — 页面结构和交互逻辑
 - **Git 基本操作** — clone, add, commit, push, branch, PR
 
