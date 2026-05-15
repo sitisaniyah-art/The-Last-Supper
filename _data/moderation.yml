@@ -1,0 +1,46 @@
+# =============================================
+# 内容审核规则配置
+# =============================================
+
+# 违禁关键词（标题/描述/标签中出现即拦截）
+blocked_keywords:
+  - 广告
+  - 代写
+  - 刷单
+  - 赌博
+  - 色情
+  - 诈骗
+  - 假货
+  - 传销
+  - 套路贷
+  - 校园贷
+
+# 屏蔽域名（链接中包含即拦截）
+blocked_domains:
+  - bit.ly
+  - tinyurl.com
+  - t.cn
+  - dwz.cn
+
+# 允许域名（白名单，优先通过）
+allowed_domains:
+  - github.com
+  - cc98.org
+  - zju.edu.cn
+  - zjuer.com
+  - pexels.com
+  - images.pexels.com
+  - docs.qq.com
+  - pan.baidu.com
+  - www.bilibili.com
+  - bilibili.com
+  - zhuanlan.zhihu.com
+  - mp.weixin.qq.com
+
+# 描述长度限制
+min_description_length: 10
+max_description_length: 2000
+
+# 标题长度限制
+min_title_length: 2
+max_title_length: 100

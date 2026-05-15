@@ -1,0 +1,119 @@
+name: 提交学习资源
+description: 提交学习资料、课件、笔记等资源
+title: "[资源] "
+labels: ["resource-submission"]
+assignees:
+  - sitisaniyah-art
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢你分享学习资源！请填写以下信息，审核通过后会自动添加到资源页面。
+
+  - type: input
+    id: resource-title
+    attributes:
+      label: 资源标题
+      placeholder: 例如：高等数学期末复习笔记
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: 学科分类
+      options:
+        - 数学
+        - 编程
+        - 英语
+        - 物理
+        - 其他
+    validations:
+      required: true
+
+  - type: dropdown
+    id: subcategory
+    attributes:
+      label: 子分类
+      options:
+        - 高等数学
+        - 线性代数
+        - 概率统计
+        - Python
+        - C/C++
+        - Java
+        - 数据结构
+        - 算法
+        - 四级
+        - 六级
+        - 考研英语
+        - 口语
+        - 大学物理
+        - 力学
+        - 电磁学
+        - 其他
+    validations:
+      required: true
+
+  - type: dropdown
+    id: grade
+    attributes:
+      label: 适用年级
+      options:
+        - 大一
+        - 大二
+        - 大三
+        - 大四
+        - 通用
+    validations:
+      required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: 资源类型
+      options:
+        - PDF
+        - PPT
+        - DOC
+        - 视频
+        - 链接
+        - 其他
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 资源描述
+      description: 简单描述资源内容、适合哪些同学、有什么特色
+      placeholder: 例如：包含高数上下册所有知识点整理，适合期末复习使用...
+    validations:
+      required: true
+
+  - type: input
+    id: link
+    attributes:
+      label: 下载链接
+      description: 资源的下载地址（百度网盘、GitHub Release 等）
+      placeholder: https://...
+    validations:
+      required: true
+
+  - type: input
+    id: tags
+    attributes:
+      label: 标签
+      description: 用逗号分隔的关键词
+      placeholder: 例如：期末,复习,高数
+    validations:
+      required: false
+
+  - type: input
+    id: nickname
+    attributes:
+      label: 你的昵称（可选）
+      placeholder: 匿名
+    validations:
+      required: false

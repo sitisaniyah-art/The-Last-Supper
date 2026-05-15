@@ -41,6 +41,11 @@
 - **生存指南** — 浙大学生必备信息汇总
 - **社区公告** — 贡献者排行榜 + 站点公告
 - **暗黑模式** — 全站主题切换
+- **GitHub Actions 自动化** — Issue 提交自动审核、生成 PR
+- **内容审核** — 违规关键词检测、链接安全检查
+- **用户举报** — 一键举报跳转 GitHub Issue 模板
+- **管理员后台** — 密码保护的数据管理面板
+- **滚动公告栏** — 页面顶部实时动态展示
 
 **核心理念：所有内容都存储在 `_data/*.yml` 文件中，HTML 页面在构建时通过 Liquid 模板引擎读取 YAML 数据并嵌入为 JavaScript 对象，由前端 JS 负责渲染和交互。**
 
@@ -108,17 +113,25 @@ The-Last-Supper/
 │   ├── contributors.yml           #   贡献者数据
 │   ├── navigation.yml             #   导航栏菜单
 │   ├── zju-fun.yml                #   嗨玩榜数据
-│   └── zju-survival.yml           #   生存指南数据
+│   ├── zju-survival.yml           #   生存指南数据
+│   ├── moderation.yml             #   内容审核规则配置
+│   ├── logs.yml                   #   操作日志
+│   └── stats.yml                  #   全站统计数据
 │
 ├── _includes/                     # Jekyll 模板片段
 │   ├── head/custom.html           #   <head> 自定义内容（CSS/JS/公告栏）
 │   └── footer/custom.html         #   页脚（链接+暗黑模式切换）
 │
 ├── assets/
-│   ├── css/custom.css             # ★ 全站自定义样式（1800+行）
+│   ├── css/
+│   │   ├── custom.css             # ★ 全站自定义样式
+│   │   └── admin.css              #   管理后台样式
 │   └── js/
 │       ├── favorites.js           #   收藏夹模块（localStorage）
 │       ├── resources.js           #   资源页渲染与筛选
+│       ├── admin.js               #   管理后台逻辑
+│       ├── recommendations.js     #   资源推荐算法
+│       ├── stats.js               #   动态排行榜
 │       └── lib/
 │           └── filter-resources.js #  纯函数：资源过滤逻辑（可测试）
 │
@@ -133,15 +146,27 @@ The-Last-Supper/
 ├── zju-survival/index.html        # 生存指南页
 ├── community/index.html           # 社区页
 ├── contribute.html                # 贡献指南页
+├── admin/index.html               # 管理后台页
 ├── guide/index.html               # 使用指南页
 ├── faq.html                       # 常见问题页
 ├── about/index.html               # 关于我们页
 │
-├── .github/ISSUE_TEMPLATE/        # GitHub Issue 模板
-│   ├── config.yml                 #   模板配置（禁用空白 Issue）
-│   ├── ask-question.yml           #   提问模板
-│   ├── recommend-place.yml        #   推荐好去处模板
-│   └── suggest-guide.yml          #   推荐生存指南模板
+├── .github/
+│   ├── ISSUE_TEMPLATE/            # GitHub Issue 模板
+│   │   ├── config.yml             #   模板配置（禁用空白 Issue）
+│   │   ├── ask-question.yml       #   提问模板
+│   │   ├── recommend-place.yml    #   推荐好去处模板
+│   │   ├── suggest-guide.yml      #   推荐生存指南模板
+│   │   ├── submit-resource.yml    #   提交学习资源模板
+│   │   └── report.yml             #   举报模板
+│   ├── scripts/                   #   GitHub Actions 脚本
+│   │   ├── process-issue.js       #     Issue 解析和 YAML 生成
+│   │   ├── moderation-check.js    #     内容违规检测
+│   │   ├── update-contributors.js #     贡献者积分更新
+│   │   └── check-consistency.js   #     数据一致性检查
+│   └── workflows/                 #   GitHub Actions 工作流
+│       ├── process-submissions.yml #    自动处理提交
+│       └── data-consistency.yml   #     数据一致性检查
 │
 ├── __tests__/
 │   └── filter-resources.test.js   # filter-resources.js 的测试
@@ -1063,6 +1088,81 @@ git reset --soft HEAD~1
 - 固定在页面顶部 3px 渐变条
 - 页面加载 30%，`window.load` 时 100% 后消失
 - 实现在 `_includes/head/custom.html`
+
+---
+
+## 13. GitHub Actions 自动化
+
+### Issue 自动处理流程
+
+当用户通过 Issue 模板提交资源推荐或生存指南时，会自动触发 GitHub Actions：
+
+**工作流文件：** `.github/workflows/process-submissions.yml`
+
+**处理流程：**
+1. 内容审核（`moderation-check.js`）— 关键词检测、链接安全、垃圾检测
+2. 解析 Issue 字段（`process-issue.js`）— 提取表单数据，验证必填项
+3. 更新贡献者积分（`update-contributors.js`）— 资源+10，指南+5
+4. 创建分支 + PR — 等待管理员手动合并
+
+**审核不通过：** Issue 自动关闭并回复原因
+**审核通过：** 创建 `auto/submission-{number}` 分支和 PR
+
+### 内容审核规则
+
+配置文件：`_data/moderation.yml`
+
+- `blocked_keywords` — 违禁关键词列表
+- `blocked_domains` — 屏蔽域名
+- `allowed_domains` — 允许域名白名单
+- `min_description_length` / `max_description_length` — 描述长度限制
+
+### 数据一致性检查
+
+**工作流文件：** `.github/workflows/data-consistency.yml`
+
+每周一自动运行，检查：
+- zju-fun.yml 中 ID 是否有重复
+- contributors.yml 中贡献者是否与资源上传者匹配
+- 积分数值是否正确
+- 自动更新 stats.yml 统计数据
+
+---
+
+## 14. 用户举报功能
+
+每张资源卡片底部有举报按钮（旗帜图标），点击后跳转到 GitHub Issue 模板页面：
+- 模板：`.github/ISSUE_TEMPLATE/report.yml`
+- 标签：`report`
+- 字段：举报内容类型、标题/ID、举报类型、详细原因
+
+管理员在 GitHub Issues 中查看和处理举报。
+
+---
+
+## 15. 管理员后台
+
+访问 `/admin/` 页面，输入密码 `ZJUNB` 进入管理面板。
+
+**功能 Tab：**
+- **数据概览** — 资源总数、下载量、平均评分、贡献者数、分类分布
+- **举报管理** — 读取 GitHub 上带 `report` label 的 Issues
+- **操作日志** — 显示 `_data/logs.yml` 中的操作记录
+- **资源管理** — 搜索和查看所有资源
+
+**注意：** 密码验证在前端 JS 中进行，密码存储在 `assets/js/admin.js` 中。适合小团队使用，不适合高安全要求场景。
+
+---
+
+## 16. 滚动公告栏
+
+页面顶部固定显示一个滚动动态栏，内容包括：
+- 置顶公告
+- 最新 3 条资源
+- 热门 3 条资源（按下载量）
+
+**实现：** `_includes/head/custom.html` 中的 CSS `@keyframes` 动画
+**特性：** 鼠标悬停暂停、自适应滚动速度、暗黑模式兼容
 
 ---
 

@@ -1,0 +1,53 @@
+name: 举报内容
+description: 举报违规、侵权或错误的内容
+title: "[举报] "
+labels: ["report"]
+assignees:
+  - sitisaniyah-art
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢你帮助维护社区环境！请填写以下信息，管理员会尽快处理。
+
+  - type: dropdown
+    id: content-type
+    attributes:
+      label: 被举报内容类型
+      options:
+        - 学习资源
+        - 嗨玩榜推荐
+        - 生存指南
+        - 其他
+    validations:
+      required: true
+
+  - type: input
+    id: content-title
+    attributes:
+      label: 被举报内容的标题或 ID
+      placeholder: 例如：堕落街烤冷面 或 ID: 1
+    validations:
+      required: true
+
+  - type: dropdown
+    id: report-type
+    attributes:
+      label: 举报类型
+      options:
+        - 侵权（盗用/未经授权）
+        - 违规内容（广告/色情/暴力等）
+        - 信息错误（链接失效/描述不实）
+        - 其他
+    validations:
+      required: true
+
+  - type: textarea
+    id: reason
+    attributes:
+      label: 详细原因
+      description: 请详细描述问题，方便管理员核实
+      placeholder: 请说明具体的违规情况或错误内容...
+    validations:
+      required: true

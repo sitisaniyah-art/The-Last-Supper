@@ -1,4 +1,8 @@
 /* Resources page JS — uses allResources embedded by Liquid */
+var TLS_GITHUB_REPO_URL = 'https://github.com/sitisaniyah-art/The-Last-Supper';
+function reportUrl(type, title) {
+  return TLS_GITHUB_REPO_URL + '/issues/new?template=report.yml&title=' + encodeURIComponent('[举报] ' + type + ' - ' + title);
+}
 
 document.addEventListener('DOMContentLoaded', function() {
   renderResources(allResources);
@@ -144,6 +148,7 @@ function buildCardHTML(r) {
     '</div>' +
     '<div class="resource-actions">' +
       '<a href="' + r.link + '" class="download-btn" target="_blank" rel="noopener" onclick="trackDownload(' + r.id + ')"><i class="fas fa-download"></i> 下载资源</a>' +
+      '<a href="' + reportUrl('学习资源', r.title) + '" class="report-btn" target="_blank" rel="noopener" title="举报"><i class="fas fa-flag"></i></a>' +
       '<span class="resource-grade">' + r.grade + ' · ' + r.subcategory + '</span>' +
     '</div>' +
   '</div>';

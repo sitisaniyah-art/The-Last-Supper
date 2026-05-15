@@ -138,6 +138,14 @@ var allWebsites = [
 <script>
 (function() {
   /* ============================================================
+     Report URL helper
+     ============================================================ */
+  var TLS_GITHUB_REPO_URL = 'https://github.com/sitisaniyah-art/The-Last-Supper';
+  function reportUrl(type, title) {
+    return TLS_GITHUB_REPO_URL + '/issues/new?template=report.yml&title=' + encodeURIComponent('[举报] ' + type + ' - ' + title);
+  }
+
+  /* ============================================================
      Category info map
      ============================================================ */
   var catMap = {};
@@ -216,6 +224,7 @@ var allWebsites = [
         '<a href="' + g.url + '" target="_blank" rel="noopener" class="survival-card-link">' +
           '<i class="fas fa-external-link-alt"></i> 查看' +
         '</a>' +
+        '<a href="' + reportUrl('生存指南', g.title) + '" class="survival-report-btn" target="_blank" rel="noopener" title="举报"><i class="fas fa-flag"></i></a>' +
       '</div>' +
     '</div>';
   }

@@ -1,0 +1,240 @@
+/* ============================================
+   Admin Panel Styles
+   ============================================ */
+
+/* --- Tabs --- */
+.admin-tabs {
+  display: flex;
+  gap: 0.25rem;
+  border-bottom: 2px solid var(--border-color);
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.admin-tab {
+  padding: 0.6rem 1rem;
+  border: none;
+  background: none;
+  color: var(--text-light);
+  font-size: 0.9rem;
+  cursor: pointer;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: var(--transition);
+}
+
+.admin-tab:hover {
+  color: var(--text-color);
+}
+
+.admin-tab.active {
+  color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
+  font-weight: 600;
+}
+
+/* --- Content panels --- */
+.admin-content {
+  display: none;
+}
+
+.admin-content.active {
+  display: block;
+}
+
+/* --- Stats grid --- */
+.admin-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+}
+
+.admin-stat-card {
+  background: var(--bg-alt, #f8fafc);
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: center;
+  border: 1px solid var(--border-color);
+  transition: var(--transition);
+}
+
+.admin-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.admin-stat-card i {
+  font-size: 1.5rem;
+  color: var(--stat-color);
+  margin-bottom: 0.5rem;
+}
+
+.admin-stat-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-color);
+  line-height: 1.2;
+}
+
+.admin-stat-label {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  margin-top: 0.25rem;
+}
+
+/* --- Bar chart --- */
+.admin-bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.admin-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.admin-bar-label {
+  width: 60px;
+  font-size: 0.85rem;
+  text-align: right;
+  flex-shrink: 0;
+  color: var(--text-color);
+}
+
+.admin-bar-track {
+  flex: 1;
+  height: 24px;
+  background: var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.admin-bar-fill {
+  height: 100%;
+  border-radius: 12px;
+  transition: width 0.6s ease;
+  min-width: 4px;
+}
+
+.admin-bar-value {
+  width: 30px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+/* --- List items --- */
+.admin-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.admin-list-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  background: var(--bg-alt, #f8fafc);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.admin-list-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-list-main strong {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--text-color);
+}
+
+.admin-list-meta {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--text-lighter);
+  margin-top: 0.2rem;
+}
+
+.admin-list-id {
+  font-size: 0.8rem;
+  color: var(--text-lighter);
+  font-family: monospace;
+  flex-shrink: 0;
+}
+
+/* --- Report items --- */
+.admin-report-body {
+  font-size: 0.82rem;
+  color: var(--text-light);
+  margin-top: 0.4rem;
+  line-height: 1.5;
+  max-height: 4.5em;
+  overflow: hidden;
+}
+
+/* --- Log badges --- */
+.admin-list-badge {
+  font-size: 0.72rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 99px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.admin-badge-success {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.admin-badge-error {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+/* --- Search input --- */
+.admin-search-input {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  background: var(--bg-color);
+  color: var(--text-color);
+  margin-bottom: 1rem;
+  outline: none;
+  transition: var(--transition);
+}
+
+.admin-search-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+/* --- Dark mode --- */
+[data-theme="dark"] .admin-stat-card,
+[data-theme="dark"] .admin-list-item {
+  background: rgba(255,255,255,0.04);
+}
+
+[data-theme="dark"] .admin-bar-track {
+  background: rgba(255,255,255,0.08);
+}
+
+/* --- Responsive --- */
+@media (max-width: 600px) {
+  .admin-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .admin-tab {
+    padding: 0.5rem 0.6rem;
+    font-size: 0.82rem;
+  }
+}

@@ -763,6 +763,14 @@ body.has-announcement-bar {
   padding-top: 48px;
 }
 
+/* When ticker + announcement bar coexist */
+body.has-ticker .tls-announcement-bar {
+  top: 36px;
+}
+body.has-ticker.has-announcement-bar {
+  padding-top: calc(clamp(40px, 5vw, 52px) + 36px);
+}
+
 /* Dark mode — announcement bar stays the same high-contrast look,
    but we tweak the pinned gradient for dark backgrounds */
 [data-theme="dark"] .tls-announcement-pinned,
@@ -2168,4 +2176,73 @@ details .answer {
 
 [data-theme="dark"] .my-rating-badge {
   background: rgba(99, 102, 241, 0.2);
+}
+
+/* ===== Report Buttons ===== */
+.report-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--warning-light, rgba(245, 158, 11, 0.1));
+  color: var(--warning-color, #f59e0b);
+  text-decoration: none;
+  font-size: 0.8rem;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+
+.report-btn:hover {
+  background: var(--warning-color, #f59e0b);
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.zj-report-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  transition: var(--transition);
+  text-decoration: none;
+}
+
+.zj-report-btn:hover {
+  background: #f59e0b;
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.survival-report-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  text-decoration: none;
+  font-size: 0.75rem;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+
+.survival-report-btn:hover {
+  background: #f59e0b;
+  color: #fff;
+  transform: scale(1.1);
+}
+
+[data-theme="dark"] .report-btn,
+[data-theme="dark"] .zj-report-btn,
+[data-theme="dark"] .survival-report-btn {
+  background: rgba(245, 158, 11, 0.15);
 }

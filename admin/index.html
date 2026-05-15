@@ -1,0 +1,88 @@
+---
+layout: single
+title: 管理后台
+permalink: /admin/
+author_profile: false
+---
+
+<style>
+/* Password screen */
+.admin-login{text-align:center;padding:4rem 1rem;}
+.admin-login h2{margin-bottom:1.5rem;font-size:1.5rem;}
+.admin-login input{padding:.6rem 1rem;border:1px solid var(--border-color);border-radius:8px;font-size:1rem;width:260px;max-width:80%;background:var(--bg-color);color:var(--text-color);text-align:center;}
+.admin-login .login-btn{display:inline-block;margin-top:1rem;padding:.6rem 1.5rem;background:var(--primary-color);color:#fff;border:none;border-radius:8px;font-size:.95rem;cursor:pointer;transition:var(--transition);}
+.admin-login .login-btn:hover{background:var(--primary-hover);}
+.admin-login .login-error{color:var(--danger-color,#ef4444);font-size:.85rem;margin-top:.5rem;display:none;}
+</style>
+
+<!-- Login screen -->
+<div class="admin-login" id="admin-login">
+  <h2><i class="fas fa-lock"></i> 管理后台</h2>
+  <p style="color:var(--text-light);margin-bottom:1.5rem;">请输入管理员密码</p>
+  <div>
+    <input type="password" id="admin-password" placeholder="请输入密码" autocomplete="off">
+  </div>
+  <div>
+    <button class="login-btn" id="admin-login-btn">验证</button>
+  </div>
+  <div class="login-error" id="login-error">密码错误，请重试</div>
+</div>
+
+<!-- Admin panel (hidden until login) -->
+<div id="admin-panel" style="display:none;">
+
+  <!-- Tab navigation -->
+  <div class="admin-tabs">
+    <button class="admin-tab active" data-tab="overview"><i class="fas fa-chart-pie"></i> 数据概览</button>
+    <button class="admin-tab" data-tab="reports"><i class="fas fa-flag"></i> 举报管理</button>
+    <button class="admin-tab" data-tab="logs"><i class="fas fa-history"></i> 操作日志</button>
+    <button class="admin-tab" data-tab="resources"><i class="fas fa-boxes"></i> 资源管理</button>
+  </div>
+
+  <!-- Overview tab -->
+  <div class="admin-content active" id="tab-overview">
+    <div class="admin-stats-grid" id="admin-stats"></div>
+    <h3 style="margin-top:2rem;">分类分布</h3>
+    <div id="admin-category-chart"></div>
+  </div>
+
+  <!-- Reports tab -->
+  <div class="admin-content" id="tab-reports">
+    <p style="color:var(--text-light);margin-bottom:1rem;">显示带 <code>report</code> label 的 Issue</p>
+    <div id="admin-reports-list" class="admin-list"></div>
+  </div>
+
+  <!-- Logs tab -->
+  <div class="admin-content" id="tab-logs">
+    <div id="admin-logs-list" class="admin-list"></div>
+  </div>
+
+  <!-- Resources tab -->
+  <div class="admin-content" id="tab-resources">
+    <input type="text" id="admin-resource-search" placeholder="搜索资源..." class="admin-search-input">
+    <div id="admin-resources-list" class="admin-list"></div>
+  </div>
+
+</div>
+
+<!-- Embedded data -->
+<script>
+var allResources = [
+  {% for r in site.data.resources %}
+  {"id":{{ r.id }},"title":"{{ r.title | escape }}","category":"{{ r.category }}","downloads":{{ r.downloads }},"rating":{{ r.rating }}}{% unless forloop.last %},{% endunless %}
+  {% endfor %}
+];
+var allContributors = [
+  {% assign sorted_c = site.data.contributors | sort: "points" | reverse %}
+  {% for c in sorted_c %}
+  {"name":"{{ c.name | escape }}","points":{{ c.points }},"resources":{{ c.resources }},"answers":{{ c.answers }}}{% unless forloop.last %},{% endunless %}
+  {% endfor %}
+];
+var allLogs = [
+  {% for l in site.data.logs %}
+  {"timestamp":"{{ l.timestamp }}","operator":"{{ l.operator | escape }}","action":"{{ l.action | escape }}","target":"{{ l.target | escape }}","result":"{{ l.result | escape }}"}{% unless forloop.last %},{% endunless %}
+  {% endfor %}
+];
+</script>
+<link rel="stylesheet" href="{{ '/assets/css/admin.css' | relative_url }}">
+<script src="{{ '/assets/js/admin.js' | relative_url }}"></script>
