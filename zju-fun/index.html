@@ -43,9 +43,12 @@ author_profile: false
       <option value="likes">最多点赞</option>
     </select>
   </div>
-  <div class="search-box">
-    <input type="text" id="fun-search" placeholder="搜索名称、地址、标签...">
-    <button><i class="fas fa-search"></i></button>
+  <div class="search-box" style="position:relative;">
+    <input type="text" id="fun-search" placeholder="搜索名称、地址、标签..." autocomplete="off">
+    <button id="fun-search-btn"><i class="fas fa-search"></i></button>
+    <button id="fun-history-btn" title="搜索历史" style="margin-left:4px;background:var(--bg-alt);border:1px solid var(--border-color);border-radius:8px;padding:0 10px;cursor:pointer;color:var(--text-light);"><i class="fas fa-history"></i></button>
+    <div id="fun-suggestions" class="search-suggestions" style="display:none;"></div>
+    <div id="fun-history-dropdown" class="search-suggestions" style="display:none;"></div>
   </div>
 </div>
 
@@ -444,9 +447,102 @@ const allPlaces = [
     document.getElementById('fun-category-filter').addEventListener('change', filterAndSort);
     document.getElementById('fun-sort-filter').addEventListener('change', filterAndSort);
     document.getElementById('fun-search').addEventListener('input', filterAndSort);
+
+    // Search suggestions & history
+    var searchInput = document.getElementById('fun-search');
+    var suggestionsEl = document.getElementById('fun-suggestions');
+    var historyDropdown = document.getElementById('fun-history-dropdown');
+    var historyBtn = document.getElementById('fun-history-btn');
+    var debounceTimer = null;
+
+    if (typeof TLSearch !== 'undefined') {
+      searchInput.addEventListener('input', function() {
+        clearTimeout(debounceTimer);
+        var val = this.value;
+        debounceTimer = setTimeout(function() {
+          if (!val || val.length < 1) { suggestionsEl.style.display = 'none'; return; }
+          var results = TLSearch.suggest(val);
+          var placeResults = allPlaces.filter(function(p) {
+            return (p.name || '').toLowerCase().includes(val.toLowerCase()) ||
+                   (p.address || '').toLowerCase().includes(val.toLowerCase());
+          }).slice(0, 3);
+          placeResults.forEach(function(p) {
+            results.push({ text: p.name, type: 'place', icon: 'fa-map-marker-alt' });
+          });
+          // Deduplicate
+          var seen = {};
+          var unique = [];
+          results.forEach(function(s) { if (!seen[s.text]) { seen[s.text] = true; unique.push(s); } });
+          if (unique.length === 0) { suggestionsEl.style.display = 'none'; return; }
+          suggestionsEl.innerHTML = unique.slice(0, 5).map(function(s) {
+            return '<div class="search-suggestion-item" data-text="' + s.text.replace(/"/g, '&quot;') + '">' +
+              '<i class="fas ' + s.icon + '" style="width:16px;color:var(--text-lighter);"></i> ' +
+              TLSearch.highlightMatch(s.text, val) +
+            '</div>';
+          }).join('');
+          suggestionsEl.style.display = 'block';
+          suggestionsEl.querySelectorAll('.search-suggestion-item').forEach(function(item) {
+            item.addEventListener('mousedown', function(e) {
+              e.preventDefault();
+              searchInput.value = this.dataset.text;
+              suggestionsEl.style.display = 'none';
+              filterAndSort();
+              TLSearch.addToHistory(this.dataset.text);
+            });
+          });
+        }, 200);
+      });
+
+      // History button
+      historyBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (historyDropdown.style.display === 'block') { historyDropdown.style.display = 'none'; return; }
+        suggestionsEl.style.display = 'none';
+        var hist = TLSearch.getHistory();
+        if (hist.length === 0) {
+          historyDropdown.innerHTML = '<div class="search-suggestion-item" style="color:var(--text-lighter);">暂无搜索历史</div>';
+        } else {
+          historyDropdown.innerHTML = '<div class="search-suggestion-item" style="justify-content:space-between;"><span style="color:var(--text-lighter);font-size:.8rem;">搜索历史</span><span class="search-clear-history" style="cursor:pointer;color:var(--danger-color);font-size:.8rem;">清除</span></div>' +
+            hist.map(function(h) {
+              return '<div class="search-suggestion-item" data-text="' + h.replace(/"/g, '&quot;') + '">' +
+                '<i class="fas fa-clock" style="width:16px;color:var(--text-lighter);"></i> ' + h +
+              '</div>';
+            }).join('');
+          var clearBtn = historyDropdown.querySelector('.search-clear-history');
+          if (clearBtn) clearBtn.addEventListener('click', function(ev) {
+            ev.stopPropagation();
+            TLSearch.clearHistory();
+            historyDropdown.style.display = 'none';
+          });
+        }
+        historyDropdown.style.display = 'block';
+        historyDropdown.querySelectorAll('.search-suggestion-item[data-text]').forEach(function(item) {
+          item.addEventListener('mousedown', function(ev) {
+            ev.preventDefault();
+            searchInput.value = this.dataset.text;
+            historyDropdown.style.display = 'none';
+            filterAndSort();
+          });
+        });
+      });
+
+      // Save to history on search
+      searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          suggestionsEl.style.display = 'none';
+          TLSearch.addToHistory(this.value);
+        }
+      });
+
+      document.addEventListener('click', function() {
+        suggestionsEl.style.display = 'none';
+        historyDropdown.style.display = 'none';
+      });
+    }
   });
 })();
 </script>
+<script src="{{ '/assets/js/search-enhanced.js' | relative_url }}"></script>
 <script src="{{ '/assets/js/comments.js' | relative_url }}"></script>
 <script src="{{ '/assets/js/comment-modal.js' | relative_url }}"></script>
 <script src="{{ '/assets/js/search-agent.js' | relative_url }}"></script>

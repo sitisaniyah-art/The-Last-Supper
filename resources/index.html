@@ -45,10 +45,38 @@ author_profile: false
       <option value="习题">习题</option>
     </select>
   </div>
-  <div class="search-box">
-    <input type="text" id="resource-search" placeholder="搜索资源名称、标签...">
-    <button><i class="fas fa-search"></i></button>
+  <div class="filter-group">
+    <label>搜索范围：</label>
+    <select id="search-scope">
+      <option value="resources">学习资源</option>
+      <option value="places">嗨玩榜</option>
+      <option value="all">全部内容</option>
+    </select>
   </div>
+  <div class="filter-group">
+    <label>排序：</label>
+    <select id="search-sort">
+      <option value="relevance">相关度</option>
+      <option value="name-asc">名称升序</option>
+      <option value="name-desc">名称降序</option>
+      <option value="newest">最新发布</option>
+      <option value="oldest">最早发布</option>
+    </select>
+  </div>
+  <div class="search-box" style="position:relative;">
+    <input type="text" id="resource-search" placeholder="搜索资源名称、作者、标签..." autocomplete="off">
+    <button id="search-submit-btn"><i class="fas fa-search"></i></button>
+    <button id="search-history-btn" title="搜索历史" style="margin-left:4px;background:var(--bg-alt);border:1px solid var(--border-color);border-radius:8px;padding:0 10px;cursor:pointer;color:var(--text-light);"><i class="fas fa-history"></i></button>
+    <!-- 搜索建议下拉 -->
+    <div id="search-suggestions" class="search-suggestions" style="display:none;"></div>
+    <!-- 搜索历史下拉 -->
+    <div id="search-history-dropdown" class="search-suggestions" style="display:none;"></div>
+  </div>
+</div>
+
+<!-- 搜索加载动画 -->
+<div id="search-loading" style="display:none;text-align:center;padding:1rem;color:var(--text-light);">
+  <i class="fas fa-spinner fa-spin"></i> 搜索中...
 </div>
 
 <!-- 资源统计 -->
@@ -61,6 +89,13 @@ author_profile: false
 <div class="state-message" id="no-results" style="display:none;">
   <i class="fas fa-search"></i>
   <p>没有找到匹配的资源，试试其他关键词？</p>
+  <div id="no-results-recommend" style="margin-top:1rem;"></div>
+</div>
+
+<!-- 嗨玩榜搜索结果 -->
+<div id="places-results" style="display:none;">
+  <h3 style="margin-bottom:1rem;"><i class="fas fa-map-marker-alt" style="color:var(--danger-color);"></i> 嗨玩榜搜索结果</h3>
+  <div class="fun-grid" id="places-results-grid"></div>
 </div>
 
 <!-- 将 YAML 数据通过 Liquid 嵌入为 JSON -->
@@ -87,4 +122,201 @@ const allResources = [
 </script>
 <script src="{{ '/assets/js/favorites.js' | relative_url }}"></script>
 <script src="{{ '/assets/js/lib/filter-resources.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/search-enhanced.js' | relative_url }}"></script>
 <script src="{{ '/assets/js/resources.js' | relative_url }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var searchInput = document.getElementById('resource-search');
+  var scopeSelect = document.getElementById('search-scope');
+  var sortSelect = document.getElementById('search-sort');
+  var suggestionsEl = document.getElementById('search-suggestions');
+  var historyDropdown = document.getElementById('search-history-dropdown');
+  var historyBtn = document.getElementById('search-history-btn');
+  var loadingEl = document.getElementById('search-loading');
+  var placesResults = document.getElementById('places-results');
+  var placesGrid = document.getElementById('places-results-grid');
+  var debounceTimer = null;
+
+  // --- Search suggestions ---
+  function showSuggestions(query) {
+    if (!query || query.length < 1) { suggestionsEl.style.display = 'none'; return; }
+    var results = TLSearch.suggest(query);
+    if (results.length === 0) { suggestionsEl.style.display = 'none'; return; }
+    suggestionsEl.innerHTML = results.map(function(s) {
+      return '<div class="search-suggestion-item" data-text="' + (s.raw || s.text).replace(/"/g, '&quot;') + '">' +
+        '<i class="fas ' + s.icon + '" style="width:16px;color:var(--text-lighter);"></i> ' +
+        TLSearch.highlightMatch(s.text, query) +
+        '<span class="search-suggestion-type">' + (s.type === 'author' ? '作者' : s.type === 'resource' ? '资源' : '地点') + '</span>' +
+      '</div>';
+    }).join('');
+    suggestionsEl.style.display = 'block';
+    suggestionsEl.querySelectorAll('.search-suggestion-item').forEach(function(item) {
+      item.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        searchInput.value = this.dataset.text;
+        suggestionsEl.style.display = 'none';
+        performSearch();
+      });
+    });
+  }
+
+  // --- Search history ---
+  function showHistory() {
+    var hist = TLSearch.getHistory();
+    if (hist.length === 0) { historyDropdown.innerHTML = '<div class="search-suggestion-item" style="color:var(--text-lighter);">暂无搜索历史</div>'; }
+    else {
+      historyDropdown.innerHTML = '<div class="search-suggestion-item" style="justify-content:space-between;"><span style="color:var(--text-lighter);font-size:.8rem;">搜索历史</span><span class="search-clear-history" style="cursor:pointer;color:var(--danger-color);font-size:.8rem;">清除</span></div>' +
+        hist.map(function(h) {
+          return '<div class="search-suggestion-item" data-text="' + h.replace(/"/g, '&quot;') + '">' +
+            '<i class="fas fa-clock" style="width:16px;color:var(--text-lighter);"></i> ' + h +
+          '</div>';
+        }).join('');
+      var clearBtn = historyDropdown.querySelector('.search-clear-history');
+      if (clearBtn) clearBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        TLSearch.clearHistory();
+        historyDropdown.style.display = 'none';
+      });
+    }
+    historyDropdown.style.display = 'block';
+    historyDropdown.querySelectorAll('.search-suggestion-item[data-text]').forEach(function(item) {
+      item.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        searchInput.value = this.dataset.text;
+        historyDropdown.style.display = 'none';
+        performSearch();
+      });
+    });
+  }
+
+  historyBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (historyDropdown.style.display === 'block') { historyDropdown.style.display = 'none'; return; }
+    suggestionsEl.style.display = 'none';
+    showHistory();
+  });
+
+  // Hide dropdowns on outside click
+  document.addEventListener('click', function() {
+    suggestionsEl.style.display = 'none';
+    historyDropdown.style.display = 'none';
+  });
+
+  // --- Main search ---
+  function performSearch() {
+    var query = searchInput.value.trim();
+    var scope = scopeSelect.value;
+    var sort = sortSelect.value;
+
+    suggestionsEl.style.display = 'none';
+    historyDropdown.style.display = 'none';
+
+    if (!query) {
+      // No query: show default filtered resources
+      placesResults.style.display = 'none';
+      if (typeof filterAndRender === 'function') filterAndRender();
+      return;
+    }
+
+    // Save to history
+    TLSearch.addToHistory(query);
+
+    // Show loading
+    loadingEl.style.display = 'block';
+
+    // Small delay for UX feel
+    setTimeout(function() {
+      loadingEl.style.display = 'none';
+
+      if (scope === 'resources' || scope === 'all') {
+        // Search resources
+        var resResults = TLSearch.search(query, { section: 'resources', sort: sort });
+        if (typeof renderResources === 'function') {
+          renderResources(resResults);
+        }
+        // Update count
+        var countEl = document.getElementById('resource-count');
+        if (resResults.length > 0) {
+          countEl.textContent = '找到 ' + resResults.length + ' 个资源';
+        } else {
+          countEl.textContent = '';
+          // Show recommendations
+          var noResults = document.getElementById('no-results');
+          noResults.style.display = 'block';
+          var recs = allResources.sort(function() { return Math.random() - 0.5; }).slice(0, 3);
+          document.getElementById('no-results-recommend').innerHTML =
+            '<p style="color:var(--text-light);font-size:.9rem;margin-bottom:.5rem;">也许你会喜欢：</p>' +
+            recs.map(function(r) {
+              return '<a href="' + r.link + '" class="btn btn-outline" style="margin:4px;font-size:.8rem;" target="_blank">' + r.title + '</a>';
+            }).join('');
+        }
+      }
+
+      if (scope === 'places' || scope === 'all') {
+        // Search places
+        var plResults = TLSearch.search(query, { section: 'places', sort: sort });
+        if (plResults.length > 0 && scope === 'all') {
+          placesResults.style.display = 'block';
+          placesGrid.innerHTML = '<p style="color:var(--text-light);grid-column:1/-1;">在嗨玩榜中找到 ' + plResults.length + ' 个结果：<br>' +
+            plResults.map(function(p) {
+              var mapUrl = 'https://uri.amap.com/marker?position=&name=' + encodeURIComponent(p.name) + '&address=' + encodeURIComponent(p.address || '');
+              return '<a href="' + mapUrl + '" target="_blank" rel="noopener" style="display:inline-block;margin:4px;padding:6px 12px;background:var(--card-bg);border:1px solid var(--border-color);border-radius:8px;font-size:.85rem;text-decoration:none;color:var(--text-color);">' +
+                '<i class="fas fa-map-marker-alt" style="color:var(--danger-color);"></i> ' + (p.name || '') +
+              '</a>';
+            }).join('') + '</p>';
+        } else if (scope === 'places') {
+          // Only showing places
+          if (typeof filterAndSort === 'function') {
+            // Use the inline search if on zju-fun page, otherwise show inline
+            placesGrid.innerHTML = plResults.map(function(p) {
+              var mapUrl = 'https://uri.amap.com/marker?position=&name=' + encodeURIComponent(p.name) + '&address=' + encodeURIComponent(p.address || '');
+              return '<a href="' + mapUrl + '" target="_blank" rel="noopener" style="display:inline-block;margin:4px;padding:8px 16px;background:var(--card-bg);border:1px solid var(--border-color);border-radius:8px;text-decoration:none;color:var(--text-color);">' +
+                '<strong>' + (p.name || '') + '</strong> <span style="color:var(--text-light);font-size:.8rem;">' + (p.category || '') + ' · ' + (p.rating || '-') + '分</span>' +
+              '</a>';
+            }).join('') || '<p style="color:var(--text-light);">没有找到匹配的地点</p>';
+            placesResults.style.display = 'block';
+            document.getElementById('resource-count').textContent = plResults.length > 0 ? '找到 ' + plResults.length + ' 个地点' : '';
+          }
+        }
+      }
+    }, 300);
+  }
+
+  // Event bindings
+  searchInput.addEventListener('input', function() {
+    clearTimeout(debounceTimer);
+    var val = this.value;
+    debounceTimer = setTimeout(function() {
+      showSuggestions(val);
+    }, 200);
+  });
+
+  searchInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      suggestionsEl.style.display = 'none';
+      performSearch();
+    }
+  });
+
+  document.getElementById('search-submit-btn').addEventListener('click', performSearch);
+  scopeSelect.addEventListener('change', performSearch);
+  sortSelect.addEventListener('change', performSearch);
+
+  // Override the default filter to integrate with TLSearch
+  var origFilter = window.filterAndRender || null;
+  window.filterAndRender = function() {
+    var query = searchInput.value.trim();
+    if (query) {
+      performSearch();
+    } else if (origFilter) {
+      origFilter();
+    }
+  };
+});
+</script>
+<script src="{{ '/assets/js/resource-agent.js' | relative_url }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  if (typeof ResourceAgent !== 'undefined') ResourceAgent.init();
+});
+</script>

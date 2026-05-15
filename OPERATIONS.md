@@ -34,6 +34,9 @@
 18. [评论系统](#18-评论系统)
 19. [智能检索 Agent](#19-智能检索-agent)
 20. [资源目录结构](#20-资源目录结构)
+21. [全局搜索引擎](#21-全局搜索引擎)
+22. [像素角色系统](#22-像素角色系统)
+23. [学习资源 AI 助手](#23-学习资源-ai-助手)
 
 ---
 
@@ -57,7 +60,9 @@
 - **评论系统** — 嗨玩榜地点独立评论（点赞/踩/举报）
 - **智能检索 Agent** — 全站悬浮搜索助手（关键词搜索 + 快捷推荐）
 - **本地数据分析** — 基于 localStorage 的访问统计（页面访问、按钮点击、资源查看、会话时长）
-- **交互式像素角色** — 首页左下角像素风角色（鼠标跟随、随机动作、idle 动画）
+- **交互式像素角色** — 首页左下角像素风角色（拖拽、20种动作、8种表情、50+台词、5个彩蛋）
+- **全局搜索引擎** — 拼音搜索、搜索建议、搜索历史、多板块搜索、5种排序方式
+- **学习资源 AI 助手** — 资源页智能助手（搜索推荐、随机推荐、热门推荐、点赞反馈）
 
 **核心理念：所有内容都存储在 `_data/*.yml` 文件中，HTML 页面在构建时通过 Liquid 模板引擎读取 YAML 数据并嵌入为 JavaScript 对象，由前端 JS 负责渲染和交互。**
 
@@ -150,7 +155,9 @@ The-Last-Supper/
 │       ├── recommendations.js     #   资源推荐算法
 │       ├── stats.js               #   动态排行榜
 │       ├── analytics.js           #   本地数据分析模块
-│       ├── pixel-character.js     #   交互式像素角色
+│       ├── pixel-character.js     #   交互式像素角色（深度优化版）
+│       ├── search-enhanced.js     #   全局搜索引擎（拼音+建议+历史）
+│       ├── resource-agent.js      #   学习资源AI助手
 │       └── lib/
 │           └── filter-resources.js #  纯函数：资源过滤逻辑（可测试）
 │
@@ -823,22 +830,58 @@ TLSAnalytics.getResourceViews()            // 获取资源查看记录
 
 ### 8.9 `assets/js/pixel-character.js`
 
-**职责：** 交互式像素角色（首页左下角）
+**职责：** 交互式像素角色（首页左下角，深度优化版）
 
 ```javascript
 PixelChar.show()                           // 显示角色
 PixelChar.hide()                           // 隐藏角色
 PixelChar.isVisible()                      // 获取可见状态
 PixelChar.say(text)                        // 显示台词气泡
+PixelChar.doAction(action)                 // 触发指定动作
 ```
 
-- CSS div 角色（48×48px），左下角定位，z-index 9989
-- 状态机：idle（呼吸）、blink（眨眼）、wave（挥手）、jump（跳跃）、happy（开心）、yawn（打哈欠）
-- 交互：hover 放大、眼睛跟随鼠标、点击随机动作+台词、30s idle 打哈欠
-- 双击切换显示/隐藏
-- 10 句随机台词（"加油学习！"等）
+- CSS div 角色（56×72px），可拖拽定位，z-index 9989
+- **20 种状态动画：** idle、blink、wave、jump、happy、yawn、walk、run、spin、dance、fall、sleep、eat、read、think、greet、shy、confused、proud、angry
+- **8 种表情：** happy、sad、angry、surprised、shy、sleepy、confused、proud
+- **交互：** 拖拽移动、部位点击检测（头→摸头、手→挥手、脚→跳）、鼠标快速移动→跑动、被动避让按钮/卡片
+- **50+ 台词：** 学习鼓励(15)、按时段问候(10+5)、小知识(10)、幽默段子(10)、节日专属(5)
+- **5 个彩蛋：** 连续点击10次→舞蹈、鼠标画圆→转圈、滚动到底部→庆祝、暗黑模式切换→反应、搜索框输入"pixel"→特殊动作
+- **性能：** requestAnimationFrame、throttle、visibilitychange 暂停
 
-### 8.10 其他页面的内联 JS
+### 8.10 `assets/js/search-enhanced.js`
+
+**职责：** 全局搜索引擎模块
+
+```javascript
+TLSearch.search(query, options)             // options: { section: 'all'|'resources'|'places', sort: 'relevance'|'name-asc'|'name-desc'|'newest'|'oldest' }
+TLSearch.suggest(query)                     // 返回 5 条搜索建议
+TLSearch.highlightMatch(text, query)        // 高亮匹配关键词
+TLSearch.getHistory()                       // 获取搜索历史
+TLSearch.addToHistory(query)                // 添加到搜索历史
+TLSearch.clearHistory()                     // 清除搜索历史
+```
+
+- 数据源：`allResources`（学习资源）+ `tlsPlacesIndex`/`allPlaces`（嗨玩榜）
+- 拼音搜索：依赖 pinyin-pro CDN，支持完整拼音和首字母匹配
+- 搜索字段：title、uploader、description、tags、category、subcategory
+- 搜索历史：localStorage `tls_search_history`，最多 20 条
+- 关键词高亮：`<mark>` 标签包裹匹配文本
+
+### 8.11 `assets/js/resource-agent.js`
+
+**职责：** 学习资源 AI 助手（复刻 search-agent.js 的 UI 结构）
+
+```javascript
+ResourceAgent.init()                        // 初始化：创建悬浮按钮和事件绑定
+```
+
+- 数据源：`allResources`（学习资源数据）
+- 搜索逻辑：匹配 title、uploader、description、tags、category、subcategory，支持拼音
+- 快捷按钮：随机推荐(3个)、热门推荐(按评分 top5)、最新资源(按日期 top5)
+- 结果卡片：显示资源名、作者、评分、类别，点击跳转下载链接
+- 点赞反馈：localStorage `tls_resource_feedback` 记录点赞状态
+
+### 8.12 其他页面的内联 JS
 
 以下页面有内联 JavaScript（不单独提取为文件）：
 
@@ -1443,6 +1486,98 @@ git reset --soft HEAD~1
 2. 选择学科分类（36个学科）
 3. 显示对应的提交指南和文件夹路径
 4. 提供 Issue 提交链接
+
+---
+
+---
+
+## 21. 全局搜索引擎
+
+### 功能概述
+
+基于 `TLSearch` 模块的全局模糊搜索引擎，支持拼音搜索、搜索建议、搜索历史、多板块搜索和 5 种排序方式。
+
+### 使用方式
+
+- **学习资源页：** 搜索框输入关键词，自动显示搜索建议。可选择搜索范围（学习资源/嗨玩榜/全部）和排序方式
+- **嗨玩榜：** 搜索框增强，支持搜索建议和搜索历史
+
+### 拼音搜索
+
+使用 pinyin-pro 库（CDN 加载），支持：
+- 中文搜索：输入"鲁迅"匹配作者包含"鲁迅"的资源
+- 拼音搜索：输入"luxun"也能匹配"鲁迅"
+- 首字母搜索：输入"lx"匹配首字母
+- 混合搜索：中英文混合输入
+
+### 数据存储
+
+| Key | 用途 |
+|-----|------|
+| `tls_search_history` | 搜索历史（最多20条） |
+
+---
+
+## 22. 像素角色系统
+
+### 功能概述
+
+首页左下角的交互式像素角色，支持 20 种状态动画、8 种表情、拖拽移动、部位点击、50+ 台词和 5 个彩蛋。
+
+### 状态动画
+
+idle、blink、wave、jump、happy、yawn、walk、run、spin、dance、fall、sleep、eat、read、think、greet、shy、confused、proud、angry
+
+### 表情系统
+
+happy、sad、angry、surprised、shy、sleepy、confused、proud
+
+### 交互方式
+
+| 操作 | 效果 |
+|------|------|
+| 点击头部 | 摸头反应（害羞） |
+| 点击手臂 | 挥手打招呼 |
+| 点击腿部 | 跳跃 |
+| 点击身体 | 搔痒反应 |
+| 随意点击 | 随机动作+台词 |
+| 双击 | 特殊惊喜动画 |
+| 拖拽 | 自由移动角色 |
+| 鼠标快速移动 | 角色跟随跑动 |
+| 30 秒无操作 | 角色打哈欠 |
+
+### 彩蛋系统
+
+1. 连续点击 10 次 → 特殊舞蹈
+2. 滚动到页面底部 → 角色举手庆祝
+3. 暗黑模式切换 → 角色有特殊反应
+4. 搜索框输入"pixel" → 角色做特殊动作
+5. 双击 → 随机惊喜动画
+
+### 台词分类
+
+学习鼓励(15条)、按时段问候(10+5条)、小知识/冷知识(10条)、幽默段子(10条)、节日专属(5条)
+
+---
+
+## 23. 学习资源 AI 助手
+
+### 功能概述
+
+学习资源页面右下角的智能助手，复刻嗨玩榜 AI 助手的 UI 结构，专注于学习资源推荐。
+
+### 功能特性
+
+- **自然语言搜索：** 输入资源名、作者名、关键词进行搜索
+- **拼音搜索：** 支持拼音和首字母匹配
+- **快捷按钮：** 随机推荐、热门推荐（按评分）、最新资源（按日期）
+- **点赞反馈：** 对推荐结果可点赞，数据存储在 localStorage
+
+### 数据存储
+
+| Key | 用途 |
+|-----|------|
+| `tls_resource_feedback` | 资源点赞记录 `{ [id]: true }` |
 
 ---
 

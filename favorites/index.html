@@ -60,9 +60,6 @@ var CATEGORY_ACCENTS = {
   '物理': ['#ef4444', '#f87171'],
   '其他': ['#8b5cf6', '#a78bfa']
 };
-var MAX_DL = 0;
-allResources.forEach(function(r){ if(r.downloads>MAX_DL) MAX_DL=r.downloads; });
-if(!MAX_DL) MAX_DL=1;
 
 function favStars(rating){
   var h='';
@@ -73,7 +70,6 @@ function favStars(rating){
 function favBuildCard(r){
   var tags=r.tags.map(function(t){return '<span class="tag">'+t+'</span>';}).join('');
   var acc=CATEGORY_ACCENTS[r.category]||CATEGORY_ACCENTS['其他'];
-  var pop=Math.round((r.downloads/MAX_DL)*100);
   return '<div class="resource-card" id="fav-card-'+r.id+'" style="--card-accent:'+acc[0]+';--card-accent-end:'+acc[1]+';">'+
     '<div class="resource-card-body">'+
       '<div class="resource-header">'+
@@ -86,12 +82,10 @@ function favBuildCard(r){
       '<div class="resource-meta">'+
         '<span class="meta-user"><i class="fas fa-user"></i> '+r.uploader+'</span>'+
         '<span class="meta-date"><i class="fas fa-calendar"></i> '+r.date+'</span>'+
-        '<span class="resource-downloads"><i class="fas fa-arrow-down"></i> '+r.downloads+'</span>'+
         '<span class="resource-rating">'+favStars(r.rating)+'<span class="rating-num">'+r.rating+'</span></span>'+
       '</div>'+
       '<p class="resource-description">'+r.description+'</p>'+
       '<div class="resource-tags">'+tags+'</div>'+
-      '<div class="resource-popularity"><div class="resource-popularity-bar" style="width:'+pop+'%;"></div></div>'+
     '</div>'+
     '<div class="resource-actions">'+
       '<a href="'+r.link+'" class="download-btn" target="_blank" rel="noopener"><i class="fas fa-download"></i> 下载资源</a>'+
