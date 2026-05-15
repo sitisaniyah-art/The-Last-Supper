@@ -89,3 +89,6 @@ if('serviceWorker' in navigator){
   navigator.serviceWorker.register('{{ "/sw.js" | relative_url }}').catch(function(e){console.log('SW registration failed:',e)});
 }
 </script>
+<!-- Auth module -->
+<script src="{{ '/assets/js/auth.js' | relative_url }}"></script>
+{% include auth-modal.html %}

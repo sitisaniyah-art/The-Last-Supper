@@ -1,0 +1,122 @@
+<!-- Auth Modal -->
+<div id="auth-modal-overlay" class="auth-modal-overlay" style="display:none;">
+  <div class="auth-modal-card">
+    <button class="auth-modal-close" id="auth-modal-close" aria-label="关闭">
+      <i class="fas fa-times"></i>
+    </button>
+    <div class="auth-modal-header">
+      <i class="fab fa-github" style="font-size:2rem;margin-bottom:0.5rem;display:block;color:var(--primary-color);"></i>
+      <h3 style="margin:0 0 0.25rem;font-size:1.2rem;">登录 / 注册</h3>
+      <p style="color:var(--text-light);font-size:0.85rem;margin:0;">输入 GitHub 用户名即可登录，无需密码</p>
+    </div>
+    <div class="auth-modal-body">
+      <div class="auth-field">
+        <label for="auth-username">GitHub 用户名 <span style="color:var(--danger-color);">*</span></label>
+        <div class="auth-input-wrap">
+          <i class="fab fa-github"></i>
+          <input type="text" id="auth-username" placeholder="例如: octocat" autocomplete="off" spellcheck="false">
+        </div>
+      </div>
+      <details class="auth-advanced">
+        <summary><i class="fas fa-cog"></i> 高级设置（可选）</summary>
+        <div class="auth-field" style="margin-top:0.75rem;">
+          <label for="auth-token">Personal Access Token</label>
+          <div class="auth-input-wrap">
+            <i class="fas fa-key"></i>
+            <input type="password" id="auth-token" placeholder="ghp_xxxx（gist 权限）" autocomplete="off" spellcheck="false">
+          </div>
+          <p class="auth-hint">
+            提供 Token 可启用 Gist 跨设备同步。
+            <a href="https://github.com/settings/tokens/new?scopes=gist&description=The-Last-Supper-Sync" target="_blank" rel="noopener">创建 Token</a>
+          </p>
+        </div>
+      </details>
+      <div id="auth-error" class="auth-error" style="display:none;"></div>
+      <button id="auth-login-btn" class="btn btn-primary" style="width:100%;margin-top:0.75rem;">
+        <i class="fas fa-sign-in-alt"></i> 登录
+      </button>
+      <div id="auth-loading" class="auth-loading" style="display:none;">
+        <i class="fas fa-spinner fa-spin"></i> 正在验证...
+      </div>
+    </div>
+    <div class="auth-modal-footer">
+      <p style="font-size:0.78rem;color:var(--text-lighter);margin:0;line-height:1.5;">
+        登录即表示你的收藏、点赞等数据会与 GitHub 用户名关联。<br>
+        我们不会存储你的密码或 Token，仅用于与 GitHub API 通信。
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var overlay = document.getElementById('auth-modal-overlay');
+  var closeBtn = document.getElementById('auth-modal-close');
+  var loginBtn = document.getElementById('auth-login-btn');
+  var usernameInput = document.getElementById('auth-username');
+  var tokenInput = document.getElementById('auth-token');
+  var errorEl = document.getElementById('auth-error');
+  var loadingEl = document.getElementById('auth-loading');
+
+  function showModal() {
+    overlay.style.display = 'flex';
+    errorEl.style.display = 'none';
+    usernameInput.focus();
+  }
+
+  function hideModal() {
+    overlay.style.display = 'none';
+    errorEl.style.display = 'none';
+  }
+
+  function showError(msg) {
+    errorEl.textContent = msg;
+    errorEl.style.display = 'block';
+  }
+
+  function setLoading(on) {
+    loadingEl.style.display = on ? 'flex' : 'none';
+    loginBtn.disabled = on;
+    loginBtn.style.opacity = on ? '0.6' : '1';
+  }
+
+  // 暴露给外部调用
+  window.showAuthModal = showModal;
+  window.hideAuthModal = hideModal;
+
+  closeBtn.addEventListener('click', hideModal);
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) hideModal();
+  });
+
+  loginBtn.addEventListener('click', function() {
+    var username = usernameInput.value.trim();
+    var token = tokenInput.value.trim() || null;
+
+    if (!username) {
+      showError('请输入 GitHub 用户名');
+      return;
+    }
+
+    setLoading(true);
+    errorEl.style.display = 'none';
+
+    Auth.login(username, token).then(function(user) {
+      setLoading(false);
+      hideModal();
+      updateAuthUI();
+    }).catch(function(err) {
+      setLoading(false);
+      showError(err.message || '登录失败，请重试');
+    });
+  });
+
+  // Enter 键提交
+  usernameInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') loginBtn.click();
+  });
+  tokenInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') loginBtn.click();
+  });
+})();
+</script>
