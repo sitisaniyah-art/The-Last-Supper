@@ -11,6 +11,57 @@ author_profile: false
   这个平台是一个AI协助搭建的资源互助社区，你的每一份贡献都能帮助到更多同学。你可以通过以下方式贡献：
 </p>
 
+<!-- 资源上传向导 -->
+<div class="upload-wizard" id="upload-wizard">
+  <h3 style="margin-bottom:1rem;color:var(--primary-color);"><i class="fas fa-magic"></i> 资源上传向导</h3>
+  <p style="color:var(--text-light);font-size:.9rem;margin-bottom:1.5rem;">不知道怎么提交？让向导帮你选择正确的方式！</p>
+
+  <!-- Step 1: 资源类型 -->
+  <div class="wizard-step active" id="wizard-step-1">
+    <label class="wizard-label">第一步：选择资源类型</label>
+    <div class="wizard-options" id="wizard-type-options">
+      <button class="wizard-option" data-type="视频课程">
+        <i class="fas fa-video"></i>
+        <span>视频课程</span>
+        <small>在线播放/网盘链接</small>
+      </button>
+      <button class="wizard-option" data-type="课件讲义">
+        <i class="fas fa-file-powerpoint"></i>
+        <span>课件讲义</span>
+        <small>PPT/PDF/Word</small>
+      </button>
+      <button class="wizard-option" data-type="习题试卷">
+        <i class="fas fa-file-alt"></i>
+        <span>习题试卷</span>
+        <small>真题/习题/答案</small>
+      </button>
+      <button class="wizard-option" data-type="书籍">
+        <i class="fas fa-book"></i>
+        <span>书籍</span>
+        <small>PDF/电子书</small>
+      </button>
+      <button class="wizard-option" data-type="其他">
+        <i class="fas fa-box"></i>
+        <span>其他</span>
+        <small>不属于以上类型</small>
+      </button>
+    </div>
+  </div>
+
+  <!-- Step 2: 学科分类 -->
+  <div class="wizard-step" id="wizard-step-2">
+    <label class="wizard-label">第二步：选择学科分类</label>
+    <div class="wizard-subject-grid" id="wizard-subject-grid"></div>
+  </div>
+
+  <!-- Step 3: 结果 -->
+  <div class="wizard-step" id="wizard-step-3">
+    <div class="wizard-result" id="wizard-result"></div>
+  </div>
+</div>
+
+<hr style="margin:2rem 0;border:none;border-top:1px solid var(--border-color);">
+
 <h3 style="margin-bottom:1rem;color:var(--primary-color);"><i class="fas fa-bolt"></i> 方式一：通过 Issue 提交（推荐）</h3>
 <p style="color:var(--text-light);line-height:1.6;margin-bottom:1rem;">
   无需 Fork 和命令行，直接在 GitHub 上填写表单即可提交。审核通过后会自动创建 PR 并由管理员合并。
@@ -26,6 +77,12 @@ author_profile: false
     <i class="fas fa-book"></i> 推荐生存指南
   </a>
 </div>
+
+<!-- 资源目录结构参考 -->
+<details style="margin-bottom:2rem;">
+  <summary style="cursor:pointer;color:var(--primary-color);font-weight:600;"><i class="fas fa-folder-tree"></i> 查看资源目录结构</summary>
+  <div class="folder-tree" id="folder-tree"></div>
+</details>
 
 <hr style="margin:2rem 0;border:none;border-top:1px solid var(--border-color);">
 
@@ -48,7 +105,7 @@ author_profile: false
   category: 数学          # 数学/编程/英语/物理/其他
   subcategory: 高等数学    # 具体学科
   grade: 大一             # 大一/大二/大三/通用
-  type: 真题              # 真题/课件/笔记/习题
+  type: 真题              # 真题/课件/笔记/习题/书籍
   uploader: 你的昵称
   date: 2026-05-15
   downloads: 0
@@ -110,3 +167,144 @@ author_profile: false
     </tbody>
   </table>
 </div>
+
+<style>
+.upload-wizard{background:var(--bg-alt,#f8fafc);border:1px solid var(--border-color);border-radius:12px;padding:1.5rem;margin-bottom:2rem;}
+.wizard-step{display:none;margin-bottom:1rem;}
+.wizard-step.active{display:block;}
+.wizard-label{display:block;font-weight:600;font-size:.9rem;margin-bottom:.75rem;color:var(--text-color);}
+.wizard-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.75rem;}
+.wizard-option{display:flex;flex-direction:column;align-items:center;gap:.3rem;padding:1rem .5rem;border:2px solid var(--border-color);border-radius:10px;background:var(--bg-color);cursor:pointer;transition:var(--transition);font-size:.85rem;color:var(--text-color);}
+.wizard-option i{font-size:1.5rem;color:var(--primary-color);}
+.wizard-option small{font-size:.7rem;color:var(--text-lighter);}
+.wizard-option:hover{border-color:var(--primary-color);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.08);}
+.wizard-option.selected{border-color:var(--primary-color);background:rgba(99,102,241,.06);}
+.wizard-subject-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.5rem;}
+.wizard-subject-btn{padding:.5rem .75rem;border:1px solid var(--border-color);border-radius:8px;background:var(--bg-color);cursor:pointer;font-size:.82rem;color:var(--text-color);text-align:left;transition:var(--transition);}
+.wizard-subject-btn:hover{border-color:var(--primary-color);background:rgba(99,102,241,.04);}
+.wizard-result{padding:1.25rem;background:var(--bg-color);border-radius:10px;border:1px solid var(--border-color);}
+.wizard-result h4{margin-bottom:.75rem;font-size:1rem;}
+.wizard-result p{font-size:.88rem;color:var(--text-light);line-height:1.6;margin-bottom:.5rem;}
+.wizard-result .wizard-code{background:var(--bg-alt,#f1f5f9);padding:.75rem;border-radius:8px;font-size:.78rem;font-family:monospace;white-space:pre-wrap;margin:.75rem 0;overflow-x:auto;}
+.wizard-back-btn{margin-top:1rem;font-size:.82rem;color:var(--primary-color);cursor:pointer;background:none;border:none;text-decoration:underline;}
+.folder-tree{margin-top:1rem;padding:1rem;background:var(--bg-alt,#f8fafc);border-radius:8px;font-size:.8rem;font-family:monospace;line-height:1.8;color:var(--text-light);max-height:300px;overflow-y:auto;}
+[data-theme="dark"] .upload-wizard{background:rgba(255,255,255,.03);}
+[data-theme="dark"] .wizard-option{background:rgba(255,255,255,.04);}
+[data-theme="dark"] .wizard-subject-btn{background:rgba(255,255,255,.04);}
+[data-theme="dark"] .wizard-result{background:rgba(255,255,255,.04);}
+</style>
+
+<script>
+(function(){
+  var SUBJECTS = {
+    '数学与统计类': ['高等数学','线性代数','概率论与数理统计','离散数学','数值分析','复变函数与积分变换','其他数学'],
+    '计算机科学与技术类': ['计算机语言','数据结构与算法','操作系统','计算机网络','数据库系统','机器学习','深度学习','计算机视觉','自然语言处理','其他计算机'],
+    '电子信息与电气工程类': ['电路原理','模拟电子技术','数字电子技术','信号与系统','数字信号处理','自动控制原理','其他电子信息'],
+    '机械与能源工程类': ['理论力学','材料力学','机械原理','机械设计','工程制图','工程热力学','流体力学','传热学','其他机械能源'],
+    '材料科学与工程类': ['材料科学基础','其他材料'],
+    '人文社科与公共基础类': ['大学英语','马克思主义基本原理','毛泽东思想和中国特色社会主义理论体系概论','中国近现代史纲要','思想道德与法治','其他人文学科'],
+    '综合类': ['其他学科']
+  };
+  var PARENTS = ['视频课程','课件讲义','习题试卷','书籍','其他'];
+  var selectedType = '';
+  var selectedSubject = '';
+
+  // Step 1: type selection
+  document.querySelectorAll('#wizard-type-options .wizard-option').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('#wizard-type-options .wizard-option').forEach(function(b){b.classList.remove('selected');});
+      this.classList.add('selected');
+      selectedType = this.dataset.type;
+      showStep2();
+    });
+  });
+
+  function showStep2(){
+    var grid = document.getElementById('wizard-subject-grid');
+    grid.innerHTML = '';
+    for(var cat in SUBJECTS){
+      SUBJECTS[cat].forEach(function(sub){
+        var btn = document.createElement('button');
+        btn.className = 'wizard-subject-btn';
+        btn.textContent = sub;
+        btn.addEventListener('click', function(){
+          selectedSubject = sub;
+          showResult();
+        });
+        grid.appendChild(btn);
+      });
+    }
+    document.getElementById('wizard-step-1').classList.remove('active');
+    document.getElementById('wizard-step-2').classList.add('active');
+  }
+
+  function showResult(){
+    var result = document.getElementById('wizard-result');
+    var folderPath = selectedType + '/.../' + selectedSubject;
+    var html = '';
+
+    if(selectedType === '视频课程'){
+      html = '<h4><i class="fas fa-video" style="color:var(--primary-color);"></i> 视频课程提交指南</h4>' +
+        '<p><strong>重要提示：本仓库不接受直接上传视频文件！</strong>视频文件体积过大，请提供链接。</p>' +
+        '<p>请通过 Issue 提交，需要提供以下信息：</p>' +
+        '<div class="wizard-code">' +
+        '课程名称：[填写课程名称]\n' +
+        '主讲人：[填写老师姓名]\n' +
+        '学科：' + selectedSubject + '\n' +
+        '视频链接：[在线播放/网盘/下载链接]\n' +
+        '提取码：[如有]\n' +
+        '有效期：[如有]' +
+        '</div>' +
+        '<p>提交后管理员会将链接整理到 <code>视频课程/.../' + selectedSubject + '/</code> 文件夹中。</p>' +
+        '<a href="https://github.com/sitisaniyah-art/The-Last-Supper/issues/new?template=submit-resource.yml" target="_blank" rel="noopener" class="btn btn-primary" style="margin-top:.5rem;">' +
+          '<i class="fas fa-external-link-alt"></i> 去提交 Issue</a>';
+    } else if(selectedType === '书籍'){
+      html = '<h4><i class="fas fa-book" style="color:var(--primary-color);"></i> 书籍资源提交指南</h4>' +
+        '<p>书籍资源将存放在 <code>书籍/.../' + selectedSubject + '/</code> 文件夹中。</p>' +
+        '<p><strong>文件命名建议：</strong>书名 + 作者 + 出版社 + 版本号</p>' +
+        '<div class="wizard-code">例如：机器学习_周志华_清华大学出版社_第2版.pdf</div>' +
+        '<p>提交方式：通过 Issue 提交资源链接（PDF/电子书下载链接），或 Fork 仓库后直接上传文件。</p>' +
+        '<a href="https://github.com/sitisaniyah-art/The-Last-Supper/issues/new?template=submit-resource.yml" target="_blank" rel="noopener" class="btn btn-primary" style="margin-top:.5rem;">' +
+          '<i class="fas fa-external-link-alt"></i> 去提交 Issue</a>';
+    } else {
+      var icon = selectedType === '课件讲义' ? 'fa-file-powerpoint' : selectedType === '习题试卷' ? 'fa-file-alt' : 'fa-box';
+      html = '<h4><i class="fas ' + icon + '" style="color:var(--primary-color);"></i> ' + selectedType + '提交指南</h4>' +
+        '<p>该资源将存放在 <code>' + selectedType + '/.../' + selectedSubject + '/</code> 文件夹中。</p>' +
+        '<p>提交方式：通过 Issue 提交资源下载链接，或 Fork 仓库后直接上传文件到对应目录。</p>' +
+        '<a href="https://github.com/sitisaniyah-art/The-Last-Supper/issues/new?template=submit-resource.yml" target="_blank" rel="noopener" class="btn btn-primary" style="margin-top:.5rem;">' +
+          '<i class="fas fa-external-link-alt"></i> 去提交 Issue</a>';
+    }
+
+    html += '<button class="wizard-back-btn" id="wizard-back-btn"><i class="fas fa-arrow-left"></i> 重新选择</button>';
+    result.innerHTML = html;
+
+    document.getElementById('wizard-step-2').classList.remove('active');
+    document.getElementById('wizard-step-3').classList.add('active');
+
+    document.getElementById('wizard-back-btn').addEventListener('click', function(){
+      selectedType = '';
+      selectedSubject = '';
+      document.getElementById('wizard-step-3').classList.remove('active');
+      document.getElementById('wizard-step-2').classList.remove('active');
+      document.getElementById('wizard-step-1').classList.add('active');
+      document.querySelectorAll('#wizard-type-options .wizard-option').forEach(function(b){b.classList.remove('selected');});
+    });
+  }
+
+  // Folder tree display
+  var treeEl = document.getElementById('folder-tree');
+  if(treeEl){
+    var html = '';
+    PARENTS.forEach(function(p){
+      html += p + '/\n';
+      for(var cat in SUBJECTS){
+        html += '  ' + cat + '/\n';
+        SUBJECTS[cat].forEach(function(sub){
+          html += '    ' + sub + '/\n';
+        });
+      }
+    });
+    treeEl.textContent = html;
+  }
+})();
+</script>

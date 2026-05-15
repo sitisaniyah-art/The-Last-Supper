@@ -14,7 +14,7 @@
   downloads: 0
   rating: 4.5
   description: Boosting方法的基础理论与算法详解，涵盖AdaBoost等经典算法
-  link: "/books/机器学习/Boosting：基础与算法Boosting_ Foundations and Algorithms .pdf"
+  link: "/书籍/计算机科学与技术类/机器学习/Boosting：基础与算法Boosting_ Foundations and Algorithms .pdf"
   tags: [机器学习, Boosting, 算法, 书籍]
 
 - id: 2
@@ -28,7 +28,7 @@
   downloads: 0
   rating: 4.5
   description: 人工智能基础知识体系，刘伟、李明编著，适合入门学习
-  link: "/books/机器学习/人工智能基础 -- 刘伟 李明 .pdf"
+  link: "/书籍/计算机科学与技术类/机器学习/人工智能基础 -- 刘伟 李明 .pdf"
   tags: [人工智能, 入门, 书籍]
 
 - id: 3
@@ -42,7 +42,7 @@
   downloads: 0
   rating: 4.8
   description: 经典凸优化教材，由Boyd和Vandenberghe编写，机器学习数学基础必读
-  link: "/books/机器学习/凸优化Convex Optimization - Cambridge University Press .pdf"
+  link: "/书籍/计算机科学与技术类/机器学习/凸优化Convex Optimization - Cambridge University Press .pdf"
   tags: [凸优化, 数学, 优化理论, 书籍]
 
 - id: 4
@@ -56,7 +56,7 @@
   downloads: 0
   rating: 4.9
   description: 由李沐等人编写的深度学习实战教材，理论与代码结合，适合动手实践
-  link: "/books/机器学习/动手学深度学习Dive Into Deep Learning.pdf"
+  link: "/书籍/计算机科学与技术类/机器学习/动手学深度学习Dive Into Deep Learning.pdf"
   tags: [深度学习, 实战, PyTorch, 书籍]
 
 - id: 5
@@ -70,7 +70,7 @@
   downloads: 0
   rating: 4.7
   description: 周志华《机器学习》的公式推导与解析 companion，帮助理解西瓜书中的数学细节
-  link: "/books/机器学习/南瓜书Pumpkin_Book.pdf"
+  link: "/书籍/计算机科学与技术类/机器学习/南瓜书Pumpkin_Book.pdf"
   tags: [机器学习, 公式推导, 西瓜书, 书籍]
 
 - id: 6
@@ -84,7 +84,7 @@
   downloads: 0
   rating: 4.4
   description: 在线凸优化第二版，介绍流数据场景下的在线学习理论与算法
-  link: "/books/机器学习/在线学习与流数据处理Introduction to Online Convex Optimization, second edition.pdf"
+  link: "/书籍/计算机科学与技术类/机器学习/在线学习与流数据处理Introduction to Online Convex Optimization, second edition.pdf"
   tags: [在线学习, 流数据, 优化, 书籍]
 
 - id: 7
@@ -98,7 +98,7 @@
   downloads: 0
   rating: 4.9
   description: 经典的"西瓜书"，周志华教授编著，系统介绍机器学习的基本概念和主要方法
-  link: "/books/机器学习/机器学习 周志华.pdf"
+  link: "/书籍/计算机科学与技术类/机器学习/机器学习 周志华.pdf"
   tags: [机器学习, 西瓜书, 经典, 书籍]
 
 - id: 8
@@ -112,7 +112,7 @@
   downloads: 0
   rating: 4.6
   description: Bishop的深度学习基础教材，涵盖机器学习的核心概念和理论基础
-  link: "/books/机器学习/机器学习基础Deep Learning_ Foundations and Concept.pdf"
+  link: "/书籍/计算机科学与技术类/机器学习/机器学习基础Deep Learning_ Foundations and Concept.pdf"
   tags: [深度学习, 基础, Bishop, 书籍]
 
 - id: 9
@@ -126,7 +126,7 @@
   downloads: 0
   rating: 4.7
   description: 机器学习所需的数学基础知识，涵盖线性代数、概率论、最优化等
-  link: "/books/机器学习/机器学习数学Mathematics for Machine Learning.pdf"
+  link: "/书籍/计算机科学与技术类/机器学习/机器学习数学Mathematics for Machine Learning.pdf"
   tags: [数学, 线性代数, 概率论, 书籍]
 
 - id: 10
@@ -140,7 +140,7 @@
   downloads: 0
   rating: 4.5
   description: 深度学习所需的矩阵微积分知识，理解反向传播的数学基础
-  link: "/books/机器学习/矩阵微积分The Matrix Calculus You Need for Deep Learning.pdf"
+  link: "/书籍/计算机科学与技术类/机器学习/矩阵微积分The Matrix Calculus You Need for Deep Learning.pdf"
   tags: [矩阵, 微积分, 深度学习, 书籍]
 
 - id: 11
@@ -154,7 +154,7 @@
   downloads: 0
   rating: 4.6
   description: 系统介绍神经网络与深度学习的基本原理、模型和应用
-  link: "/books/机器学习/神经网络与深度学习.pdf"
+  link: "/书籍/计算机科学与技术类/机器学习/神经网络与深度学习.pdf"
   tags: [神经网络, 深度学习, 书籍]
 
 - id: 12
@@ -168,7 +168,7 @@
   downloads: 0
   rating: 4.8
   description: Bishop的经典之作，从贝叶斯视角系统讲解模式识别与机器学习
-  link: "/books/机器学习/算法Bishop-Pattern-Recognition-and-Machine-Learning-2006.pdf"
+  link: "/书籍/计算机科学与技术类/机器学习/算法Bishop-Pattern-Recognition-and-Machine-Learning-2006.pdf"
   tags: [PRML, 贝叶斯, 模式识别, 书籍]
 
 - id: 13
@@ -182,7 +182,7 @@
   downloads: 0
   rating: 4.3
   description: 算法与博弈论交叉领域，介绍计算博弈论的核心理论和算法
-  link: "/books/机器学习/算法博弈论Algorithmic Game Theory .pdf"
+  link: "/书籍/计算机科学与技术类/机器学习/算法博弈论Algorithmic Game Theory .pdf"
   tags: [博弈论, 算法, 书籍]
 
 - id: 14
@@ -196,7 +196,7 @@
   downloads: 0
   rating: 4.6
   description: Larry Wasserman的统计学精简教程，涵盖概率论、统计推断、回归分析等
-  link: "/books/机器学习/统计学完全教程All of Statistics - A Concise Course in Statistical.pdf"
+  link: "/书籍/计算机科学与技术类/机器学习/统计学完全教程All of Statistics - A Concise Course in Statistical.pdf"
   tags: [统计学, 概率论, 推断, 书籍]
 
 - id: 15
@@ -210,5 +210,5 @@
   downloads: 0
   rating: 4.9
   description: Goodfellow、Bengio、Courville合著的深度学习圣经，全面系统讲解深度学习理论
-  link: "/books/机器学习/花书Deep Learning.pdf"
+  link: "/书籍/计算机科学与技术类/机器学习/花书Deep Learning.pdf"
   tags: [深度学习, 花书, 经典, 书籍]

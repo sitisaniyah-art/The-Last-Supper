@@ -26,6 +26,14 @@
 10. [部署与发布流程](#10-部署与发布流程)
 11. [常见问题排查](#11-常见问题排查)
 12. [扩展功能指南](#12-扩展功能指南)
+13. [GitHub Actions 自动化](#13-github-actions-自动化)
+14. [用户举报功能](#14-用户举报功能)
+15. [管理员后台](#15-管理员后台)
+16. [滚动公告栏](#16-滚动公告栏)
+17. [嗨玩榜图片管理系统](#17-嗨玩榜图片管理系统)
+18. [评论系统](#18-评论系统)
+19. [智能检索 Agent](#19-智能检索-agent)
+20. [资源目录结构](#20-资源目录结构)
 
 ---
 
@@ -34,18 +42,20 @@
 **"最后的晚餐"** 是一个 AI 协助搭建的资源互助社区，基于 Jekyll 静态站点生成器，使用 Minimal Mistakes 主题，托管在 GitHub Pages。
 
 **核心功能：**
-- **学习资源库** — 按学科/年级/类型筛选的 PDF 资源库
+- **学习资源库** — 按学科/年级/类型筛选的资源库（5种资源类型 × 36个学科）
 - **我的收藏** — 基于 localStorage 的收藏夹
 - **疑问区** — 基于 GitHub Issues 的问答系统
-- **嗨玩榜** — 浙大紫金港附近吃喝玩乐推荐
+- **嗨玩榜** — 浙大紫金港附近吃喝玩乐推荐（图片轮播 + 评论 + 搜索Agent）
 - **生存指南** — 浙大学生必备信息汇总
 - **社区公告** — 贡献者排行榜 + 站点公告
 - **暗黑模式** — 全站主题切换
 - **GitHub Actions 自动化** — Issue 提交自动审核、生成 PR
 - **内容审核** — 违规关键词检测、链接安全检查
 - **用户举报** — 一键举报跳转 GitHub Issue 模板
-- **管理员后台** — 密码保护的数据管理面板
+- **管理员后台** — 密码保护的数据管理面板（含图片管理 + 评论举报）
 - **滚动公告栏** — 页面顶部实时动态展示
+- **评论系统** — 嗨玩榜地点独立评论（点赞/踩/举报）
+- **智能检索 Agent** — 全站悬浮搜索助手（关键词搜索 + 快捷推荐）
 
 **核心理念：所有内容都存储在 `_data/*.yml` 文件中，HTML 页面在构建时通过 Liquid 模板引擎读取 YAML 数据并嵌入为 JavaScript 对象，由前端 JS 负责渲染和交互。**
 
@@ -62,6 +72,7 @@
 | GitHub Pages | 托管平台 |
 | GitHub Issues API | 问答系统后端 |
 | Font Awesome 6.5.1 | 图标库（CDN 加载） |
+| Imgbb API v1 | 图片托管（免费） |
 | Jest 29.x | 单元测试（仅 `filter-resources.js`） |
 
 ### 本地运行
@@ -130,13 +141,25 @@ The-Last-Supper/
 │       ├── favorites.js           #   收藏夹模块（localStorage）
 │       ├── resources.js           #   资源页渲染与筛选
 │       ├── admin.js               #   管理后台逻辑
+│       ├── image-upload.js        #   图片压缩/Imgbb上传
+│       ├── comments.js            #   评论数据模块（CRUD/投票/举报）
+│       ├── comment-modal.js       #   评论弹窗UI
+│       ├── search-agent.js        #   智能检索Agent
 │       ├── recommendations.js     #   资源推荐算法
 │       ├── stats.js               #   动态排行榜
 │       └── lib/
 │           └── filter-resources.js #  纯函数：资源过滤逻辑（可测试）
 │
-├── books/                         # ★ 直接托管的 PDF 文件
-│   └── 机器学习/                  #   机器学习类书籍 PDF
+├── 视频课程/                      # 资源类型母文件夹（仅链接，无视频文件）
+│   └── [学科分类]/[具体学科]/     #   学科子文件夹
+├── 课件讲义/                      # PPT/PDF/Word 等课件
+│   └── [学科分类]/[具体学科]/
+├── 习题试卷/                      # 真题/习题/答案
+│   └── [学科分类]/[具体学科]/
+├── 书籍/                          # PDF/电子书（原 books/ 已迁移）
+│   └── [学科分类]/[具体学科]/     #   例：计算机科学与技术类/机器学习/
+└── 其他/                          # 不属于以上类型的资源
+    └── [学科分类]/[具体学科]/
 │
 ├── index.html                     # 首页
 ├── resources/index.html           # 学习资源页
@@ -708,18 +731,83 @@ var CATEGORY_ACCENTS = {
 };
 ```
 
-### 8.4 其他页面的内联 JS
+### 8.4 `assets/js/image-upload.js`
+
+**职责：** 图片压缩、WebP转换、Imgbb API上传
+
+```javascript
+ImageUpload.getApiKey()                    // 获取 API Key（优先 localStorage，fallback 默认 key）
+ImageUpload.setApiKey('xxx')               // 设置自定义 API Key
+ImageUpload.compressImage(file, callback)  // 压缩图片（最大1200px，WebP）
+ImageUpload.blobToBase64(blob, callback)   // Blob 转 Base64
+ImageUpload.uploadToImgbb(source, cb, opts) // 上传到 Imgbb
+// source: Blob/base64/URL
+// opts: { name: '文件名', expiration: 60-15552000 }
+// cb: function(result) — result = { url, display_url, thumb_url, medium_url, delete_url, id }
+ImageUpload.handleFileSelect(files, onProgress, onComplete) // 多文件处理
+ImageUpload.createDropZone(container, onComplete, maxFiles) // 拖拽上传UI
+```
+
+- **Imgbb API v1：** `POST https://api.imgbb.com/1/upload`，参数 key + image(base64)
+- 默认 API Key 已内置，管理员可自定义覆盖
+- 存储 key：`tls_imgbb_key`
+
+### 8.5 `assets/js/comments.js`
+
+**职责：** 评论数据模块（CRUD、投票、举报）
+
+```javascript
+Comments.getComments(placeId, page)        // 分页获取评论（20条/页）
+Comments.addComment(placeId, nick, content) // 添加评论（验证+XSS防护）
+Comments.getCommentCount(placeId)          // 评论数
+Comments.canVote(commentId)                // 检查24h投票限制
+Comments.getVoteType(commentId)            // 获取投票类型（like/dislike/null）
+Comments.vote(commentId, placeId, type)    // 投票（支持取消/切换）
+Comments.report(commentId, placeId, reason, detail, nick, content) // 举报
+Comments.getReports()                      // 获取所有举报
+Comments.deleteReport(index)               // 删除举报记录
+```
+
+- 存储 keys：`tls_comments`, `tls_comment_votes`, `tls_comment_reports`
+- 投票有效期 24 小时，过期自动清除
+
+### 8.6 `assets/js/comment-modal.js`
+
+**职责：** 评论弹窗UI
+
+```javascript
+CommentModal.open(placeId, placeName)      // 打开评论弹窗
+CommentModal.close()                       // 关闭弹窗
+```
+
+- 弹窗结构：头部（标题+计数）、表单（昵称+内容+字数统计）、评论列表（无限滚动）、举报子模态
+
+### 8.7 `assets/js/search-agent.js`
+
+**职责：** 智能检索Agent（悬浮角色+聊天面板）
+
+```javascript
+SearchAgent.init()                         // 初始化：创建悬浮按钮和事件绑定
+```
+
+- 搜索数据源：`tlsPlacesIndex`（head/custom.html 注入）或 `allPlaces`
+- 匹配字段：name, description, address, category, tags
+- 快捷按钮：附近推荐、热门榜单、最新添加、随机推荐
+- CSS 纯绘制角色：呼吸动画、眨眼动画、阴影脉冲
+
+### 8.8 其他页面的内联 JS
 
 以下页面有内联 JavaScript（不单独提取为文件）：
 
 | 页面 | 内联 JS 功能 |
 |------|-------------|
 | `questions/index.html` | GitHub Issues API 数据获取、筛选、渲染 |
-| `zju-fun/index.html` | 嗨玩榜数据渲染、筛选、点赞（localStorage） |
+| `zju-fun/index.html` | 嗨玩榜数据渲染、筛选、点赞、图片轮播、评论按钮、Agent初始化 |
 | `zju-survival/index.html` | 生存指南数据渲染、筛选、搜索高亮 |
 | `favorites/index.html` | 收藏列表渲染、取消收藏 |
-| `_includes/head/custom.html` | 公告栏逻辑、暗黑模式预加载 |
+| `_includes/head/custom.html` | 公告栏逻辑、暗黑模式预加载、tlsPlacesIndex 注入 |
 | `_includes/footer/custom.html` | 暗黑模式切换按钮 |
+| `contribute.html` | 资源上传向导（类型选择→学科选择→提交指引） |
 
 ---
 
@@ -1149,6 +1237,8 @@ git reset --soft HEAD~1
 - **举报管理** — 读取 GitHub 上带 `report` label 的 Issues
 - **操作日志** — 显示 `_data/logs.yml` 中的操作记录
 - **资源管理** — 搜索和查看所有资源
+- **嗨玩项目** — 管理嗨玩榜项目图片（编辑/上传/删除），支持 Imgbb 上传和 URL 粘贴
+- **评论举报** — 查看和处理用户提交的评论举报（本地存储）
 
 **注意：** 密码验证在前端 JS 中进行，密码存储在 `assets/js/admin.js` 中。适合小团队使用，不适合高安全要求场景。
 
@@ -1163,6 +1253,142 @@ git reset --soft HEAD~1
 
 **实现：** `_includes/head/custom.html` 中的 CSS `@keyframes` 动画
 **特性：** 鼠标悬停暂停、自适应滚动速度、暗黑模式兼容
+
+---
+
+## 17. 嗨玩榜图片管理系统
+
+### 功能概述
+
+嗨玩榜（zju-fun）卡片支持多图轮播，管理员可在后台编辑项目图片。
+
+### 数据存储
+
+- **Key：** `tls_zju_images`（localStorage）
+- **格式：** `{ "1": ["url1", "url2"], "4": ["url3"] }`
+- 最多 5 张/项目，第一张为封面
+- 无数据时回退到 `zju-fun.yml` 的 `image` 字段
+
+### 卡片轮播
+
+- 左右箭头 + 底部点指示器 + 图片计数标签
+- 支持触摸滑动切换（touchstart/touchend）
+- 图片切换有 opacity 渐变过渡
+
+### Imgbb 上传
+
+- 管理后台点击"编辑图片"弹出编辑器
+- 支持：URL 粘贴 / 拖拽上传 / 文件选择
+- 上传流程：文件 → Canvas 压缩（最大 1200px） → WebP → Imgbb API → 返回 URL
+- 默认 API Key 已内置，管理员可自定义
+
+### 用户图片提交
+
+用户可通过推荐 Issue 模板提交图片 URL（每行一个，最多 3 张）。
+
+---
+
+## 18. 评论系统
+
+### 功能概述
+
+嗨玩榜每个地点支持独立评论，无需登录，使用昵称+内容发表。
+
+### 数据存储
+
+| Key | 用途 |
+|-----|------|
+| `tls_comments` | `{[placeId]: Comment[]}` — 评论数据 |
+| `tls_comment_votes` | `{[commentId]: {type, time}}` — 24h 投票限制 |
+| `tls_comment_reports` | `Report[]` — 评论举报 |
+
+### 功能特性
+
+- **分页加载** — 20条/页，无限滚动
+- **点赞/踩** — 24小时内可切换/取消，超时后可重新投票
+- **动画效果** — 点赞爱心飘出动画、踩抖动动画
+- **举报** — 二级模态框，选择理由+补充说明
+- **XSS 防护** — `textContent` → `innerHTML` 转义
+- **管理** — 管理后台"评论举报"Tab 可查看和忽略举报
+
+### 使用方式
+
+点击嗨玩榜卡片底部的评论图标（气泡），弹出评论弹窗。
+
+---
+
+## 19. 智能检索 Agent
+
+### 功能概述
+
+全站右下角悬浮一个小助手角色，点击展开聊天面板，支持关键词搜索嗨玩榜地点。
+
+### CSS 角色
+
+- 蓝紫渐变圆形身体
+- 白色眼睛 + 4s 眨眼动画
+- 微笑嘴巴
+- 3s 呼吸动画 + 阴影脉冲
+- 默认半透明（0.6），hover 全透明 + 放大
+
+### 聊天面板
+
+- **搜索逻辑** — 匹配 name, description, address, category, tags，按评分排序，最多返回 8 条
+- **快捷按钮** — 附近推荐（随机5条）、热门榜单（按点赞）、最新添加、随机推荐
+- **思考动画** — 3个弹跳圆点
+- **结果卡片** — 名称+评分+简介，点击跳转高德地图导航
+
+### 数据源
+
+- `_includes/head/custom.html` 注入 `tlsPlacesIndex` 全局变量
+- 轻量级数据：id, name, category, rating, address, description, tags
+- fallback：页面内联 `allPlaces` 变量
+
+### 响应式
+
+| 设备 | 角色大小 | 面板宽度 |
+|------|---------|---------|
+| 桌面 (>768px) | 80×80px | 360px |
+| iPad (768px) | 60×60px | calc(100vw-32px) |
+| 手机 (<480px) | 50×50px | calc(100vw-32px) |
+
+---
+
+## 20. 资源目录结构
+
+### 目录规范
+
+资源按 **类型 + 学科** 两级分类存放，共 5 个母文件夹，7 个学科大类，36 个具体学科。
+
+**母文件夹：** 视频课程、课件讲义、习题试卷、书籍、其他
+
+**学科大类：** 数学与统计类（7）、计算机科学与技术类（10）、电子信息与电气工程类（7）、机械与能源工程类（9）、材料科学与工程类（2）、人文社科与公共基础类（6）、综合类（1）
+
+### 视频课程规则
+
+**本仓库不存储视频文件**，仅存放链接文件。格式：
+
+```
+课程名称：高等数学（上）
+主讲人：张三老师
+链接地址：https://pan.baidu.com/s/xxx
+提取码：abcd
+有效期：永久
+```
+
+### 书籍命名建议
+
+`书名_作者_出版社_版本号.pdf`
+
+例如：`机器学习_周志华_清华大学出版社_第2版.pdf`
+
+### 用户上传引导
+
+`contribute.html` 页面包含交互式上传向导：
+1. 选择资源类型（视频/课件/习题/书籍/其他）
+2. 选择学科分类（36个学科）
+3. 显示对应的提交指南和文件夹路径
+4. 提供 Issue 提交链接
 
 ---
 
