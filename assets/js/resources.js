@@ -39,12 +39,76 @@ allResources.forEach(function(r) {
 });
 if (MAX_DOWNLOADS === 0) MAX_DOWNLOADS = 1;
 
-function renderStars(rating) {
-  var html = '';
-  for (var i = 1; i <= 5; i++) {
-    html += '<i class="fas fa-star star' + (i <= Math.round(rating) ? ' filled' : '') + '"></i>';
+/* Rating system */
+var RTG_KEY = 'tls_ratings';
+function getRatings() {
+  try { return JSON.parse(localStorage.getItem(RTG_KEY)) || {}; } catch(e) { return {}; }
+}
+function getMyRating(id) {
+  return getRatings()[id] || 0;
+}
+function setRating(id, rating) {
+  var rtg = getRatings();
+  rtg[id] = rating;
+  localStorage.setItem(RTG_KEY, JSON.stringify(rtg));
+  if (typeof Auth !== 'undefined' && Auth.isLoggedIn()) {
+    Auth.updateField('ratings', rtg);
   }
+}
+
+function renderStars(rating, resourceId) {
+  var myRtg = resourceId ? getMyRating(resourceId) : 0;
+  var html = '<span class="star-rating' + (resourceId ? ' star-interactive' : '') + '"' +
+    (resourceId ? ' data-resource-id="' + resourceId + '"' : '') + '>';
+  for (var i = 1; i <= 5; i++) {
+    var filled = myRtg ? (i <= myRtg) : (i <= Math.round(rating));
+    html += '<i class="fas fa-star star' + (filled ? ' filled' : '') + '" data-value="' + i + '"></i>';
+  }
+  html += '</span>';
+  if (myRtg) html += '<span class="my-rating-badge" title="我的评分">★' + myRtg + '</span>';
   return html;
+}
+
+/* Bind interactive star events */
+function bindStarEvents(container) {
+  container.querySelectorAll('.star-interactive').forEach(function(span) {
+    var resourceId = parseInt(span.getAttribute('data-resource-id'));
+    var stars = span.querySelectorAll('.star');
+
+    stars.forEach(function(star) {
+      star.addEventListener('mouseenter', function() {
+        var val = parseInt(this.getAttribute('data-value'));
+        stars.forEach(function(s, idx) {
+          s.classList.toggle('filled', idx < val);
+        });
+      });
+
+      star.addEventListener('click', function() {
+        var val = parseInt(this.getAttribute('data-value'));
+        setRating(resourceId, val);
+        // Re-render this card's stars
+        var card = span.closest('.resource-card');
+        if (card) {
+          var ratingEl = card.querySelector('.resource-rating');
+          if (ratingEl) {
+            // Find the original resource data for the avg rating
+            var r = allResources.find(function(x) { return x.id === resourceId; });
+            if (r) ratingEl.innerHTML = renderStars(r.rating, r.id) + '<span class="rating-num">' + r.rating + '</span>';
+          }
+        }
+      });
+    });
+
+    span.addEventListener('mouseleave', function() {
+      var myRtg = getMyRating(resourceId);
+      var r = allResources.find(function(x) { return x.id === resourceId; });
+      var baseRtg = r ? r.rating : 0;
+      stars.forEach(function(s, idx) {
+        var filled = myRtg ? (idx < myRtg) : (idx < Math.round(baseRtg));
+        s.classList.toggle('filled', filled);
+      });
+    });
+  });
 }
 
 function buildCardHTML(r) {
@@ -72,7 +136,7 @@ function buildCardHTML(r) {
         '<span class="meta-user"><i class="fas fa-user"></i> ' + r.uploader + '</span>' +
         '<span class="meta-date"><i class="fas fa-calendar"></i> ' + r.date + '</span>' +
         '<span class="resource-downloads"><i class="fas fa-arrow-down"></i> ' + totalDl + '</span>' +
-        '<span class="resource-rating">' + renderStars(r.rating) + '<span class="rating-num">' + r.rating + '</span></span>' +
+        '<span class="resource-rating">' + renderStars(r.rating, r.id) + '<span class="rating-num">' + r.rating + '</span></span>' +
       '</div>' +
       '<p class="resource-description">' + r.description + '</p>' +
       '<div class="resource-tags">' + tagsHtml + '</div>' +
@@ -102,6 +166,7 @@ function renderResources(resources) {
 
   grid.innerHTML = resources.map(buildCardHTML).join('');
   bindFavoriteEvents(grid);
+  bindStarEvents(grid);
 }
 
 function bindFavoriteEvents(container) {

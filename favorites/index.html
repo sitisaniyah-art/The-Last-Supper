@@ -15,6 +15,9 @@ author_profile: false
 <!-- 收藏列表 -->
 <div class="resources-grid" id="favorites-grid"></div>
 
+<!-- 推荐区域 -->
+<div id="recommendations-section" style="display:none;"></div>
+
 <!-- 空状态 -->
 <div class="state-message" id="no-favorites" style="display:none;">
   <i class="far fa-heart"></i>
@@ -48,6 +51,7 @@ const allResources = [
 ];
 </script>
 <script src="{{ '/assets/js/favorites.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/recommendations.js' | relative_url }}"></script>
 <script>
 var CATEGORY_ACCENTS = {
   '数学': ['#6366f1', '#818cf8'],
@@ -145,5 +149,9 @@ function renderFavorites() {
       }
     });
   });
+
+  // Render recommendations
+  var recs = Recommendations.getRecommended(favIds, allResources, 4);
+  Recommendations.renderRecommendations('recommendations-section', recs);
 }
 </script>

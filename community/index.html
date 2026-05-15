@@ -61,39 +61,60 @@ author_profile: false
 <!-- 贡献榜 Top 5 -->
 <h3 style="font-size:1.3rem;margin-bottom:1rem;"><i class="fas fa-trophy" style="color:var(--accent-color);"></i> 贡献榜 Top 5</h3>
 
-<div style="overflow-x:auto;">
-  <table class="leaderboard-table">
-    <thead>
-      <tr>
-        <th class="leaderboard-rank">排名</th>
-        <th>贡献者</th>
-        <th>资源</th>
-        <th>回答</th>
-        <th>积分</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% assign sorted = site.data.contributors | sort: "points" | reverse %}
-      {% for c in sorted limit:5 %}
-      <tr>
-        <td class="leaderboard-rank">
-          {% if forloop.index == 1 %}<i class="fas fa-crown" style="color:#f59e0b;"></i>
-          {% elsif forloop.index == 2 %}<i class="fas fa-medal" style="color:#94a3b8;"></i>
-          {% elsif forloop.index == 3 %}<i class="fas fa-medal" style="color:#cd7f32;"></i>
-          {% else %}{{ forloop.index }}{% endif %}
-        </td>
-        <td>
-          <img class="leaderboard-avatar" src="{{ c.avatar }}" alt="{{ c.name }}" loading="lazy">
-          <strong>{{ c.name }}</strong>
-        </td>
-        <td>{{ c.resources }}</td>
-        <td>{{ c.answers }}</td>
-        <td class="leaderboard-points">{{ c.points }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div id="dynamic-leaderboard">
+  <!-- 静态 fallback（JS 加载后替换） -->
+  <div style="overflow-x:auto;">
+    <table class="leaderboard-table">
+      <thead>
+        <tr>
+          <th class="leaderboard-rank">排名</th>
+          <th>贡献者</th>
+          <th>资源</th>
+          <th>回答</th>
+          <th>积分</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% assign sorted = site.data.contributors | sort: "points" | reverse %}
+        {% for c in sorted limit:5 %}
+        <tr>
+          <td class="leaderboard-rank">
+            {% if forloop.index == 1 %}<i class="fas fa-crown" style="color:#f59e0b;"></i>
+            {% elsif forloop.index == 2 %}<i class="fas fa-medal" style="color:#94a3b8;"></i>
+            {% elsif forloop.index == 3 %}<i class="fas fa-medal" style="color:#cd7f32;"></i>
+            {% else %}{{ forloop.index }}{% endif %}
+          </td>
+          <td>
+            <img class="leaderboard-avatar" src="{{ c.avatar }}" alt="{{ c.name }}" loading="lazy">
+            <strong>{{ c.name }}</strong>
+          </td>
+          <td>{{ c.resources }}</td>
+          <td>{{ c.answers }}</td>
+          <td class="leaderboard-points">{{ c.points }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
+
+<script>
+window.TLS_GITHUB_USERNAME = '{{ site.github_username }}';
+window.TLS_GITHUB_REPO = '{{ site.github_repo }}';
+</script>
+<script src="{{ '/assets/js/stats.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/recommendations.js' | relative_url }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var staticContributors = [
+    {% assign sorted2 = site.data.contributors | sort: "points" | reverse %}
+    {% for c in sorted2 %}
+    {"name":"{{ c.name | escape }}","github":"{{ c.github }}","avatar":"{{ c.avatar }}","resources":{{ c.resources }},"answers":{{ c.answers }},"points":{{ c.points }}}{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ];
+  Stats.renderDynamicLeaderboard('dynamic-leaderboard', staticContributors, []);
+});
+</script>
 <p style="text-align:right;margin-top:0.5rem;">
   <a href="{{ '/contribute/' | relative_url }}" style="color:var(--primary-color);font-size:0.9rem;">查看完整排行榜 &rarr;</a>
 </p>
