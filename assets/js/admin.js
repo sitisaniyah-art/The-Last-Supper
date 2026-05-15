@@ -60,6 +60,8 @@
     renderResources();
     loadReports();
     renderLogs();
+    renderPlaces();
+    renderCommentReports();
   }
 
   // --- Overview ---
@@ -207,6 +209,231 @@
         '<span class="admin-list-badge ' + (log.result === '成功' ? 'admin-badge-success' : 'admin-badge-error') + '">' + log.result + '</span>' +
       '</div>';
     }).join('');
+  }
+
+  // --- Places (嗨玩项目) ---
+  var _editingPlaceId = null;
+  var _editingImages = [];
+
+  function renderPlaces() {
+    var list = document.getElementById('admin-places-list');
+    var search = document.getElementById('admin-place-search');
+    if (!list || typeof allPlaces === 'undefined') return;
+
+    function doRender(term) {
+      var filtered = allPlaces;
+      if (term) {
+        term = term.toLowerCase();
+        filtered = allPlaces.filter(function(p) {
+          return p.name.toLowerCase().includes(term) || p.category.toLowerCase().includes(term);
+        });
+      }
+
+      list.innerHTML = filtered.map(function(p) {
+        var images = _getPlaceImages(p.id);
+        var imgCount = images.length;
+        return '<div class="admin-list-item admin-place-item">' +
+          '<div class="admin-place-thumb">' +
+            '<img src="' + (images[0] || p.image) + '" alt="" onerror="this.src=\'https://picsum.photos/80/80?random=' + p.id + '\'">' +
+          '</div>' +
+          '<div class="admin-list-main">' +
+            '<strong>' + p.name + '</strong>' +
+            '<span class="admin-list-meta">' + p.category + ' · 评分 ' + p.rating + ' · ' + imgCount + ' 张图片</span>' +
+          '</div>' +
+          '<button class="btn btn-outline admin-place-edit-btn" data-id="' + p.id + '" data-name="' + encodeURIComponent(p.name) + '">' +
+            '<i class="fas fa-edit"></i> 编辑图片' +
+          '</button>' +
+        '</div>';
+      }).join('');
+
+      // Bind edit buttons
+      list.querySelectorAll('.admin-place-edit-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var id = parseInt(this.dataset.id);
+          var name = decodeURIComponent(this.dataset.name);
+          openImageEditor(id, name);
+        });
+      });
+    }
+
+    doRender('');
+    if (search) {
+      search.addEventListener('input', function() {
+        doRender(this.value);
+      });
+    }
+  }
+
+  function _getPlaceImages(placeId) {
+    try {
+      var stored = JSON.parse(localStorage.getItem('tls_zju_images')) || {};
+      if (stored[String(placeId)] && stored[String(placeId)].length > 0) {
+        return stored[String(placeId)].slice(0, 5);
+      }
+    } catch(e) {}
+    var place = allPlaces.find(function(p) { return p.id === placeId; });
+    return place ? [place.image] : [];
+  }
+
+  function _savePlaceImages(placeId, images) {
+    try {
+      var stored = JSON.parse(localStorage.getItem('tls_zju_images')) || {};
+      stored[String(placeId)] = images;
+      localStorage.setItem('tls_zju_images', JSON.stringify(stored));
+    } catch(e) {}
+  }
+
+  function openImageEditor(placeId, placeName) {
+    _editingPlaceId = placeId;
+    _editingImages = _getPlaceImages(placeId).slice();
+
+    var overlay = document.getElementById('img-editor-overlay');
+    var title = document.getElementById('img-editor-title');
+    title.innerHTML = '<i class="fas fa-images"></i> ' + placeName;
+
+    _renderEditorImages();
+    overlay.style.display = 'flex';
+
+    // Drop zone
+    var dropZone = document.getElementById('admin-img-drop-zone');
+    var fileInput = document.getElementById('admin-img-file-input');
+
+    dropZone.onclick = function() { fileInput.click(); };
+    dropZone.ondragover = function(e) { e.preventDefault(); dropZone.classList.add('dragover'); };
+    dropZone.ondragleave = function() { dropZone.classList.remove('dragover'); };
+    dropZone.ondrop = function(e) {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      _handleImgUpload(e.dataTransfer.files);
+    };
+    fileInput.onchange = function() {
+      _handleImgUpload(this.files);
+      this.value = '';
+    };
+  }
+
+  function _renderEditorImages() {
+    var container = document.getElementById('img-editor-current');
+    if (!_editingImages.length) {
+      container.innerHTML = '<p style="color:var(--text-light);font-size:.85rem;">暂无图片</p>';
+      return;
+    }
+    container.innerHTML = _editingImages.map(function(url, i) {
+      return '<div class="img-editor-thumb">' +
+        '<img src="' + url + '" alt="">' +
+        '<button class="img-editor-thumb-del" data-idx="' + i + '" title="删除"><i class="fas fa-times"></i></button>' +
+        (i === 0 ? '<span class="img-editor-cover-badge">封面</span>' : '') +
+      '</div>';
+    }).join('');
+
+    container.querySelectorAll('.img-editor-thumb-del').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        _editingImages.splice(parseInt(this.dataset.idx), 1);
+        _renderEditorImages();
+      });
+    });
+  }
+
+  function _handleImgUpload(files) {
+    if (!files || !files.length) return;
+    var status = document.getElementById('admin-img-upload-status');
+    var remaining = 5 - _editingImages.length;
+    if (remaining <= 0) { status.textContent = '已达上限（5张）'; return; }
+
+    var toProcess = Array.from(files).slice(0, remaining);
+    status.textContent = '上传中... (0/' + toProcess.length + ')';
+
+    var done = 0;
+    toProcess.forEach(function(file) {
+      if (typeof ImageUpload !== 'undefined') {
+        ImageUpload.compressImage(file, function(blob) {
+          ImageUpload.uploadToImgbb(blob, function(url) {
+            if (url) _editingImages.push(url);
+            done++;
+            status.textContent = '上传中... (' + done + '/' + toProcess.length + ')';
+            _renderEditorImages();
+            if (done >= toProcess.length) status.textContent = '上传完成';
+          });
+        });
+      } else {
+        done++;
+        status.textContent = 'ImageUpload 模块未加载';
+      }
+    });
+  }
+
+  // Close editor
+  function closeImageEditor() {
+    document.getElementById('img-editor-overlay').style.display = 'none';
+    _editingPlaceId = null;
+    _editingImages = [];
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var overlay = document.getElementById('img-editor-overlay');
+    if (!overlay) return;
+
+    overlay.querySelector('.img-editor-close').addEventListener('click', closeImageEditor);
+    document.getElementById('img-editor-cancel').addEventListener('click', closeImageEditor);
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) closeImageEditor();
+    });
+
+    // URL add
+    document.getElementById('img-editor-url-add').addEventListener('click', function() {
+      var input = document.getElementById('img-editor-url-input');
+      var url = input.value.trim();
+      if (!url) return;
+      if (_editingImages.length >= 5) return;
+      _editingImages.push(url);
+      input.value = '';
+      _renderEditorImages();
+    });
+    document.getElementById('img-editor-url-input').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') document.getElementById('img-editor-url-add').click();
+    });
+
+    // Save
+    document.getElementById('img-editor-save').addEventListener('click', function() {
+      if (_editingPlaceId !== null) {
+        _savePlaceImages(_editingPlaceId, _editingImages);
+        closeImageEditor();
+        renderPlaces();
+      }
+    });
+  });
+
+  // --- Comment Reports ---
+  function renderCommentReports() {
+    var list = document.getElementById('admin-comment-reports-list');
+    if (!list || typeof Comments === 'undefined') return;
+
+    var reports = Comments.getReports();
+    if (reports.length === 0) {
+      list.innerHTML = '<p style="color:var(--text-light);">暂无评论举报</p>';
+      return;
+    }
+
+    list.innerHTML = reports.map(function(r, i) {
+      var time = '';
+      try { time = new Date(r.time).toLocaleString('zh-CN'); } catch(e) {}
+      return '<div class="admin-list-item admin-report-item">' +
+        '<div class="admin-list-main">' +
+          '<strong>' + r.reason + '</strong>' +
+          '<span class="admin-list-meta">项目ID: ' + r.placeId + ' · ' + r.nickname + ' · ' + time + '</span>' +
+          '<p class="admin-report-body">"' + (r.content || '').substring(0, 100) + '"</p>' +
+          (r.detail ? '<p class="admin-report-detail">补充: ' + r.detail + '</p>' : '') +
+        '</div>' +
+        '<button class="btn btn-outline admin-report-dismiss" data-idx="' + i + '" style="flex-shrink:0;font-size:.78rem;">忽略</button>' +
+      '</div>';
+    }).join('');
+
+    list.querySelectorAll('.admin-report-dismiss').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        Comments.deleteReport(parseInt(this.dataset.idx));
+        renderCommentReports();
+      });
+    });
   }
 
 })();

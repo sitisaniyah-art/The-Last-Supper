@@ -37,6 +37,8 @@ author_profile: false
     <button class="admin-tab" data-tab="reports"><i class="fas fa-flag"></i> 举报管理</button>
     <button class="admin-tab" data-tab="logs"><i class="fas fa-history"></i> 操作日志</button>
     <button class="admin-tab" data-tab="resources"><i class="fas fa-boxes"></i> 资源管理</button>
+    <button class="admin-tab" data-tab="places"><i class="fas fa-map-marker-alt"></i> 嗨玩项目</button>
+    <button class="admin-tab" data-tab="comment-reports"><i class="fas fa-comment-slash"></i> 评论举报</button>
   </div>
 
   <!-- Overview tab -->
@@ -63,6 +65,49 @@ author_profile: false
     <div id="admin-resources-list" class="admin-list"></div>
   </div>
 
+  <!-- Places (嗨玩项目) tab -->
+  <div class="admin-content" id="tab-places">
+    <p style="color:var(--text-light);margin-bottom:1rem;">管理嗨玩榜项目的图片。点击"编辑图片"可上传、删除或替换项目封面图。</p>
+    <input type="text" id="admin-place-search" placeholder="搜索项目名称..." class="admin-search-input">
+    <div id="admin-places-list" class="admin-list"></div>
+  </div>
+
+  <!-- Comment Reports tab -->
+  <div class="admin-content" id="tab-comment-reports">
+    <p style="color:var(--text-light);margin-bottom:1rem;">用户提交的评论举报，存储在本地浏览器中。</p>
+    <div id="admin-comment-reports-list" class="admin-list"></div>
+  </div>
+
+</div>
+
+<!-- Image editor modal -->
+<div id="img-editor-overlay" class="img-editor-overlay" style="display:none;">
+  <div class="img-editor-card">
+    <button class="img-editor-close"><i class="fas fa-times"></i></button>
+    <h3 id="img-editor-title" style="margin-bottom:1rem;"><i class="fas fa-images"></i> 编辑图片</h3>
+    <div class="img-editor-current" id="img-editor-current"></div>
+    <div class="img-editor-add">
+      <label class="img-editor-label">添加图片 URL</label>
+      <div class="img-editor-url-row">
+        <input type="text" id="img-editor-url-input" placeholder="粘贴图片URL，回车添加" class="admin-search-input" style="margin-bottom:0;">
+        <button id="img-editor-url-add" class="btn btn-primary" style="white-space:nowrap;">添加</button>
+      </div>
+      <p style="font-size:.75rem;color:var(--text-lighter);margin-top:.4rem;">最多 5 张，第一张为封面图。支持 Imgbb / 任意图片 URL。</p>
+    </div>
+    <div class="img-editor-upload">
+      <label class="img-editor-label">或上传图片 (Imgbb)</label>
+      <div class="img-drop-zone" id="admin-img-drop-zone">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <p>拖拽图片到此处，或点击选择</p>
+        <input type="file" id="admin-img-file-input" accept="image/*" multiple style="display:none;">
+      </div>
+      <div id="admin-img-upload-status" style="font-size:.82rem;color:var(--text-light);margin-top:.5rem;"></div>
+    </div>
+    <div class="img-editor-actions">
+      <button class="btn btn-outline" id="img-editor-cancel">取消</button>
+      <button class="btn btn-primary" id="img-editor-save">保存</button>
+    </div>
+  </div>
 </div>
 
 <!-- Embedded data -->
@@ -83,6 +128,13 @@ var allLogs = [
   {"timestamp":"{{ l.timestamp }}","operator":"{{ l.operator | escape }}","action":"{{ l.action | escape }}","target":"{{ l.target | escape }}","result":"{{ l.result | escape }}"}{% unless forloop.last %},{% endunless %}
   {% endfor %}
 ];
+var allPlaces = [
+  {% for p in site.data.zju-fun %}
+  {"id":{{ p.id }},"name":"{{ p.name | escape }}","category":"{{ p.category }}","rating":{{ p.rating }},"image":"{{ p.image }}","address":"{{ p.address | escape }}"}{% unless forloop.last %},{% endunless %}
+  {% endfor %}
+];
 </script>
 <link rel="stylesheet" href="{{ '/assets/css/admin.css' | relative_url }}">
+<script src="{{ '/assets/js/image-upload.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/comments.js' | relative_url }}"></script>
 <script src="{{ '/assets/js/admin.js' | relative_url }}"></script>

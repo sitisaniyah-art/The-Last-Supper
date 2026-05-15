@@ -208,6 +208,38 @@ const allPlaces = [
   }
 
   /* ============================================================
+     Image carousel helpers
+     ============================================================ */
+  function getImages(placeId) {
+    try {
+      var stored = JSON.parse(localStorage.getItem('tls_zju_images')) || {};
+      if (stored[String(placeId)] && stored[String(placeId)].length > 0) {
+        return stored[String(placeId)].slice(0, 5);
+      }
+    } catch(e) {}
+    var place = allPlaces.find(function(p) { return p.id === placeId; });
+    return place ? [place.image] : [];
+  }
+
+  function buildImageCarousel(placeId, name) {
+    var images = getImages(placeId);
+    if (!images.length) images = ['https://picsum.photos/600/400?random=' + placeId];
+    if (images.length <= 1) {
+      return '<img src="' + images[0] + '" alt="' + name + '" loading="lazy" onerror="this.onerror=null;this.src=\'https://picsum.photos/600/400?random=' + placeId + '\'">';
+    }
+    var dots = images.map(function(_, i) {
+      return '<span class="zj-img-dot' + (i === 0 ? ' active' : '') + '" data-idx="' + i + '"></span>';
+    }).join('');
+    return '<div class="zj-carousel" data-place="' + placeId + '" data-current="0">' +
+      '<img src="' + images[0] + '" alt="' + name + '" class="zj-carousel-img" loading="lazy">' +
+      '<button class="zj-carousel-prev"><i class="fas fa-chevron-left"></i></button>' +
+      '<button class="zj-carousel-next"><i class="fas fa-chevron-right"></i></button>' +
+      '<div class="zj-carousel-dots">' + dots + '</div>' +
+      '<span class="zj-carousel-count"><i class="fas fa-images"></i> ' + images.length + '</span>' +
+    '</div>';
+  }
+
+  /* ============================================================
      Card rendering
      ============================================================ */
   function buildCard(p) {
@@ -219,7 +251,7 @@ const allPlaces = [
 
     return '<div class="zj-card">' +
       '<div class="zj-card-img">' +
-        '<img src="' + p.image + '" alt="' + p.name + '" loading="lazy" onerror="this.onerror=null;this.src=\'https://picsum.photos/600/400?random=' + p.id + '\'">' +
+        buildImageCarousel(p.id, p.name) +
         '<div class="zj-card-img-overlay">' +
           '<span class="zj-tag" style="background:' + color + ';color:#fff;"><i class="fas ' + icon + '"></i> ' + p.category + '</span>' +
           '<button class="zj-like-btn' + (liked ? ' active' : '') + '" data-id="' + p.id + '" title="' + (liked ? '取消点赞' : '点赞') + '">' +
@@ -298,6 +330,24 @@ const allPlaces = [
   }
 
   /* ============================================================
+     Carousel navigation
+     ============================================================ */
+  function _carouselGoTo(carousel, idx) {
+    var images = getImages(parseInt(carousel.dataset.place));
+    if (!images.length || idx < 0 || idx >= images.length) return;
+    carousel.dataset.current = idx;
+    var img = carousel.querySelector('.zj-carousel-img');
+    if (img) { img.style.opacity = '0'; setTimeout(function() { img.src = images[idx]; img.style.opacity = '1'; }, 150); }
+    carousel.querySelectorAll('.zj-img-dot').forEach(function(d, i) { d.classList.toggle('active', i === idx); });
+  }
+  function _carouselGo(carousel, dir) {
+    var images = getImages(parseInt(carousel.dataset.place));
+    var current = parseInt(carousel.dataset.current) || 0;
+    var next = (current + dir + images.length) % images.length;
+    _carouselGoTo(carousel, next);
+  }
+
+  /* ============================================================
      Event binding
      ============================================================ */
   function bindEvents(container) {
@@ -320,17 +370,50 @@ const allPlaces = [
       });
     });
 
-    // Comment buttons — scroll to Giscus
+    // Comment buttons — open comment modal
     container.querySelectorAll('.zj-comment-btn').forEach(function(btn) {
       btn.addEventListener('click', function() {
-        var name = decodeURIComponent(this.getAttribute('data-name'));
-        var giscus = document.querySelector('.giscus');
-        if (giscus) {
-          giscus.scrollIntoView({ behavior: 'smooth' });
-        } else {
-          alert('评论区加载中，请稍后再试。你也可以直接在页面底部找到评论框。');
+        var card = this.closest('.zj-card');
+        var likeBtn = card ? card.querySelector('.zj-like-btn') : null;
+        var placeId = likeBtn ? parseInt(likeBtn.getAttribute('data-id')) : null;
+        var place = placeId ? allPlaces.find(function(p) { return p.id === placeId; }) : null;
+        if (place && typeof CommentModal !== 'undefined') {
+          CommentModal.open(place.id, place.name);
         }
       });
+    });
+
+    // Carousel buttons
+    container.querySelectorAll('.zj-carousel-prev').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault(); e.stopPropagation();
+        var carousel = this.closest('.zj-carousel');
+        _carouselGo(carousel, -1);
+      });
+    });
+    container.querySelectorAll('.zj-carousel-next').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault(); e.stopPropagation();
+        var carousel = this.closest('.zj-carousel');
+        _carouselGo(carousel, 1);
+      });
+    });
+    container.querySelectorAll('.zj-img-dot').forEach(function(dot) {
+      dot.addEventListener('click', function(e) {
+        e.preventDefault(); e.stopPropagation();
+        var carousel = this.closest('.zj-carousel');
+        var idx = parseInt(this.dataset.idx);
+        _carouselGoTo(carousel, idx);
+      });
+    });
+    // Touch swipe
+    container.querySelectorAll('.zj-carousel').forEach(function(carousel) {
+      var startX = 0;
+      carousel.addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; }, { passive: true });
+      carousel.addEventListener('touchend', function(e) {
+        var diff = e.changedTouches[0].clientX - startX;
+        if (Math.abs(diff) > 40) _carouselGo(carousel, diff < 0 ? 1 : -1);
+      }, { passive: true });
     });
 
     // Share buttons
@@ -367,4 +450,12 @@ const allPlaces = [
     document.getElementById('fun-search').addEventListener('input', filterAndSort);
   });
 })();
+</script>
+<script src="{{ '/assets/js/comments.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/comment-modal.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/search-agent.js' | relative_url }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  if (typeof SearchAgent !== 'undefined') SearchAgent.init();
+});
 </script>

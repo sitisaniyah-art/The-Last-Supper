@@ -154,3 +154,11 @@ if('serviceWorker' in navigator){
 <!-- Auth module -->
 <script src="{{ '/assets/js/auth.js' | relative_url }}"></script>
 {% include auth-modal.html %}
+<!-- Places index for site-wide search agent -->
+<script>
+var tlsPlacesIndex=[
+{% for p in site.data.zju-fun %}
+{"id":{{ p.id }},"name":"{{ p.name | escape }}","category":"{{ p.category }}","rating":{{ p.rating }},"address":"{{ p.address | escape }}","description":"{{ p.description | escape }}","tags":{{ p.tags | jsonify }}}{% unless forloop.last %},{% endunless %}
+{% endfor %}
+];
+</script>

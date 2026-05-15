@@ -86,3 +86,14 @@ body:
       placeholder: 匿名
     validations:
       required: false
+
+  - type: textarea
+    id: image-urls
+    attributes:
+      label: 图片链接（可选）
+      description: 提供该地点的图片URL，每行一个，最多3张。支持 Imgbb、微博图床等可直接访问的图片链接。
+      placeholder: |
+        https://i.ibb.co/xxx/photo1.jpg
+        https://i.ibb.co/xxx/photo2.jpg
+    validations:
+      required: false
