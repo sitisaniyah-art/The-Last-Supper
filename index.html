@@ -51,21 +51,21 @@ share: false
 <div style="text-align:center;">
   <h2 style="font-size:1.5rem;margin-bottom:1.5rem;">如何使用？</h2>
   <div class="feature-grid" style="max-width:900px;margin:0 auto;">
-    <div style="text-align:center;padding:1rem;">
+    <div class="fade-in-up" style="text-align:center;padding:1rem;">
       <div style="width:48px;height:48px;background:var(--primary-light);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:0.75rem;">
         <i class="fas fa-search" style="color:var(--primary-color);font-size:1.2rem;"></i>
       </div>
       <h4 style="margin-bottom:0.5rem;">搜索资源</h4>
       <p style="color:var(--text-light);font-size:0.9rem;">按学科、年级、类型筛选，快速找到目标资料</p>
     </div>
-    <div style="text-align:center;padding:1rem;">
+    <div class="fade-in-up" style="text-align:center;padding:1rem;">
       <div style="width:48px;height:48px;background:var(--primary-light);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:0.75rem;">
         <i class="fas fa-download" style="color:var(--primary-color);font-size:1.2rem;"></i>
       </div>
       <h4 style="margin-bottom:0.5rem;">下载使用</h4>
       <p style="color:var(--text-light);font-size:0.9rem;">获取课件、真题、笔记等学习资料</p>
     </div>
-    <div style="text-align:center;padding:1rem;">
+    <div class="fade-in-up" style="text-align:center;padding:1rem;">
       <div style="width:48px;height:48px;background:var(--primary-light);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:0.75rem;">
         <i class="fas fa-hands-helping" style="color:var(--primary-color);font-size:1.2rem;"></i>
       </div>
@@ -74,3 +74,32 @@ share: false
     </div>
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Fade-in-up animation via IntersectionObserver
+  var fadeEls = document.querySelectorAll('.fade-in-up');
+  if (fadeEls.length && 'IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    fadeEls.forEach(function(el) { observer.observe(el); });
+  }
+
+  // Parallax effect on hero area
+  var hero = document.querySelector('.page__content > div:first-child');
+  if (hero) {
+    window.addEventListener('scroll', function() {
+      var scrollY = window.pageYOffset;
+      if (scrollY < 600) {
+        hero.style.transform = 'translateY(' + (scrollY * 0.25) + 'px)';
+      }
+    }, { passive: true });
+  }
+});
+</script>

@@ -35,14 +35,6 @@ function getLocalDownloadCount(id) {
   return getDownloads()[id] || 0;
 }
 
-/* Max downloads across all resources (for popularity bar) */
-var MAX_DOWNLOADS = 0;
-allResources.forEach(function(r) {
-  var total = r.downloads + getLocalDownloadCount(r.id);
-  if (total > MAX_DOWNLOADS) MAX_DOWNLOADS = total;
-});
-if (MAX_DOWNLOADS === 0) MAX_DOWNLOADS = 1;
-
 /* Rating system */
 var RTG_KEY = 'tls_ratings';
 function getRatings() {
@@ -124,14 +116,12 @@ function buildCardHTML(r) {
   var heartClass = fav ? 'fas fa-heart favorited' : 'far fa-heart';
   var heartTitle = fav ? '取消收藏' : '收藏';
   var accents = CATEGORY_ACCENTS[r.category] || CATEGORY_ACCENTS['其他'];
-  var totalDl = r.downloads + getLocalDownloadCount(r.id);
-  var popularity = Math.round((totalDl / MAX_DOWNLOADS) * 100);
 
   return '<div class="resource-card" style="--card-accent:' + accents[0] + ';--card-accent-end:' + accents[1] + ';">' +
     '<div class="resource-card-body">' +
       '<div class="resource-header">' +
         '<span class="resource-category-badge">' + r.category + '</span>' +
-        '<button class="favorite-btn' + (fav ? ' active' : '') + '" data-id="' + r.id + '" title="' + heartTitle + '">' +
+        '<button class="favorite-btn' + (fav ? ' active' : '') + '" data-id="' + r.id + '" data-tooltip="收藏">' +
           '<i class="' + heartClass + '"></i>' +
         '</button>' +
       '</div>' +
@@ -139,16 +129,14 @@ function buildCardHTML(r) {
       '<div class="resource-meta">' +
         '<span class="meta-user"><i class="fas fa-user"></i> ' + r.uploader + '</span>' +
         '<span class="meta-date"><i class="fas fa-calendar"></i> ' + r.date + '</span>' +
-        '<span class="resource-downloads"><i class="fas fa-arrow-down"></i> ' + totalDl + '</span>' +
         '<span class="resource-rating">' + renderStars(r.rating, r.id) + '<span class="rating-num">' + r.rating + '</span></span>' +
       '</div>' +
       '<p class="resource-description">' + r.description + '</p>' +
       '<div class="resource-tags">' + tagsHtml + '</div>' +
-      '<div class="resource-popularity"><div class="resource-popularity-bar" style="width:' + popularity + '%;"></div></div>' +
     '</div>' +
     '<div class="resource-actions">' +
-      '<a href="' + r.link + '" class="download-btn" target="_blank" rel="noopener" onclick="trackDownload(' + r.id + ')"><i class="fas fa-download"></i> 下载资源</a>' +
-      '<a href="' + reportUrl('学习资源', r.title) + '" class="report-btn" target="_blank" rel="noopener" title="举报"><i class="fas fa-flag"></i></a>' +
+      '<a href="' + r.link + '" class="download-btn" target="_blank" rel="noopener" onclick="trackDownload(' + r.id + ')" data-tooltip="下载资源"><i class="fas fa-download"></i> 下载资源</a>' +
+      '<a href="' + reportUrl('学习资源', r.title) + '" class="report-btn" target="_blank" rel="noopener" data-tooltip="举报"><i class="fas fa-flag"></i></a>' +
       '<span class="resource-grade">' + r.grade + ' · ' + r.subcategory + '</span>' +
     '</div>' +
   '</div>';
@@ -182,7 +170,7 @@ function bindFavoriteEvents(container) {
       var nowFav = Favorites.toggle(id);
       this.classList.toggle('active', nowFav);
       this.querySelector('i').className = nowFav ? 'fas fa-heart favorited' : 'far fa-heart';
-      this.title = nowFav ? '取消收藏' : '收藏';
+      this.setAttribute('data-tooltip', nowFav ? '取消收藏' : '收藏');
 
       this.classList.add('pulse');
       var self = this;

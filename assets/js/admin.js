@@ -1,31 +1,138 @@
 /**
  * admin.js — 管理后台逻辑
- * 密码: ZJUNB
+ * 认证: GitHub Personal Access Token
+ * 锁定: 5次失败 → 24小时前端锁定
+ * 统计: 本地 TLSAnalytics 数据展示
  */
 (function() {
-  var ADMIN_PASSWORD = 'ZJUNB';
-  var SESSION_KEY = 'tls_admin_auth';
   var GITHUB_API = 'https://api.github.com';
   var REPO_OWNER = window.TLS_GITHUB_USERNAME || 'sitisaniyah-art';
   var REPO_NAME = window.TLS_GITHUB_REPO || 'The-Last-Supper';
+  var ALLOWED_USERS = ['sitisaniyah-art'];
+  var SESSION_KEY = 'tls_admin_auth';
+  var LOCK_KEY = 'tls_admin_lock';
+  var MAX_FAILURES = 5;
+  var LOCK_DURATION = 24 * 60 * 60 * 1000; // 24 hours
 
-  // --- Password auth ---
+  // --- Lock mechanism ---
+  function _getLock() {
+    try { return JSON.parse(localStorage.getItem(LOCK_KEY)) || { failures: 0, lockedUntil: null }; }
+    catch(e) { return { failures: 0, lockedUntil: null }; }
+  }
+
+  function _saveLock(lock) {
+    localStorage.setItem(LOCK_KEY, JSON.stringify(lock));
+  }
+
+  function _isLocked() {
+    var lock = _getLock();
+    if (lock.lockedUntil && Date.now() < lock.lockedUntil) return true;
+    if (lock.lockedUntil && Date.now() >= lock.lockedUntil) {
+      _saveLock({ failures: 0, lockedUntil: null });
+      return false;
+    }
+    return false;
+  }
+
+  function _recordFailure() {
+    var lock = _getLock();
+    lock.failures++;
+    if (lock.failures >= MAX_FAILURES) {
+      lock.lockedUntil = Date.now() + LOCK_DURATION;
+    }
+    _saveLock(lock);
+  }
+
+  function _resetLock() {
+    _saveLock({ failures: 0, lockedUntil: null });
+  }
+
+  function _getLockRemaining() {
+    var lock = _getLock();
+    if (!lock.lockedUntil) return '';
+    var ms = lock.lockedUntil - Date.now();
+    if (ms <= 0) return '';
+    var h = Math.floor(ms / 3600000);
+    var m = Math.floor((ms % 3600000) / 60000);
+    return h + '小时' + m + '分钟';
+  }
+
+  // --- Token auth ---
   function isLoggedIn() {
     return sessionStorage.getItem(SESSION_KEY) === 'true';
   }
 
+  function _validateToken(token) {
+    return fetch(GITHUB_API + '/user', {
+      headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' }
+    }).then(function(res) {
+      if (!res.ok) throw new Error('Invalid token');
+      return res.json();
+    }).then(function(user) {
+      var username = user.login;
+      // Check if user is in allowed list
+      if (ALLOWED_USERS.indexOf(username) !== -1) {
+        return { valid: true, username: username };
+      }
+      // Check if user is a collaborator
+      return fetch(GITHUB_API + '/repos/' + REPO_OWNER + '/' + REPO_NAME + '/collaborators/' + username, {
+        headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' }
+      }).then(function(colRes) {
+        if (colRes.ok) return { valid: true, username: username };
+        throw new Error('Not a collaborator');
+      });
+    });
+  }
+
   function login() {
-    var input = document.getElementById('admin-password').value;
-    if (input === ADMIN_PASSWORD) {
+    if (_isLocked()) {
+      var lockedEl = document.getElementById('login-locked');
+      lockedEl.style.display = 'block';
+      lockedEl.textContent = '账户已锁定，请 ' + _getLockRemaining() + ' 后重试';
+      return;
+    }
+
+    var tokenInput = document.getElementById('admin-token');
+    var token = tokenInput.value.trim();
+    var errorEl = document.getElementById('login-error');
+    var loginBtn = document.getElementById('admin-login-btn');
+
+    if (!token) {
+      errorEl.textContent = '请输入 Token';
+      errorEl.style.display = 'block';
+      return;
+    }
+
+    loginBtn.textContent = '验证中...';
+    loginBtn.disabled = true;
+    errorEl.style.display = 'none';
+
+    _validateToken(token).then(function(result) {
       sessionStorage.setItem(SESSION_KEY, 'true');
+      sessionStorage.setItem('tls_admin_token', token);
+      sessionStorage.setItem('tls_admin_user', result.username);
+      _resetLock();
       document.getElementById('admin-login').style.display = 'none';
       document.getElementById('admin-panel').style.display = 'block';
       initPanel();
-    } else {
-      var err = document.getElementById('login-error');
-      err.style.display = 'block';
-      document.getElementById('admin-password').value = '';
-    }
+    }).catch(function(err) {
+      _recordFailure();
+      var lock = _getLock();
+      if (lock.lockedUntil) {
+        errorEl.style.display = 'none';
+        var lockedEl = document.getElementById('login-locked');
+        lockedEl.style.display = 'block';
+        lockedEl.textContent = '验证失败次数过多，账户已锁定 ' + _getLockRemaining();
+      } else {
+        var remaining = MAX_FAILURES - lock.failures;
+        errorEl.textContent = '验证失败：' + (err.message === 'Not a collaborator' ? '非项目协作者' : 'Token 无效') + '（剩余 ' + remaining + ' 次机会）';
+        errorEl.style.display = 'block';
+      }
+      tokenInput.value = '';
+    }).finally(function() {
+      loginBtn.textContent = '验证身份';
+      loginBtn.disabled = false;
+    });
   }
 
   // Auto-login if session exists
@@ -34,11 +141,20 @@
     document.getElementById('admin-panel').style.display = 'block';
   }
 
+  // Check lock state on load
+  if (_isLocked()) {
+    var lockedEl = document.getElementById('login-locked');
+    if (lockedEl) {
+      lockedEl.style.display = 'block';
+      lockedEl.textContent = '账户已锁定，请 ' + _getLockRemaining() + ' 后重试';
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', function() {
     var loginBtn = document.getElementById('admin-login-btn');
-    var pwInput = document.getElementById('admin-password');
+    var tokenInput = document.getElementById('admin-token');
     if (loginBtn) loginBtn.addEventListener('click', login);
-    if (pwInput) pwInput.addEventListener('keydown', function(e) {
+    if (tokenInput) tokenInput.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') login();
     });
 
@@ -62,6 +178,7 @@
     renderLogs();
     renderPlaces();
     renderCommentReports();
+    renderAnalytics();
   }
 
   // --- Overview ---
@@ -167,7 +284,11 @@
 
     list.innerHTML = '<p style="color:var(--text-light);">正在加载举报 Issue...</p>';
 
-    fetch(GITHUB_API + '/repos/' + REPO_OWNER + '/' + REPO_NAME + '/issues?labels=report&state=open&per_page=20')
+    var headers = { 'Accept': 'application/vnd.github.v3+json' };
+    var token = sessionStorage.getItem('tls_admin_token');
+    if (token) headers['Authorization'] = 'token ' + token;
+
+    fetch(GITHUB_API + '/repos/' + REPO_OWNER + '/' + REPO_NAME + '/issues?labels=report&state=open&per_page=20', { headers: headers })
       .then(function(res) { return res.json(); })
       .then(function(issues) {
         if (!Array.isArray(issues) || issues.length === 0) {
@@ -434,6 +555,96 @@
         renderCommentReports();
       });
     });
+  }
+
+  // --- Analytics ---
+  function renderAnalytics() {
+    var statsEl = document.getElementById('admin-analytics-stats');
+    var downloadsEl = document.getElementById('admin-analytics-downloads');
+    var pagesEl = document.getElementById('admin-analytics-pages');
+    if (!statsEl) return;
+
+    // Read from TLSAnalytics if available
+    var analyticsData = null;
+    try {
+      analyticsData = JSON.parse(localStorage.getItem('tls_analytics'));
+    } catch(e) {}
+
+    var stats = { totalPageViews: 0, totalClicks: 0, totalResourceViews: 0, sessions: 0, totalDuration: 0 };
+    if (analyticsData) {
+      stats.totalPageViews = (analyticsData.pageViews || []).length;
+      stats.totalClicks = (analyticsData.clicks || []).length;
+      stats.totalResourceViews = (analyticsData.resourceViews || []).length;
+      stats.sessions = analyticsData.sessions || 0;
+      stats.totalDuration = analyticsData.totalDuration || 0;
+    }
+
+    // Format duration
+    var durStr = stats.totalDuration < 60 ? stats.totalDuration + '秒' :
+      stats.totalDuration < 3600 ? Math.round(stats.totalDuration / 60) + '分钟' :
+      (stats.totalDuration / 3600).toFixed(1) + '小时';
+
+    var cards = [
+      { icon: 'fa-eye', label: '页面访问', value: stats.totalPageViews, color: '#6366f1' },
+      { icon: 'fa-mouse-pointer', label: '按钮点击', value: stats.totalClicks, color: '#10b981' },
+      { icon: 'fa-book-open', label: '资源查看', value: stats.totalResourceViews, color: '#f59e0b' },
+      { icon: 'fa-clock', label: '总会话', value: stats.sessions, color: '#ef4444' },
+      { icon: 'fa-hourglass-half', label: '总时长', value: durStr, color: '#8b5cf6' }
+    ];
+
+    statsEl.innerHTML = cards.map(function(c) {
+      return '<div class="admin-stat-card" style="--stat-color:' + c.color + ';">' +
+        '<i class="fas ' + c.icon + '"></i>' +
+        '<div class="admin-stat-value">' + c.value + '</div>' +
+        '<div class="admin-stat-label">' + c.label + '</div>' +
+      '</div>';
+    }).join('');
+
+    // Popular resources by local download count
+    if (downloadsEl) {
+      var dlData = {};
+      try { dlData = JSON.parse(localStorage.getItem('tls_downloads')) || {}; } catch(e) {}
+
+      var dlList = Object.keys(dlData).map(function(id) {
+        var res = allResources.find(function(r) { return r.id === parseInt(id); });
+        return { id: id, count: dlData[id], title: res ? res.title : '资源 #' + id };
+      }).sort(function(a, b) { return b.count - a.count; }).slice(0, 10);
+
+      if (dlList.length === 0) {
+        downloadsEl.innerHTML = '<p style="color:var(--text-light);">暂无下载记录</p>';
+      } else {
+        downloadsEl.innerHTML = dlList.map(function(d) {
+          return '<div class="admin-list-item">' +
+            '<div class="admin-list-main"><strong>' + d.title + '</strong></div>' +
+            '<span class="admin-list-badge admin-badge-success">' + d.count + ' 次</span>' +
+          '</div>';
+        }).join('');
+      }
+    }
+
+    // Page visit stats
+    if (pagesEl && analyticsData && analyticsData.pageViews) {
+      var pageCount = {};
+      analyticsData.pageViews.forEach(function(pv) {
+        pageCount[pv.url] = (pageCount[pv.url] || 0) + 1;
+      });
+      var pageList = Object.keys(pageCount).map(function(url) {
+        return { url: url, count: pageCount[url] };
+      }).sort(function(a, b) { return b.count - a.count; });
+
+      if (pageList.length === 0) {
+        pagesEl.innerHTML = '<p style="color:var(--text-light);">暂无页面访问记录</p>';
+      } else {
+        pagesEl.innerHTML = pageList.map(function(p) {
+          return '<div class="admin-list-item">' +
+            '<div class="admin-list-main"><strong>' + p.url + '</strong></div>' +
+            '<span class="admin-list-badge admin-badge-success">' + p.count + ' 次</span>' +
+          '</div>';
+        }).join('');
+      }
+    } else if (pagesEl) {
+      pagesEl.innerHTML = '<p style="color:var(--text-light);">暂无页面访问记录</p>';
+    }
   }
 
 })();

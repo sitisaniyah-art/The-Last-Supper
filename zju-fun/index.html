@@ -254,9 +254,8 @@ const allPlaces = [
         buildImageCarousel(p.id, p.name) +
         '<div class="zj-card-img-overlay">' +
           '<span class="zj-tag" style="background:' + color + ';color:#fff;"><i class="fas ' + icon + '"></i> ' + p.category + '</span>' +
-          '<button class="zj-like-btn' + (liked ? ' active' : '') + '" data-id="' + p.id + '" title="' + (liked ? '取消点赞' : '点赞') + '">' +
+          '<button class="zj-like-btn' + (liked ? ' active' : '') + '" data-id="' + p.id + '" data-tooltip="' + (liked ? '取消点赞' : '点赞') + '">' +
             '<i class="' + (liked ? 'fas' : 'far') + ' fa-heart"></i>' +
-            '<span class="zj-like-count">' + getLikeCount(p.id, p.like_count) + '</span>' +
           '</button>' +
         '</div>' +
       '</div>' +
@@ -276,9 +275,9 @@ const allPlaces = [
       '<div class="zj-card-footer">' +
         '<span class="zj-card-recommender"><i class="fas fa-user-circle"></i> ' + p.recommender + ' · ' + p.date + '</span>' +
         '<div class="zj-card-actions">' +
-          '<button class="zj-action-btn zj-comment-btn" data-name="' + encodeURIComponent(p.name) + '" title="评论"><i class="fas fa-comment"></i></button>' +
-          '<button class="zj-action-btn zj-share-btn" data-id="' + p.id + '" data-name="' + encodeURIComponent(p.name) + '" title="分享"><i class="fas fa-share-alt"></i></button>' +
-          '<a href="' + reportUrl('嗨玩榜推荐', p.name) + '" class="zj-action-btn zj-report-btn" target="_blank" rel="noopener" title="举报"><i class="fas fa-flag"></i></a>' +
+          '<button class="zj-action-btn zj-comment-btn" data-name="' + encodeURIComponent(p.name) + '" data-tooltip="评论"><i class="fas fa-comment"></i></button>' +
+          '<button class="zj-action-btn zj-share-btn" data-id="' + p.id + '" data-name="' + encodeURIComponent(p.name) + '" data-tooltip="分享"><i class="fas fa-share-alt"></i></button>' +
+          '<a href="' + reportUrl('嗨玩榜推荐', p.name) + '" class="zj-action-btn zj-report-btn" target="_blank" rel="noopener" data-tooltip="举报"><i class="fas fa-flag"></i></a>' +
         '</div>' +
       '</div>' +
     '</div>';
@@ -357,12 +356,9 @@ const allPlaces = [
         e.preventDefault();
         var id = parseInt(this.getAttribute('data-id'));
         var nowLiked = toggleLike(id);
-        var place = allPlaces.find(function(p) { return p.id === id; });
-        var count = place ? place.like_count + (nowLiked ? 1 : 0) : 0;
         this.classList.toggle('active', nowLiked);
         this.querySelector('i').className = nowLiked ? 'fas fa-heart' : 'far fa-heart';
-        this.querySelector('.zj-like-count').textContent = count;
-        this.title = nowLiked ? '取消点赞' : '点赞';
+        this.setAttribute('data-tooltip', nowLiked ? '取消点赞' : '点赞');
         // Pulse
         this.classList.add('pulse');
         var self = this;

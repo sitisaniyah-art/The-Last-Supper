@@ -1,31 +1,39 @@
 ---
 layout: single
 title: 管理后台
-permalink: /admin/
+permalink: /admin-dashboard-xk7m2q/
 author_profile: false
 ---
 
 <style>
-/* Password screen */
+/* Login screen */
 .admin-login{text-align:center;padding:4rem 1rem;}
 .admin-login h2{margin-bottom:1.5rem;font-size:1.5rem;}
-.admin-login input{padding:.6rem 1rem;border:1px solid var(--border-color);border-radius:8px;font-size:1rem;width:260px;max-width:80%;background:var(--bg-color);color:var(--text-color);text-align:center;}
+.admin-login input{padding:.6rem 1rem;border:1px solid var(--border-color);border-radius:8px;font-size:1rem;width:320px;max-width:80%;background:var(--bg-color);color:var(--text-color);text-align:center;}
 .admin-login .login-btn{display:inline-block;margin-top:1rem;padding:.6rem 1.5rem;background:var(--primary-color);color:#fff;border:none;border-radius:8px;font-size:.95rem;cursor:pointer;transition:var(--transition);}
 .admin-login .login-btn:hover{background:var(--primary-hover);}
 .admin-login .login-error{color:var(--danger-color,#ef4444);font-size:.85rem;margin-top:.5rem;display:none;}
+.admin-login .login-hint{font-size:.8rem;color:var(--text-lighter);margin-top:.75rem;line-height:1.6;}
+.admin-login .login-hint a{color:var(--primary-color);}
+.admin-login .login-locked{color:var(--danger-color,#ef4444);font-size:.9rem;margin-top:1rem;}
 </style>
 
 <!-- Login screen -->
 <div class="admin-login" id="admin-login">
   <h2><i class="fas fa-lock"></i> 管理后台</h2>
-  <p style="color:var(--text-light);margin-bottom:1.5rem;">请输入管理员密码</p>
+  <p style="color:var(--text-light);margin-bottom:1.5rem;">请输入 GitHub Personal Access Token 进行验证</p>
   <div>
-    <input type="password" id="admin-password" placeholder="请输入密码" autocomplete="off">
+    <input type="password" id="admin-token" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off">
   </div>
   <div>
-    <button class="login-btn" id="admin-login-btn">验证</button>
+    <button class="login-btn" id="admin-login-btn">验证身份</button>
   </div>
-  <div class="login-error" id="login-error">密码错误，请重试</div>
+  <div class="login-error" id="login-error"></div>
+  <div class="login-hint">
+    需要具有 <code>repo</code> 权限的 Token<br>
+    <a href="https://github.com/settings/tokens/new?scopes=repo&description=TLS-Admin" target="_blank" rel="noopener">生成 Token &rarr;</a>
+  </div>
+  <div class="login-locked" id="login-locked" style="display:none;"></div>
 </div>
 
 <!-- Admin panel (hidden until login) -->
@@ -39,6 +47,7 @@ author_profile: false
     <button class="admin-tab" data-tab="resources"><i class="fas fa-boxes"></i> 资源管理</button>
     <button class="admin-tab" data-tab="places"><i class="fas fa-map-marker-alt"></i> 嗨玩项目</button>
     <button class="admin-tab" data-tab="comment-reports"><i class="fas fa-comment-slash"></i> 评论举报</button>
+    <button class="admin-tab" data-tab="analytics"><i class="fas fa-chart-line"></i> 数据统计</button>
   </div>
 
   <!-- Overview tab -->
@@ -76,6 +85,16 @@ author_profile: false
   <div class="admin-content" id="tab-comment-reports">
     <p style="color:var(--text-light);margin-bottom:1rem;">用户提交的评论举报，存储在本地浏览器中。</p>
     <div id="admin-comment-reports-list" class="admin-list"></div>
+  </div>
+
+  <!-- Analytics tab -->
+  <div class="admin-content" id="tab-analytics">
+    <p style="color:var(--text-light);margin-bottom:1rem;">本地浏览器数据统计，基于 TLSAnalytics 模块收集。</p>
+    <div class="admin-stats-grid" id="admin-analytics-stats"></div>
+    <h3 style="margin-top:2rem;">热门资源（本地下载量）</h3>
+    <div id="admin-analytics-downloads" class="admin-list"></div>
+    <h3 style="margin-top:2rem;">页面访问统计</h3>
+    <div id="admin-analytics-pages" class="admin-list"></div>
   </div>
 
 </div>
