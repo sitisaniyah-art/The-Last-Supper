@@ -1005,5 +1005,66 @@ git reset --soft HEAD~1
 
 ---
 
+## 附录：新功能说明（2026-05-15 更新）
+
+### 登录系统
+
+**如何使用：**
+1. 点击页脚的 "登录" 按钮
+2. 输入 GitHub 用户名即可登录（无需密码）
+3. 可选填 Personal Access Token（gist 权限）启用跨设备同步
+4. 登录后收藏、点赞等数据与 GitHub 账号关联
+
+**技术细节：**
+- 用户名验证：调用 `api.github.com/users/{username}` 验证用户存在
+- 数据存储：`tls_userdata_{username}` localStorage key
+- Gist 同步：查找/创建 description 为 `the-last-supper-data` 的私有 Gist
+- 相关文件：`assets/js/auth.js`, `_includes/auth-modal.html`
+
+### 点赞系统
+
+**数据结构：**
+- 未登录：`tls_zju_likes = { [id]: true }`
+- 已登录：`tls_zju_likes = { [id]: ["user1", "user2"] }`
+- 自动迁移旧格式数据
+
+### 下载量统计
+
+**工作原理：**
+- 基础下载量来自 `_data/resources.yml` 中的 `downloads` 字段
+- 用户点击下载时，`tls_downloads` localStorage 自动 +1
+- 显示值 = 基础值 + 本地累计值
+
+### 资源评分
+
+**如何使用：**
+- 在资源卡片上 hover 星星可预览评分
+- 点击星星提交 1-5 分评分
+- 评分存储在 `tls_ratings` localStorage key
+- 显示"我的评分"标记
+
+### 资源推荐
+
+**算法：**
+- 基于收藏资源的标签权重匹配
+- 同品类资源加分
+- 返回得分最高的 N 个未收藏资源
+- 相关文件：`assets/js/recommendations.js`
+
+### Service Worker 离线支持
+
+- 首次访问时自动缓存静态资源
+- 离线时显示降级页面
+- 策略：network-first，离线回退 cache
+- 相关文件：`sw.js`, `offline.html`
+
+### 页面加载进度条
+
+- 固定在页面顶部 3px 渐变条
+- 页面加载 30%，`window.load` 时 100% 后消失
+- 实现在 `_includes/head/custom.html`
+
+---
+
 > **最后更新：2026-05-15**
 > **维护者：sitisaniyah-art**
