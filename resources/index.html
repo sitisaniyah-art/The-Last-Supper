@@ -79,7 +79,7 @@ const allResources = [
     "downloads": {{ r.downloads }},
     "rating": {{ r.rating }},
     "description": "{{ r.description | escape }}",
-    "link": "{{ r.link }}",
+    "link": "{{ r.link | relative_url }}",
     "tags": {{ r.tags | jsonify }}
   }{% unless forloop.last %},{% endunless %}
   {% endfor %}
