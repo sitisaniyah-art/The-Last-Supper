@@ -35,8 +35,9 @@
 19. [智能检索 Agent](#19-智能检索-agent)
 20. [资源目录结构](#20-资源目录结构)
 21. [全局搜索引擎](#21-全局搜索引擎)
-22. [像素角色系统](#22-像素角色系统)
+22. [互动角色系统 v2.0](#22-互动角色系统-v20)
 23. [学习资源 AI 助手](#23-学习资源-ai-助手)
+24. [首页标题艺术化](#24-首页标题艺术化)
 
 ---
 
@@ -60,7 +61,7 @@
 - **评论系统** — 嗨玩榜地点独立评论（点赞/踩/举报）
 - **智能检索 Agent** — 全站悬浮搜索助手（关键词搜索 + 快捷推荐）
 - **本地数据分析** — 基于 localStorage 的访问统计（页面访问、按钮点击、资源查看、会话时长）
-- **交互式像素角色** — 首页左下角像素风角色（拖拽、20种动作、8种表情、50+台词、5个彩蛋）
+- **互动角色系统** — 首页左下角Q版角色（7个可切换角色、拖拽、20种动作、50+台词、5个彩蛋）
 - **全局搜索引擎** — 拼音搜索、搜索建议、搜索历史、多板块搜索、5种排序方式
 - **学习资源 AI 助手** — 资源页智能助手（搜索推荐、随机推荐、热门推荐、点赞反馈）
 
@@ -155,7 +156,7 @@ The-Last-Supper/
 │       ├── recommendations.js     #   资源推荐算法
 │       ├── stats.js               #   动态排行榜
 │       ├── analytics.js           #   本地数据分析模块
-│       ├── pixel-character.js     #   交互式像素角色（深度优化版）
+│       ├── pixel-character.js     #   互动角色系统 v2.0（7个SVG角色+切换）
 │       ├── search-enhanced.js     #   全局搜索引擎（拼音+建议+历史）
 │       ├── resource-agent.js      #   学习资源AI助手
 │       └── lib/
@@ -830,7 +831,7 @@ TLSAnalytics.getResourceViews()            // 获取资源查看记录
 
 ### 8.9 `assets/js/pixel-character.js`
 
-**职责：** 交互式像素角色（首页左下角，深度优化版）
+**职责：** 互动角色系统 v2.0（原神Q版风格，7个可切换角色）
 
 ```javascript
 PixelChar.show()                           // 显示角色
@@ -838,14 +839,19 @@ PixelChar.hide()                           // 隐藏角色
 PixelChar.isVisible()                      // 获取可见状态
 PixelChar.say(text)                        // 显示台词气泡
 PixelChar.doAction(action)                 // 触发指定动作
+PixelChar.switchTo(charId)                 // 切换角色
+PixelChar.getCharacters()                  // 获取角色列表 {id: name}
+PixelChar.getCurrentChar()                 // 获取当前角色ID
 ```
 
-- CSS div 角色（56×72px），可拖拽定位，z-index 9989
+- SVG 内联矢量角色（128×140px），可拖拽定位，z-index 9989
+- **7 个角色：** 大熊猫(默认)、软萌少女、兽耳少女、狼耳少年、橘柴、柴犬、狐耳少女
+- **角色切换：** 长按 1 秒 → 角色选择面板（半透明遮罩+头像网格），localStorage `tls_current_char` 持久化
 - **20 种状态动画：** idle、blink、wave、jump、happy、yawn、walk、run、spin、dance、fall、sleep、eat、read、think、greet、shy、confused、proud、angry
-- **8 种表情：** happy、sad、angry、surprised、shy、sleepy、confused、proud
-- **交互：** 拖拽移动、部位点击检测（头→摸头、手→挥手、脚→跳）、鼠标快速移动→跑动、被动避让按钮/卡片
-- **50+ 台词：** 学习鼓励(15)、按时段问候(10+5)、小知识(10)、幽默段子(10)、节日专属(5)
-- **5 个彩蛋：** 连续点击10次→舞蹈、鼠标画圆→转圈、滚动到底部→庆祝、暗黑模式切换→反应、搜索框输入"pixel"→特殊动作
+- **每个角色独有特殊动作+专属台词（5-10条）**
+- **交互：** 拖拽、部位点击（SVG class 检测）、鼠标跟随、被动避让
+- **50+ 通用台词 + 角色专属台词**
+- **5 个彩蛋：** 连续点击10次→舞蹈、滚动到底部→庆祝、暗黑模式切换→反应、搜索框输入"pixel"→特殊动作、双击→惊喜
 - **性能：** requestAnimationFrame、throttle、visibilitychange 暂停
 
 ### 8.10 `assets/js/search-enhanced.js`
@@ -1518,19 +1524,34 @@ git reset --soft HEAD~1
 
 ---
 
-## 22. 像素角色系统
+## 22. 互动角色系统 v2.0
 
 ### 功能概述
 
-首页左下角的交互式像素角色，支持 20 种状态动画、8 种表情、拖拽移动、部位点击、50+ 台词和 5 个彩蛋。
+首页左下角的互动角色系统，原神Q版风格 SVG 渲染，支持 7 个可切换角色、20 种状态动画、拖拽移动、部位点击、50+ 台词和 5 个彩蛋。
+
+### 角色列表
+
+| ID | 名称 | 类型 | 主色调 | 特殊动作 | 台词风格 |
+|----|------|------|--------|---------|---------|
+| panda | 大熊猫 | 动物 | 黑白系 | 抱竹子啃 | 憨厚可爱 |
+| soft-girl | 软萌少女 | 人类 | 粉色系 | 比心 | 温柔鼓励 |
+| beast-girl | 兽耳少女 | 人类 | 紫色系 | 摇尾巴 | 活泼俏皮 |
+| wolf-boy | 狼耳少年 | 人类 | 蓝灰色 | 狼嚎 | 冷酷但暖心 |
+| orange-cat | 橘猫 | 动物 | 橙色系 | 打滚撒娇 | 贪吃慵懒 |
+| shiba | 柴犬 | 动物 | 棕色系 | 转圈追尾 | 热情忠诚 |
+| fox-girl | 狐耳少女 | 人类 | 红橙系 | 捂嘴笑 | 神秘优雅 |
+
+### 角色切换
+
+- **触发方式：** 长按角色 1 秒
+- **选择面板：** 半透明遮罩 + 居中圆形头像网格
+- **过渡动画：** 淡出旧角色 → 淡入新角色（0.3s opacity 过渡）
+- **持久化：** localStorage `tls_current_char`
 
 ### 状态动画
 
 idle、blink、wave、jump、happy、yawn、walk、run、spin、dance、fall、sleep、eat、read、think、greet、shy、confused、proud、angry
-
-### 表情系统
-
-happy、sad、angry、surprised、shy、sleepy、confused、proud
 
 ### 交互方式
 
@@ -1542,6 +1563,7 @@ happy、sad、angry、surprised、shy、sleepy、confused、proud
 | 点击身体 | 搔痒反应 |
 | 随意点击 | 随机动作+台词 |
 | 双击 | 特殊惊喜动画 |
+| 长按 1 秒 | 打开角色选择面板 |
 | 拖拽 | 自由移动角色 |
 | 鼠标快速移动 | 角色跟随跑动 |
 | 30 秒无操作 | 角色打哈欠 |
@@ -1556,7 +1578,22 @@ happy、sad、angry、surprised、shy、sleepy、confused、proud
 
 ### 台词分类
 
-学习鼓励(15条)、按时段问候(10+5条)、小知识/冷知识(10条)、幽默段子(10条)、节日专属(5条)
+通用台词(45条)：学习鼓励(15)、按时段问候(10+5)、小知识/冷知识(10)、幽默段子(10)、节日专属(5)
+每个角色专属台词(5-10条)
+
+### 技术实现
+
+- **渲染：** SVG 内联在 JS 中，每个角色一个 SVG 字符串函数
+- **动画：** CSS `@keyframes` + SVG `<g>` 组 `transform` 动画
+- **部位检测：** 点击时遍历 SVG 父元素的 `class` 属性
+- **瞳孔跟随：** SVG `<circle>` 的 `transform` 属性
+- **数据存储：** localStorage `tls_current_char`
+
+### 数据存储
+
+| Key | 用途 |
+|-----|------|
+| `tls_current_char` | 当前选中的角色 ID |
 
 ---
 
@@ -1578,6 +1615,29 @@ happy、sad、angry、surprised、shy、sleepy、confused、proud
 | Key | 用途 |
 |-----|------|
 | `tls_resource_feedback` | 资源点赞记录 `{ [id]: true }` |
+
+---
+
+## 24. 首页标题艺术化
+
+### 功能概述
+
+首页"最后的晚餐"标题支持 3 种视觉风格切换，通过 CSS 类名控制。
+
+### 3 种标题方案
+
+| 方案 | CSS 类名 | 效果 |
+|------|---------|------|
+| A（默认） | 无类 / `.title-style-a` | 渐变流光 — 多色渐变背景 + 动画流动 + 柔和辉光 |
+| B | `.title-style-b` | 霓虹发光 — 多层 text-shadow + 色相旋转动画 |
+| C | `.title-style-c` | 立体浮雕 — 金色渐变 + drop-shadow 3D 效果 |
+
+### 技术实现
+
+- HTML：`<h1 class="hero-title"><span class="hero-title-text">最后的晚餐</span></h1>`
+- CSS：`background-clip: text` + `@keyframes` 动画
+- 暗黑模式：`[data-theme="dark"]` 选择器覆盖颜色值
+- 响应式：依赖已有 `clamp()` 字号，无需额外媒体查询
 
 ---
 
