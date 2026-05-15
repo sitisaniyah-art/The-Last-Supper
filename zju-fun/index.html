@@ -171,7 +171,7 @@ const allPlaces = [
 
     return '<div class="zj-card">' +
       '<div class="zj-card-img">' +
-        '<img src="' + p.image + '" alt="' + p.name + '" loading="lazy">' +
+        '<img src="' + p.image + '" alt="' + p.name + '" loading="lazy" onerror="this.onerror=null;this.src=\'https://picsum.photos/600/400?random=' + p.id + '\'">' +
         '<div class="zj-card-img-overlay">' +
           '<span class="zj-tag" style="background:' + color + ';color:#fff;"><i class="fas ' + icon + '"></i> ' + p.category + '</span>' +
           '<button class="zj-like-btn' + (liked ? ' active' : '') + '" data-id="' + p.id + '" title="' + (liked ? '取消点赞' : '点赞') + '">' +
