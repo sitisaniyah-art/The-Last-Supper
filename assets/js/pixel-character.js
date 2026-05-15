@@ -490,7 +490,7 @@ var PixelChar = (function() {
     ],
     night: [
       '夜深了，早点休息吧~',
-      '熀夜对身体不好哦，早点睡',
+      '熬夜对身体不好哦，早点睡',
       '深夜了，明天再继续吧',
       '晚安！做个好梦~',
       '夜猫子也要注意休息哦'
@@ -872,6 +872,7 @@ var PixelChar = (function() {
   }
 
   // ==================== Character Selector ====================
+  var _selectorBound = false;
   function _showSelector() {
     if (_selectorOpen) return;
     _selectorOpen = true;
@@ -881,9 +882,16 @@ var PixelChar = (function() {
       document.body.insertAdjacentHTML('beforeend', _buildSelectorHTML());
       _selectorOverlay = document.getElementById('char-selector-overlay');
     }
+    // Update active thumb
+    var allThumbs = _selectorOverlay.querySelectorAll('.char-selector-thumb');
+    for (var j = 0; j < allThumbs.length; j++) {
+      allThumbs[j].classList.toggle('active', allThumbs[j].getAttribute('data-char') === _currentChar);
+    }
     _selectorOverlay.classList.add('show');
 
-    // Bind click events
+    // Bind click events only once
+    if (_selectorBound) return;
+    _selectorBound = true;
     var thumbs = _selectorOverlay.querySelectorAll('.char-selector-thumb');
     for (var i = 0; i < thumbs.length; i++) {
       (function(thumb) {
@@ -978,7 +986,7 @@ var PixelChar = (function() {
   function _onDblClick(e) {
     e.stopPropagation();
     _setState('spin', 1600);
-    _showSpeech(_pick(['变身！✨', '闪亮登场！⭐', 'Surprise！🎉', '你触发了隐崟彩蛋！']));
+    _showSpeech(_pick(['变身！✨', '闪亮登场！⭐', 'Surprise！🎉', '你触发了隐藏彩蛋！']));
   }
 
   // ==================== Mouse Speed ====================
@@ -1002,10 +1010,10 @@ var PixelChar = (function() {
         var speed = dist / dt * 1000;
         if (speed > 800 && _state === 'idle') {
           _setState('run', 1000);
-          if (_container) {
+          if (_body) {
             var charRect = _container.getBoundingClientRect();
             var charCx = charRect.left + charRect.width / 2;
-            _container.style.transform = last.x > charCx ? 'scaleX(1)' : 'scaleX(-1)';
+            _body.style.transform = last.x > charCx ? 'scaleX(1)' : 'scaleX(-1)';
           }
         }
       }
