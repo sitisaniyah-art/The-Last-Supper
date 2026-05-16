@@ -188,12 +188,9 @@
 
     var totalRes = allResources.length;
     var totalDl = 0;
-    var avgRating = 0;
     allResources.forEach(function(r) {
       totalDl += r.downloads;
-      avgRating += r.rating;
     });
-    avgRating = totalRes ? (avgRating / totalRes).toFixed(1) : '0.0';
 
     var totalContributors = allContributors.length;
     var totalPoints = 0;
@@ -208,7 +205,6 @@
     var cards = [
       { icon: 'fa-book', label: '资源总数', value: totalRes, color: '#6366f1' },
       { icon: 'fa-download', label: '总下载量', value: totalDl, color: '#10b981' },
-      { icon: 'fa-star', label: '平均评分', value: avgRating, color: '#f59e0b' },
       { icon: 'fa-users', label: '贡献者', value: totalContributors, color: '#ef4444' },
       { icon: 'fa-trophy', label: '总积分', value: totalPoints, color: '#8b5cf6' },
       { icon: 'fa-list', label: '操作日志', value: (typeof allLogs !== 'undefined' ? allLogs.length : 0), color: '#06b6d4' }
@@ -228,7 +224,7 @@
       var maxCount = 1;
       for (var cat in catCount) { if (catCount[cat] > maxCount) maxCount = catCount[cat]; }
 
-      var catColors = { '数学': '#6366f1', '编程': '#10b981', '英语': '#f59e0b', '物理': '#ef4444', '电子信息': '#0ea5e9', '工程技术': '#f97316', '人文社科': '#ec4899', '其他': '#8b5cf6' };
+      var catColors = { '数学与统计类': '#6366f1', '计算机科学与技术类': '#10b981', '电子信息与电气工程类': '#0ea5e9', '机械与能源工程类': '#f97316', '材料科学与工程类': '#a855f7', '物理学类': '#ef4444', '化学与化工类': '#14b8a6', '生命科学与医学类': '#22c55e', '地球与空间科学类': '#0d9488', '土木水利与建筑类': '#d97706', '交通运输与航空航天类': '#3b82f6', '环境与安全科学类': '#65a30d', '农学与食品科学类': '#84cc16', '经济与管理类': '#eab308', '法学与政治学类': '#dc2626', '人文与教育类': '#ec4899', '艺术与设计类': '#f43f5e', '交叉学科类': '#8b5cf6', '公共基础类': '#64748b', '综合类': '#78716c' };
       chart.innerHTML = '<div class="admin-bar-chart">' +
         Object.keys(catCount).map(function(cat) {
           var pct = Math.round((catCount[cat] / maxCount) * 100);
@@ -262,7 +258,7 @@
         return '<div class="admin-list-item">' +
           '<div class="admin-list-main">' +
             '<strong>' + r.title + '</strong>' +
-            '<span class="admin-list-meta">' + r.category + ' · 下载 ' + r.downloads + ' · 评分 ' + r.rating + '</span>' +
+            '<span class="admin-list-meta">' + r.category + ' · 下载 ' + r.downloads + '</span>' +
           '</div>' +
           '<span class="admin-list-id">#' + r.id + '</span>' +
         '</div>';

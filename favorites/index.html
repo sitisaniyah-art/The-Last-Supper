@@ -42,7 +42,6 @@ const allResources = [
     "uploader": "{{ r.uploader }}",
     "date": "{{ r.date }}",
     "downloads": {{ r.downloads }},
-    "rating": {{ r.rating }},
     "description": "{{ r.description | escape }}",
     "link": "{{ r.link }}",
     "tags": {{ r.tags | jsonify }}
@@ -61,12 +60,6 @@ var CATEGORY_ACCENTS = {
   '其他': ['#8b5cf6', '#a78bfa']
 };
 
-function favStars(rating){
-  var h='';
-  for(var i=1;i<=5;i++) h+='<i class="fas fa-star star'+(i<=Math.round(rating)?' filled':'')+'"></i>';
-  return h;
-}
-
 function favBuildCard(r){
   var tags=r.tags.map(function(t){return '<span class="tag">'+t+'</span>';}).join('');
   var acc=CATEGORY_ACCENTS[r.category]||CATEGORY_ACCENTS['其他'];
@@ -82,7 +75,6 @@ function favBuildCard(r){
       '<div class="resource-meta">'+
         '<span class="meta-user"><i class="fas fa-user"></i> '+r.uploader+'</span>'+
         '<span class="meta-date"><i class="fas fa-calendar"></i> '+r.date+'</span>'+
-        '<span class="resource-rating">'+favStars(r.rating)+'<span class="rating-num">'+r.rating+'</span></span>'+
       '</div>'+
       '<p class="resource-description">'+r.description+'</p>'+
       '<div class="resource-tags">'+tags+'</div>'+

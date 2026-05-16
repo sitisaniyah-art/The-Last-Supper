@@ -20,35 +20,25 @@ author_profile: false
   <div class="wizard-step active" id="wizard-step-1">
     <label class="wizard-label">第一步：选择资源类型</label>
     <div class="wizard-options" id="wizard-type-options">
-      <button class="wizard-option" data-type="真题">
-        <i class="fas fa-file-alt"></i>
-        <span>真题</span>
-        <small>期末/考研/考试</small>
+      <button class="wizard-option" data-type="视频课程">
+        <i class="fas fa-video"></i>
+        <span>视频课程</span>
+        <small>在线播放/网盘</small>
       </button>
-      <button class="wizard-option" data-type="课件">
+      <button class="wizard-option" data-type="课件讲义">
         <i class="fas fa-file-powerpoint"></i>
-        <span>课件</span>
+        <span>课件讲义</span>
         <small>PPT/PDF课件</small>
-      </button>
-      <button class="wizard-option" data-type="笔记">
-        <i class="fas fa-sticky-note"></i>
-        <span>笔记</span>
-        <small>学习笔记/整理</small>
-      </button>
-      <button class="wizard-option" data-type="习题">
-        <i class="fas fa-pencil-alt"></i>
-        <span>习题</span>
-        <small>练习题/作业</small>
       </button>
       <button class="wizard-option" data-type="书籍">
         <i class="fas fa-book"></i>
         <span>书籍</span>
         <small>PDF/电子书</small>
       </button>
-      <button class="wizard-option" data-type="视频">
-        <i class="fas fa-video"></i>
-        <span>视频</span>
-        <small>在线播放/网盘</small>
+      <button class="wizard-option" data-type="习题试卷">
+        <i class="fas fa-pencil-alt"></i>
+        <span>习题试卷</span>
+        <small>练习题/考试卷</small>
       </button>
       <button class="wizard-option" data-type="其他">
         <i class="fas fa-box"></i>
@@ -58,14 +48,22 @@ author_profile: false
     </div>
   </div>
 
-  <!-- Step 2: 学科分类 -->
+  <!-- Step 2: 学科大类 -->
   <div class="wizard-step" id="wizard-step-2">
-    <label class="wizard-label">第二步：选择学科分类</label>
-    <div class="wizard-subject-grid" id="wizard-subject-grid"></div>
+    <label class="wizard-label">第二步：选择学科大类</label>
+    <div class="wizard-category-grid" id="wizard-category-grid"></div>
+    <button class="wizard-back-btn" id="wizard-back-1"><i class="fas fa-arrow-left"></i> 返回上一步</button>
   </div>
 
-  <!-- Step 3: 结果 -->
+  <!-- Step 3: 具体课程 -->
   <div class="wizard-step" id="wizard-step-3">
+    <label class="wizard-label" id="wizard-step3-label">第三步：选择具体课程</label>
+    <div class="wizard-subject-grid" id="wizard-subject-grid"></div>
+    <button class="wizard-back-btn" id="wizard-back-2"><i class="fas fa-arrow-left"></i> 返回上一步</button>
+  </div>
+
+  <!-- Step 4: 结果 -->
+  <div class="wizard-step" id="wizard-step-4">
     <div class="wizard-result" id="wizard-result"></div>
   </div>
 </div>
@@ -112,14 +110,13 @@ author_profile: false
     </p>
     <pre style="background:var(--bg-alt);padding:1rem;border-radius:var(--radius);overflow-x:auto;font-size:0.85rem;margin-top:0.75rem;"><code>- id: 16
   title: 你的资源标题
-  category: 数学          # 数学/编程/英语/物理/电子信息/工程技术/人文社科/其他
-  subcategory: 高等数学    # 子学科（如高等数学、Python、四级等）
-  grade: 大一             # 大一/大二/大三/大四/通用
-  type: 真题              # 真题/课件/笔记/习题/书籍/视频/其他
+  category: 数学与统计类       # 20个学科大类之一
+  subcategory: 基础数学        # 对应大类下的具体课程
+  grade: 大一                  # 大一/大二/大三/大四/通用
+  type: 课件讲义               # 视频课程/课件讲义/书籍/习题试卷/其他
   uploader: 你的昵称
   date: 2026-05-15
   downloads: 0
-  rating: 0
   description: 资源的详细描述
   link: https://你的下载链接
   tags: [标签1, 标签2]</code></pre>
@@ -192,6 +189,12 @@ author_profile: false
 .wizard-subject-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.5rem;}
 .wizard-subject-btn{padding:.5rem .75rem;border:1px solid var(--border-color);border-radius:8px;background:var(--bg-color);cursor:pointer;font-size:.82rem;color:var(--text-color);text-align:left;transition:var(--transition);}
 .wizard-subject-btn:hover{border-color:var(--primary-color);background:rgba(99,102,241,.04);}
+.wizard-category-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.5rem;}
+.wizard-category-btn{padding:.6rem .75rem;border:1px solid var(--border-color);border-radius:8px;background:var(--bg-color);cursor:pointer;font-size:.82rem;color:var(--text-color);text-align:left;transition:var(--transition);display:flex;align-items:center;gap:.4rem;}
+.wizard-category-btn i{color:var(--primary-color);font-size:.9rem;width:18px;text-align:center;}
+.wizard-category-btn:hover{border-color:var(--primary-color);background:rgba(99,102,241,.04);}
+.wizard-breadcrumb{font-size:.78rem;color:var(--text-lighter);margin-bottom:.75rem;}
+.wizard-breadcrumb span{color:var(--primary-color);}
 .wizard-result{padding:1.25rem;background:var(--bg-color);border-radius:10px;border:1px solid var(--border-color);}
 .wizard-result h4{margin-bottom:.75rem;font-size:1rem;}
 .wizard-result p{font-size:.88rem;color:var(--text-light);line-height:1.6;margin-bottom:.5rem;}
@@ -201,24 +204,72 @@ author_profile: false
 [data-theme="dark"] .upload-wizard{background:rgba(255,255,255,.03);}
 [data-theme="dark"] .wizard-option{background:rgba(255,255,255,.04);}
 [data-theme="dark"] .wizard-subject-btn{background:rgba(255,255,255,.04);}
+[data-theme="dark"] .wizard-category-btn{background:rgba(255,255,255,.04);}
 [data-theme="dark"] .wizard-result{background:rgba(255,255,255,.04);}
 </style>
 
 <script>
 (function(){
-  var SUBJECTS = {
-    '数学': ['高等数学','线性代数','概率论与数理统计','离散数学','数值分析','复变函数与积分变换','其他数学'],
-    '编程': ['Python','C/C++','Java','数据结构与算法','操作系统','计算机网络','数据库','机器学习','深度学习','计算机视觉','自然语言处理','其他计算机'],
-    '英语': ['四级','六级','考研英语','口语','听力','其他英语'],
-    '物理': ['大学物理','力学','电磁学','光学','热学','其他物理'],
-    '电子信息': ['电路原理','模拟电子技术','数字电子技术','信号与系统','数字信号处理','自动控制原理','其他电子信息'],
-    '工程技术': ['理论力学','材料力学','机械原理','机械设计','工程制图','工程热力学','流体力学','传热学','其他工程'],
-    '人文社科': ['马克思主义基本原理','毛泽东思想和中国特色社会主义理论体系概论','中国近现代史纲要','思想道德与法治','其他人文学科'],
-    '其他': ['其他学科']
+  var CATEGORIES = {
+    '数学与统计类': ['基础数学','应用数学','概率与统计','工程数学','其他数学'],
+    '计算机科学与技术类': ['计算机基础','编程语言与开发','软件工程','人工智能与数据科学','系统与安全','计算机应用','其他计算机'],
+    '电子信息与电气工程类': ['电路与电子技术','信号与信息处理','电气工程','电子科学与技术','控制科学与工程','通信工程','其他电子信息'],
+    '机械与能源工程类': ['力学基础','机械设计与制造','机电一体化','能源与动力工程','车辆与运载工程','其他机械能源'],
+    '材料科学与工程类': ['材料基础','金属材料','无机非金属材料','高分子材料','复合材料','功能材料','其他材料'],
+    '物理学类': ['基础物理','现代物理','应用物理','其他物理'],
+    '化学与化工类': ['基础化学','应用化学','化学工程与技术','其他化学'],
+    '生命科学与医学类': ['基础生命科学','生物工程与技术','基础医学','临床医学','其他医学'],
+    '地球与空间科学类': ['地理学','地质学','地球物理学','大气科学','海洋科学','空间科学'],
+    '土木水利与建筑类': ['土木工程','水利工程','建筑学','城乡规划','其他土木建筑'],
+    '交通运输与航空航天类': ['交通运输工程','航空航天工程','船舶与海洋工程','其他交通运输'],
+    '环境与安全科学类': ['环境科学','环境工程','安全科学与工程','其他环境安全'],
+    '农学与食品科学类': ['农学','林学','畜牧兽医','食品科学与工程','其他农学'],
+    '经济与管理类': ['经济学','管理学','工商管理','公共管理','其他经济管理'],
+    '法学与政治学类': ['法学','政治学','社会学','马克思主义理论','其他法学政治'],
+    '人文与教育类': ['哲学','中国语言文学','外国语言文学','新闻传播学','历史学','教育学','心理学','体育学'],
+    '艺术与设计类': ['艺术学理论','美术学','设计学','音乐与舞蹈学','戏剧与影视学','其他艺术'],
+    '交叉学科类': ['人工智能','数据科学与大数据技术','生物医学工程','环境科学与工程','金融科技','数字人文','其他交叉学科'],
+    '公共基础类': ['大学英语','思想政治理论','计算机基础','体育','军事理论','其他公共基础'],
+    '综合类': ['其他学科']
   };
-  var TYPES = ['真题','课件','笔记','习题','书籍','视频','其他'];
+  var TYPES = ['视频课程','课件讲义','书籍','习题试卷','其他'];
+  var TYPE_ICONS = {
+    '视频课程': 'fa-video', '课件讲义': 'fa-file-powerpoint',
+    '书籍': 'fa-book', '习题试卷': 'fa-pencil-alt', '其他': 'fa-box'
+  };
+  var CAT_ICONS = {
+    '数学与统计类': 'fa-square-root-variable',
+    '计算机科学与技术类': 'fa-laptop-code',
+    '电子信息与电气工程类': 'fa-microchip',
+    '机械与能源工程类': 'fa-gear',
+    '材料科学与工程类': 'fa-atom',
+    '物理学类': 'fa-atom',
+    '化学与化工类': 'fa-flask',
+    '生命科学与医学类': 'fa-dna',
+    '地球与空间科学类': 'fa-earth-americas',
+    '土木水利与建筑类': 'fa-building',
+    '交通运输与航空航天类': 'fa-plane',
+    '环境与安全科学类': 'fa-leaf',
+    '农学与食品科学类': 'fa-seedling',
+    '经济与管理类': 'fa-chart-line',
+    '法学与政治学类': 'fa-scale-balanced',
+    '人文与教育类': 'fa-graduation-cap',
+    '艺术与设计类': 'fa-palette',
+    '交叉学科类': 'fa-diagram-project',
+    '公共基础类': 'fa-book-open',
+    '综合类': 'fa-layer-group'
+  };
+
   var selectedType = '';
-  var selectedSubject = '';
+  var selectedCategory = '';
+  var selectedSub = '';
+
+  function showStep(n){
+    for(var i=1;i<=4;i++){
+      var el = document.getElementById('wizard-step-'+i);
+      if(el) el.classList.toggle('active', i===n);
+    }
+  }
 
   // Step 1: type selection
   document.querySelectorAll('#wizard-type-options .wizard-option').forEach(function(btn){
@@ -230,80 +281,103 @@ author_profile: false
     });
   });
 
+  // Back buttons
+  document.getElementById('wizard-back-1').addEventListener('click', function(){
+    selectedCategory = '';
+    showStep(1);
+  });
+  document.getElementById('wizard-back-2').addEventListener('click', function(){
+    selectedSub = '';
+    showStep(2);
+  });
+
+  // Step 2: category selection
   function showStep2(){
-    var grid = document.getElementById('wizard-subject-grid');
+    var grid = document.getElementById('wizard-category-grid');
     grid.innerHTML = '';
-    for(var cat in SUBJECTS){
-      SUBJECTS[cat].forEach(function(sub){
-        var btn = document.createElement('button');
-        btn.className = 'wizard-subject-btn';
-        btn.textContent = sub;
-        btn.addEventListener('click', function(){
-          selectedSubject = sub;
-          showResult();
-        });
-        grid.appendChild(btn);
+    Object.keys(CATEGORIES).forEach(function(cat){
+      var btn = document.createElement('button');
+      btn.className = 'wizard-category-btn';
+      var icon = CAT_ICONS[cat] || 'fa-folder';
+      btn.innerHTML = '<i class="fas ' + icon + '"></i> ' + cat;
+      btn.addEventListener('click', function(){
+        selectedCategory = cat;
+        showStep3();
       });
-    }
-    document.getElementById('wizard-step-1').classList.remove('active');
-    document.getElementById('wizard-step-2').classList.add('active');
+      grid.appendChild(btn);
+    });
+    showStep(2);
   }
 
-  function showResult(){
+  // Step 3: subcategory (course) selection
+  function showStep3(){
+    var label = document.getElementById('wizard-step3-label');
+    label.textContent = '第三步：选择具体课程（' + selectedCategory + '）';
+    var grid = document.getElementById('wizard-subject-grid');
+    grid.innerHTML = '';
+    var subs = CATEGORIES[selectedCategory] || [];
+    subs.forEach(function(sub){
+      var btn = document.createElement('button');
+      btn.className = 'wizard-subject-btn';
+      btn.textContent = sub;
+      btn.addEventListener('click', function(){
+        selectedSub = sub;
+        showStep4();
+      });
+      grid.appendChild(btn);
+    });
+    showStep(3);
+  }
+
+  // Step 4: result with submit button
+  function showStep4(){
     var result = document.getElementById('wizard-result');
-    var folderPath = selectedType + '/' + selectedSubject;
-    var html = '';
+    var folderPath = selectedType + '/' + selectedCategory + '/' + selectedSub;
+    var icon = TYPE_ICONS[selectedType] || 'fa-box';
 
-    var typeIcons = {
-      '真题': 'fa-file-alt', '课件': 'fa-file-powerpoint', '笔记': 'fa-sticky-note',
-      '习题': 'fa-pencil-alt', '书籍': 'fa-book', '视频': 'fa-video', '其他': 'fa-box'
-    };
-    var icon = typeIcons[selectedType] || 'fa-box';
+    var html = '<div class="wizard-breadcrumb">你的选择：<span>' + selectedType + '</span> / <span>' + selectedCategory + '</span> / <span>' + selectedSub + '</span></div>';
 
-    if(selectedType === '视频'){
-      html = '<h4><i class="fas fa-video" style="color:var(--primary-color);"></i> 视频资源提交指南</h4>' +
+    if(selectedType === '视频课程'){
+      html += '<h4><i class="fas fa-video" style="color:var(--primary-color);"></i> 视频课程提交指南</h4>' +
         '<p><strong>重要提示：本仓库不接受直接上传视频文件！</strong>视频文件体积过大，请提供链接。</p>' +
-        '<p>请通过 Issue 提交，需要提供以下信息：</p>' +
+        '<p>资源将放置在目录：<code>' + folderPath + '/</code></p>' +
         '<div class="wizard-code">' +
         '课程名称：[填写课程名称]\n' +
         '主讲人：[填写老师姓名]\n' +
-        '学科：' + selectedSubject + '\n' +
+        '学科分类：' + selectedCategory + '\n' +
+        '具体课程：' + selectedSub + '\n' +
         '视频链接：[在线播放/网盘/下载链接]\n' +
         '提取码：[如有]\n' +
         '有效期：[如有]' +
-        '</div>' +
-        '<p>提交后管理员会将链接整理到对应学科分类中。</p>' +
-        '<a href="https://github.com/sitisaniyah-art/The-Last-Supper/issues/new?template=submit-resource.yml" target="_blank" rel="noopener" class="btn btn-primary" style="margin-top:.5rem;">' +
-          '<i class="fas fa-external-link-alt"></i> 去提交 Issue</a>';
+        '</div>';
     } else if(selectedType === '书籍'){
-      html = '<h4><i class="fas fa-book" style="color:var(--primary-color);"></i> 书籍资源提交指南</h4>' +
-        '<p>书籍资源将按学科分类整理。</p>' +
+      html += '<h4><i class="fas fa-book" style="color:var(--primary-color);"></i> 书籍提交指南</h4>' +
+        '<p>资源将放置在目录：<code>' + folderPath + '/</code></p>' +
         '<p><strong>文件命名建议：</strong>书名 + 作者 + 出版社 + 版本号</p>' +
-        '<div class="wizard-code">例如：机器学习_周志华_清华大学出版社_第2版.pdf</div>' +
-        '<p>提交方式：通过 Issue 提交资源链接（PDF/电子书下载链接），或 Fork 仓库后直接上传文件。</p>' +
-        '<a href="https://github.com/sitisaniyah-art/The-Last-Supper/issues/new?template=submit-resource.yml" target="_blank" rel="noopener" class="btn btn-primary" style="margin-top:.5rem;">' +
-          '<i class="fas fa-external-link-alt"></i> 去提交 Issue</a>';
+        '<div class="wizard-code">例如：机器学习_周志华_清华大学出版社_第2版.pdf</div>';
     } else {
-      html = '<h4><i class="fas ' + icon + '" style="color:var(--primary-color);"></i> ' + selectedType + '提交指南</h4>' +
-        '<p>该资源的分类为 <strong>' + selectedType + '</strong>，学科为 <strong>' + selectedSubject + '</strong>。</p>' +
-        '<p>提交方式：通过 Issue 提交资源下载链接，或 Fork 仓库后直接上传文件到对应目录。</p>' +
-        '<a href="https://github.com/sitisaniyah-art/The-Last-Supper/issues/new?template=submit-resource.yml" target="_blank" rel="noopener" class="btn btn-primary" style="margin-top:.5rem;">' +
-          '<i class="fas fa-external-link-alt"></i> 去提交 Issue</a>';
+      html += '<h4><i class="fas ' + icon + '" style="color:var(--primary-color);"></i> ' + selectedType + '提交指南</h4>' +
+        '<p>资源将放置在目录：<code>' + folderPath + '/</code></p>';
     }
 
-    html += '<button class="wizard-back-btn" id="wizard-back-btn"><i class="fas fa-arrow-left"></i> 重新选择</button>';
+    html += '<div style="margin-top:1.25rem;display:flex;gap:.75rem;flex-wrap:wrap;">' +
+      '<a href="https://github.com/sitisaniyah-art/The-Last-Supper/issues/new?template=submit-resource.yml" target="_blank" rel="noopener" class="btn btn-primary">' +
+        '<i class="fas fa-paper-plane"></i> 通过 Issue 提交</a>' +
+      '<a href="https://github.com/sitisaniyah-art/The-Last-Supper" target="_blank" rel="noopener" class="btn btn-outline">' +
+        '<i class="fas fa-code-branch"></i> Fork & PR</a>' +
+      '</div>';
+
+    html += '<button class="wizard-back-btn" id="wizard-restart"><i class="fas fa-redo"></i> 重新选择</button>';
     result.innerHTML = html;
 
-    document.getElementById('wizard-step-2').classList.remove('active');
-    document.getElementById('wizard-step-3').classList.add('active');
+    showStep(4);
 
-    document.getElementById('wizard-back-btn').addEventListener('click', function(){
+    document.getElementById('wizard-restart').addEventListener('click', function(){
       selectedType = '';
-      selectedSubject = '';
-      document.getElementById('wizard-step-3').classList.remove('active');
-      document.getElementById('wizard-step-2').classList.remove('active');
-      document.getElementById('wizard-step-1').classList.add('active');
+      selectedCategory = '';
+      selectedSub = '';
       document.querySelectorAll('#wizard-type-options .wizard-option').forEach(function(b){b.classList.remove('selected');});
+      showStep(1);
     });
   }
 
@@ -313,12 +387,12 @@ author_profile: false
     var html = '';
     TYPES.forEach(function(t){
       html += t + '/\n';
-      for(var cat in SUBJECTS){
+      Object.keys(CATEGORIES).forEach(function(cat){
         html += '  ' + cat + '/\n';
-        SUBJECTS[cat].forEach(function(sub){
+        CATEGORIES[cat].forEach(function(sub){
           html += '    ' + sub + '/\n';
         });
-      }
+      });
     });
     treeEl.textContent = html;
   }

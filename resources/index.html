@@ -18,14 +18,26 @@ author_profile: false
     <label>学科：</label>
     <select id="category-filter">
       <option value="all">全部学科</option>
-      <option value="数学">数学</option>
-      <option value="编程">编程</option>
-      <option value="英语">英语</option>
-      <option value="物理">物理</option>
-      <option value="电子信息">电子信息</option>
-      <option value="工程技术">工程技术</option>
-      <option value="人文社科">人文社科</option>
-      <option value="其他">其他</option>
+      <option value="数学与统计类">数学与统计类</option>
+      <option value="计算机科学与技术类">计算机科学与技术类</option>
+      <option value="电子信息与电气工程类">电子信息与电气工程类</option>
+      <option value="机械与能源工程类">机械与能源工程类</option>
+      <option value="材料科学与工程类">材料科学与工程类</option>
+      <option value="物理学类">物理学类</option>
+      <option value="化学与化工类">化学与化工类</option>
+      <option value="生命科学与医学类">生命科学与医学类</option>
+      <option value="地球与空间科学类">地球与空间科学类</option>
+      <option value="土木水利与建筑类">土木水利与建筑类</option>
+      <option value="交通运输与航空航天类">交通运输与航空航天类</option>
+      <option value="环境与安全科学类">环境与安全科学类</option>
+      <option value="农学与食品科学类">农学与食品科学类</option>
+      <option value="经济与管理类">经济与管理类</option>
+      <option value="法学与政治学类">法学与政治学类</option>
+      <option value="人文与教育类">人文与教育类</option>
+      <option value="艺术与设计类">艺术与设计类</option>
+      <option value="交叉学科类">交叉学科类</option>
+      <option value="公共基础类">公共基础类</option>
+      <option value="综合类">综合类</option>
     </select>
   </div>
   <div class="filter-group">
@@ -43,12 +55,10 @@ author_profile: false
     <label>类型：</label>
     <select id="type-filter">
       <option value="all">全部类型</option>
-      <option value="真题">真题</option>
-      <option value="课件">课件</option>
-      <option value="笔记">笔记</option>
-      <option value="习题">习题</option>
+      <option value="视频课程">视频课程</option>
+      <option value="课件讲义">课件讲义</option>
       <option value="书籍">书籍</option>
-      <option value="视频">视频</option>
+      <option value="习题试卷">习题试卷</option>
       <option value="其他">其他</option>
     </select>
   </div>
@@ -119,7 +129,6 @@ const allResources = [
     "uploader": "{{ r.uploader }}",
     "date": "{{ r.date }}",
     "downloads": {{ r.downloads }},
-    "rating": {{ r.rating }},
     "description": "{{ r.description | escape }}",
     "link": "{{ r.link | relative_url }}",
     "tags": {{ r.tags | jsonify }}

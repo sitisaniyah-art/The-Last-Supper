@@ -147,7 +147,7 @@ author_profile: false
 <script>
 var allResources = [
   {% for r in site.data.resources %}
-  {"id":{{ r.id }},"title":"{{ r.title | escape }}","category":"{{ r.category }}","downloads":{{ r.downloads }},"rating":{{ r.rating }}}{% unless forloop.last %},{% endunless %}
+  {"id":{{ r.id }},"title":"{{ r.title | escape }}","category":"{{ r.category }}","downloads":{{ r.downloads }}}{% unless forloop.last %},{% endunless %}
   {% endfor %}
 ];
 var allContributors = [

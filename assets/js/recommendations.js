@@ -52,7 +52,7 @@ var Recommendations = (function() {
       .filter(function(x) { return x.score > 0; })
       .sort(function(a, b) {
         if (b.score !== a.score) return b.score - a.score;
-        return b.resource.rating - a.resource.rating; // 评分高的优先
+        return (b.resource.downloads || 0) - (a.resource.downloads || 0);
       })
       .slice(0, limit);
 
@@ -79,7 +79,6 @@ var Recommendations = (function() {
           '<h4 class="rec-card-title">' + r.title + '</h4>' +
           '<p class="rec-card-desc">' + r.description.substring(0, 60) + '...</p>' +
           '<div class="rec-card-meta">' +
-            '<span><i class="fas fa-star" style="color:#f59e0b;"></i> ' + r.rating + '</span>' +
             '<span>' + r.type + '</span>' +
           '</div>' +
         '</div>' +

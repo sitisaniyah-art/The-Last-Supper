@@ -36,7 +36,7 @@ var ResourceAgent = (function() {
         }
         return false;
       });
-    }).sort(function(a, b) { return (b.rating || 0) - (a.rating || 0); }).slice(0, 5);
+    }).sort(function(a, b) { return (b.downloads || 0) - (a.downloads || 0); }).slice(0, 5);
   }
 
   function _getRandom(count) {
@@ -47,7 +47,7 @@ var ResourceAgent = (function() {
 
   function _getPopular(count) {
     var data = _getData();
-    return data.slice().sort(function(a, b) { return (b.rating || 0) - (a.rating || 0); }).slice(0, count || 5);
+    return data.slice().sort(function(a, b) { return (b.downloads || 0) - (a.downloads || 0); }).slice(0, count || 5);
   }
 
   function _getLatest(count) {
@@ -233,7 +233,6 @@ var ResourceAgent = (function() {
           '<div class="agent-result-name">' + _escapeHtml(r.title) + '</div>' +
           '<div class="agent-result-desc">' + _escapeHtml(r.uploader) + ' · ' + r.category + ' · ' + r.grade + '</div>' +
         '</a>' +
-        '<span class="agent-result-rating"><i class="fas fa-star"></i> ' + (r.rating || '-') + '</span>' +
         '<a href="' + r.link + '" target="_blank" rel="noopener" class="agent-result-link"><i class="fas fa-download"></i></a>' +
       '</div>';
     }).join('');

@@ -114,7 +114,6 @@ var TLSearch = (function() {
       score += _matchScore(t, query, queryPinyin, queryInitials) * 3;
     });
     score += _matchScore(r.description, query, queryPinyin, queryInitials) * 1;
-    score += (r.rating || 0) * 0.5;
     return score;
   }
 
