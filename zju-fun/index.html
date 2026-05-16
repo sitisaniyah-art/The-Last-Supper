@@ -40,7 +40,6 @@ author_profile: false
     <select id="fun-sort-filter">
       <option value="rating">最高评分</option>
       <option value="date">最新推荐</option>
-      <option value="likes">最多点赞</option>
     </select>
   </div>
   <div class="search-box" style="position:relative;">
@@ -90,61 +89,6 @@ const allPlaces = [
 <script src="{{ '/assets/js/favorites.js' | relative_url }}"></script>
 <script>
 (function() {
-  /* ============================================================
-     Likes — localStorage, Auth-aware with user tracking
-     Data format: { [id]: true } (anonymous) or { [id]: ["user1","user2"] } (logged in)
-     ============================================================ */
-  var LIKE_KEY = 'tls_zju_likes';
-  function getLikes() {
-    try { return JSON.parse(localStorage.getItem(LIKE_KEY)) || {}; } catch(e) { return {}; }
-  }
-  function saveLikes(d) {
-    localStorage.setItem(LIKE_KEY, JSON.stringify(d));
-    if (typeof Auth !== 'undefined' && Auth.isLoggedIn()) {
-      Auth.updateField('likes', d);
-    }
-  }
-  function isLiked(id) {
-    var likes = getLikes();
-    if (typeof Auth !== 'undefined' && Auth.isLoggedIn()) {
-      var username = Auth.getUsername();
-      return Array.isArray(likes[id]) && likes[id].indexOf(username) !== -1;
-    }
-    return !!likes[id];
-  }
-  function getLikeCount(id, baseCount) {
-    var likes = getLikes();
-    if (typeof Auth !== 'undefined' && Auth.isLoggedIn()) {
-      return baseCount + (Array.isArray(likes[id]) ? likes[id].length : 0);
-    }
-    return baseCount + (likes[id] ? 1 : 0);
-  }
-  function toggleLike(id) {
-    var likes = getLikes();
-    if (typeof Auth !== 'undefined' && Auth.isLoggedIn()) {
-      var username = Auth.getUsername();
-      if (!Array.isArray(likes[id])) likes[id] = [];
-      var idx = likes[id].indexOf(username);
-      if (idx !== -1) { likes[id].splice(idx, 1); saveLikes(likes); return false; }
-      likes[id].push(username); saveLikes(likes); return true;
-    }
-    // Anonymous fallback
-    if (likes[id]) { delete likes[id]; saveLikes(likes); return false; }
-    likes[id] = true; saveLikes(likes); return true;
-  }
-  // Migrate old format { [id]: true } to new format
-  (function migrateLikes() {
-    var likes = getLikes();
-    var changed = false;
-    for (var id in likes) {
-      if (likes[id] === true && typeof Auth !== 'undefined' && Auth.isLoggedIn()) {
-        likes[id] = [];
-        changed = true;
-      }
-    }
-    if (changed) localStorage.setItem(LIKE_KEY, JSON.stringify(likes));
-  })();
-
   /* ============================================================
      Report URL helper
      ============================================================ */
@@ -248,7 +192,6 @@ const allPlaces = [
   function buildCard(p) {
     var color = CAT_COLORS[p.category] || '#6b7280';
     var icon = CAT_ICONS[p.category] || 'fa-map-pin';
-    var liked = isLiked(p.id);
     var tagsHtml = p.tags.map(function(t) { return '<span class="tag">' + t + '</span>'; }).join('');
     var mapUrl = 'https://uri.amap.com/marker?position=&name=' + encodeURIComponent(p.name) + '&address=' + encodeURIComponent(p.address);
 
@@ -257,9 +200,6 @@ const allPlaces = [
         buildImageCarousel(p.id, p.name) +
         '<div class="zj-card-img-overlay">' +
           '<span class="zj-tag" style="background:' + color + ';color:#fff;"><i class="fas ' + icon + '"></i> ' + p.category + '</span>' +
-          '<button class="zj-like-btn' + (liked ? ' active' : '') + '" data-id="' + p.id + '" data-tooltip="' + (liked ? '取消点赞' : '点赞') + '">' +
-            '<i class="' + (liked ? 'fas' : 'far') + ' fa-heart"></i>' +
-          '</button>' +
         '</div>' +
       '</div>' +
       '<div class="zj-card-body">' +
@@ -278,7 +218,6 @@ const allPlaces = [
       '<div class="zj-card-footer">' +
         '<span class="zj-card-recommender"><i class="fas fa-user-circle"></i> ' + p.recommender + ' · ' + p.date + '</span>' +
         '<div class="zj-card-actions">' +
-          '<button class="zj-action-btn zj-comment-btn" data-name="' + encodeURIComponent(p.name) + '" data-tooltip="评论"><i class="fas fa-comment"></i></button>' +
           '<button class="zj-action-btn zj-share-btn" data-id="' + p.id + '" data-name="' + encodeURIComponent(p.name) + '" data-tooltip="分享"><i class="fas fa-share-alt"></i></button>' +
           '<a href="' + reportUrl('嗨玩榜推荐', p.name) + '" class="zj-action-btn zj-report-btn" target="_blank" rel="noopener" data-tooltip="举报"><i class="fas fa-flag"></i></a>' +
         '</div>' +
@@ -306,9 +245,6 @@ const allPlaces = [
 
     if (sort === 'rating')      result.sort(function(a, b) { return b.rating - a.rating; });
     else if (sort === 'date')   result.sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
-    else if (sort === 'likes')  result.sort(function(a, b) {
-      return getLikeCount(b.id, b.like_count) - getLikeCount(a.id, a.like_count);
-    });
 
     renderGrid(result);
   }
@@ -353,35 +289,6 @@ const allPlaces = [
      Event binding
      ============================================================ */
   function bindEvents(container) {
-    // Like buttons
-    container.querySelectorAll('.zj-like-btn').forEach(function(btn) {
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        var id = parseInt(this.getAttribute('data-id'));
-        var nowLiked = toggleLike(id);
-        this.classList.toggle('active', nowLiked);
-        this.querySelector('i').className = nowLiked ? 'fas fa-heart' : 'far fa-heart';
-        this.setAttribute('data-tooltip', nowLiked ? '取消点赞' : '点赞');
-        // Pulse
-        this.classList.add('pulse');
-        var self = this;
-        setTimeout(function() { self.classList.remove('pulse'); }, 350);
-      });
-    });
-
-    // Comment buttons — open comment modal
-    container.querySelectorAll('.zj-comment-btn').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        var card = this.closest('.zj-card');
-        var likeBtn = card ? card.querySelector('.zj-like-btn') : null;
-        var placeId = likeBtn ? parseInt(likeBtn.getAttribute('data-id')) : null;
-        var place = placeId ? allPlaces.find(function(p) { return p.id === placeId; }) : null;
-        if (place && typeof CommentModal !== 'undefined') {
-          CommentModal.open(place.id, place.name);
-        }
-      });
-    });
-
     // Carousel buttons
     container.querySelectorAll('.zj-carousel-prev').forEach(function(btn) {
       btn.addEventListener('click', function(e) {
@@ -543,8 +450,6 @@ const allPlaces = [
 })();
 </script>
 <script src="{{ '/assets/js/search-enhanced.js' | relative_url }}"></script>
-<script src="{{ '/assets/js/comments.js' | relative_url }}"></script>
-<script src="{{ '/assets/js/comment-modal.js' | relative_url }}"></script>
 <script src="{{ '/assets/js/search-agent.js' | relative_url }}"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {

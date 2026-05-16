@@ -5,7 +5,6 @@
 var ResourceAgent = (function() {
   var _isOpen = false;
   var _panel = null;
-  var FEEDBACK_KEY = 'tls_resource_feedback';
 
   // Data source
   function _getData() {
@@ -54,22 +53,6 @@ var ResourceAgent = (function() {
   function _getLatest(count) {
     var data = _getData();
     return data.slice().sort(function(a, b) { return (b.date || '').localeCompare(a.date || ''); }).slice(0, count || 5);
-  }
-
-  // Feedback
-  function _getFeedback() {
-    try { return JSON.parse(localStorage.getItem(FEEDBACK_KEY)) || {}; } catch(e) { return {}; }
-  }
-  function _saveFeedback(fb) {
-    localStorage.setItem(FEEDBACK_KEY, JSON.stringify(fb));
-  }
-  function _toggleFeedback(id) {
-    var fb = _getFeedback();
-    if (fb[id]) { delete fb[id]; _saveFeedback(fb); return false; }
-    fb[id] = true; _saveFeedback(fb); return true;
-  }
-  function _hasFeedback(id) {
-    return !!_getFeedback()[id];
   }
 
   // UI: Widget
@@ -245,35 +228,18 @@ var ResourceAgent = (function() {
     div.className = 'agent-msg agent';
 
     var cards = resources.map(function(r) {
-      var liked = _hasFeedback(r.id);
       return '<div class="agent-result-card" style="text-decoration:none;color:inherit;">' +
         '<a href="' + r.link + '" target="_blank" rel="noopener" class="agent-result-info" style="flex:1;text-decoration:none;color:inherit;">' +
           '<div class="agent-result-name">' + _escapeHtml(r.title) + '</div>' +
           '<div class="agent-result-desc">' + _escapeHtml(r.uploader) + ' · ' + r.category + ' · ' + r.grade + '</div>' +
         '</a>' +
         '<span class="agent-result-rating"><i class="fas fa-star"></i> ' + (r.rating || '-') + '</span>' +
-        '<button class="agent-result-like' + (liked ? ' active' : '') + '" data-id="' + r.id + '" title="' + (liked ? '取消点赞' : '点赞') + '">' +
-          '<i class="' + (liked ? 'fas' : 'far') + ' fa-heart"></i>' +
-        '</button>' +
         '<a href="' + r.link + '" target="_blank" rel="noopener" class="agent-result-link"><i class="fas fa-download"></i></a>' +
       '</div>';
     }).join('');
 
     div.innerHTML = '<div class="agent-result-cards">' + cards + '</div>';
     msgArea.appendChild(div);
-
-    // Bind like buttons
-    div.querySelectorAll('.agent-result-like').forEach(function(btn) {
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        var id = parseInt(this.dataset.id);
-        var nowLiked = _toggleFeedback(id);
-        this.classList.toggle('active', nowLiked);
-        this.querySelector('i').className = nowLiked ? 'fas fa-heart' : 'far fa-heart';
-        this.title = nowLiked ? '取消点赞' : '点赞';
-      });
-    });
 
     _scrollToBottom();
   }

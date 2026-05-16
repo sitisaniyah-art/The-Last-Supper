@@ -177,7 +177,6 @@
     loadReports();
     renderLogs();
     renderPlaces();
-    renderCommentReports();
     renderSurvivalGuides();
     renderAnalytics();
   }
@@ -525,39 +524,6 @@
     });
   });
 
-  // --- Comment Reports ---
-  function renderCommentReports() {
-    var list = document.getElementById('admin-comment-reports-list');
-    if (!list || typeof Comments === 'undefined') return;
-
-    var reports = Comments.getReports();
-    if (reports.length === 0) {
-      list.innerHTML = '<p style="color:var(--text-light);">暂无评论举报</p>';
-      return;
-    }
-
-    list.innerHTML = reports.map(function(r, i) {
-      var time = '';
-      try { time = new Date(r.time).toLocaleString('zh-CN'); } catch(e) {}
-      return '<div class="admin-list-item admin-report-item">' +
-        '<div class="admin-list-main">' +
-          '<strong>' + r.reason + '</strong>' +
-          '<span class="admin-list-meta">项目ID: ' + r.placeId + ' · ' + r.nickname + ' · ' + time + '</span>' +
-          '<p class="admin-report-body">"' + (r.content || '').substring(0, 100) + '"</p>' +
-          (r.detail ? '<p class="admin-report-detail">补充: ' + r.detail + '</p>' : '') +
-        '</div>' +
-        '<button class="btn btn-outline admin-report-dismiss" data-idx="' + i + '" style="flex-shrink:0;font-size:.78rem;">忽略</button>' +
-      '</div>';
-    }).join('');
-
-    list.querySelectorAll('.admin-report-dismiss').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        Comments.deleteReport(parseInt(this.dataset.idx));
-        renderCommentReports();
-      });
-    });
-  }
-
   // --- Survival Guide Websites ---
   var SURVIVAL_KEY = 'tls_survival_websites';
   var _defaultWebsites = (typeof allSurvivalWebsites !== 'undefined') ? JSON.parse(JSON.stringify(allSurvivalWebsites)) : [];
@@ -745,32 +711,16 @@
     var pagesEl = document.getElementById('admin-analytics-pages');
     if (!statsEl) return;
 
-    // Read from TLSAnalytics if available
-    var analyticsData = null;
-    try {
-      analyticsData = JSON.parse(localStorage.getItem('tls_analytics'));
-    } catch(e) {}
-
-    var stats = { totalPageViews: 0, totalClicks: 0, totalResourceViews: 0, sessions: 0, totalDuration: 0 };
-    if (analyticsData) {
-      stats.totalPageViews = (analyticsData.pageViews || []).length;
-      stats.totalClicks = (analyticsData.clicks || []).length;
-      stats.totalResourceViews = (analyticsData.resourceViews || []).length;
-      stats.sessions = analyticsData.sessions || 0;
-      stats.totalDuration = analyticsData.totalDuration || 0;
-    }
-
-    // Format duration
-    var durStr = stats.totalDuration < 60 ? stats.totalDuration + '秒' :
-      stats.totalDuration < 3600 ? Math.round(stats.totalDuration / 60) + '分钟' :
-      (stats.totalDuration / 3600).toFixed(1) + '小时';
+    var totalRes = allResources.length;
+    var totalDl = 0;
+    allResources.forEach(function(r) { totalDl += r.downloads; });
 
     var cards = [
-      { icon: 'fa-eye', label: '页面访问', value: stats.totalPageViews, color: '#6366f1' },
-      { icon: 'fa-mouse-pointer', label: '按钮点击', value: stats.totalClicks, color: '#10b981' },
-      { icon: 'fa-book-open', label: '资源查看', value: stats.totalResourceViews, color: '#f59e0b' },
-      { icon: 'fa-clock', label: '总会话', value: stats.sessions, color: '#ef4444' },
-      { icon: 'fa-hourglass-half', label: '总时长', value: durStr, color: '#8b5cf6' }
+      { icon: 'fa-book', label: '资源总数', value: totalRes, color: '#6366f1' },
+      { icon: 'fa-download', label: '总下载量(静态)', value: totalDl, color: '#10b981' },
+      { icon: 'fa-users', label: '贡献者', value: allContributors.length, color: '#f59e0b' },
+      { icon: 'fa-map-marker-alt', label: '嗨玩项目', value: allPlaces.length, color: '#ef4444' },
+      { icon: 'fa-compass', label: '导航网站', value: (typeof allSurvivalWebsites !== 'undefined' ? allSurvivalWebsites.length : 0), color: '#8b5cf6' }
     ];
 
     statsEl.innerHTML = cards.map(function(c) {
@@ -781,50 +731,11 @@
       '</div>';
     }).join('');
 
-    // Popular resources by local download count
     if (downloadsEl) {
-      var dlData = {};
-      try { dlData = JSON.parse(localStorage.getItem('tls_downloads')) || {}; } catch(e) {}
-
-      var dlList = Object.keys(dlData).map(function(id) {
-        var res = allResources.find(function(r) { return r.id === parseInt(id); });
-        return { id: id, count: dlData[id], title: res ? res.title : '资源 #' + id };
-      }).sort(function(a, b) { return b.count - a.count; }).slice(0, 10);
-
-      if (dlList.length === 0) {
-        downloadsEl.innerHTML = '<p style="color:var(--text-light);">暂无下载记录</p>';
-      } else {
-        downloadsEl.innerHTML = dlList.map(function(d) {
-          return '<div class="admin-list-item">' +
-            '<div class="admin-list-main"><strong>' + d.title + '</strong></div>' +
-            '<span class="admin-list-badge admin-badge-success">' + d.count + ' 次</span>' +
-          '</div>';
-        }).join('');
-      }
+      downloadsEl.innerHTML = '<p style="color:var(--text-light);">动态下载统计已移除（静态站点无法实现跨用户统计）</p>';
     }
-
-    // Page visit stats
-    if (pagesEl && analyticsData && analyticsData.pageViews) {
-      var pageCount = {};
-      analyticsData.pageViews.forEach(function(pv) {
-        pageCount[pv.url] = (pageCount[pv.url] || 0) + 1;
-      });
-      var pageList = Object.keys(pageCount).map(function(url) {
-        return { url: url, count: pageCount[url] };
-      }).sort(function(a, b) { return b.count - a.count; });
-
-      if (pageList.length === 0) {
-        pagesEl.innerHTML = '<p style="color:var(--text-light);">暂无页面访问记录</p>';
-      } else {
-        pagesEl.innerHTML = pageList.map(function(p) {
-          return '<div class="admin-list-item">' +
-            '<div class="admin-list-main"><strong>' + p.url + '</strong></div>' +
-            '<span class="admin-list-badge admin-badge-success">' + p.count + ' 次</span>' +
-          '</div>';
-        }).join('');
-      }
-    } else if (pagesEl) {
-      pagesEl.innerHTML = '<p style="color:var(--text-light);">暂无页面访问记录</p>';
+    if (pagesEl) {
+      pagesEl.innerHTML = '<p style="color:var(--text-light);">动态访问统计已移除（静态站点无法实现跨用户统计）</p>';
     }
   }
 

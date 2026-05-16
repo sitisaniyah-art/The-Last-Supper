@@ -46,7 +46,6 @@ author_profile: false
     <button class="admin-tab" data-tab="logs"><i class="fas fa-history"></i> 操作日志</button>
     <button class="admin-tab" data-tab="resources"><i class="fas fa-boxes"></i> 资源管理</button>
     <button class="admin-tab" data-tab="places"><i class="fas fa-map-marker-alt"></i> 嗨玩项目</button>
-    <button class="admin-tab" data-tab="comment-reports"><i class="fas fa-comment-slash"></i> 评论举报</button>
     <button class="admin-tab" data-tab="survival"><i class="fas fa-compass"></i> 生存指南</button>
     <button class="admin-tab" data-tab="analytics"><i class="fas fa-chart-line"></i> 数据统计</button>
   </div>
@@ -82,12 +81,6 @@ author_profile: false
     <div id="admin-places-list" class="admin-list"></div>
   </div>
 
-  <!-- Comment Reports tab -->
-  <div class="admin-content" id="tab-comment-reports">
-    <p style="color:var(--text-light);margin-bottom:1rem;">用户提交的评论举报，存储在本地浏览器中。</p>
-    <div id="admin-comment-reports-list" class="admin-list"></div>
-  </div>
-
   <!-- Survival Guide tab -->
   <div class="admin-content" id="tab-survival">
     <p style="color:var(--text-light);margin-bottom:1rem;">管理生存指南中的实用网站。可以修改名称、URL、描述和分类，也可以删除条目。</p>
@@ -110,11 +103,11 @@ author_profile: false
 
   <!-- Analytics tab -->
   <div class="admin-content" id="tab-analytics">
-    <p style="color:var(--text-light);margin-bottom:1rem;">本地浏览器数据统计，基于 TLSAnalytics 模块收集。</p>
+    <p style="color:var(--text-light);margin-bottom:1rem;">基于静态数据的统计概览。</p>
     <div class="admin-stats-grid" id="admin-analytics-stats"></div>
-    <h3 style="margin-top:2rem;">热门资源（本地下载量）</h3>
+    <h3 style="margin-top:2rem;">下载统计</h3>
     <div id="admin-analytics-downloads" class="admin-list"></div>
-    <h3 style="margin-top:2rem;">页面访问统计</h3>
+    <h3 style="margin-top:2rem;">页面统计</h3>
     <div id="admin-analytics-pages" class="admin-list"></div>
   </div>
 
@@ -181,5 +174,4 @@ var allSurvivalWebsites = [
 </script>
 <link rel="stylesheet" href="{{ '/assets/css/admin.css' | relative_url }}">
 <script src="{{ '/assets/js/image-upload.js' | relative_url }}"></script>
-<script src="{{ '/assets/js/comments.js' | relative_url }}"></script>
 <script src="{{ '/assets/js/admin.js' | relative_url }}"></script>

@@ -191,18 +191,13 @@ var Auth = (function() {
           catch(e) { existingUserData = null; }
           if (!existingUserData) existingUserData = _getDefaultData();
 
-          // 合并匿名的 favorites 和 likes
-          var anonFavs, anonLikes;
+          // 合并匿名的 favorites
+          var anonFavs;
           try { anonFavs = JSON.parse(localStorage.getItem('tls_favorites')) || []; }
           catch(e) { anonFavs = []; }
-          try { anonLikes = JSON.parse(localStorage.getItem('tls_zju_likes')) || {}; }
-          catch(e) { anonLikes = {}; }
 
           var localData = {
-            favorites: anonFavs,
-            likes: anonLikes,
-            downloads: existingUserData.downloads || {},
-            ratings: existingUserData.ratings || {}
+            favorites: anonFavs
           };
 
           var merged = _mergeData(existingUserData, localData);
