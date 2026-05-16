@@ -462,12 +462,50 @@
 }
 
 /* --- Responsive --- */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .admin-stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
   .admin-tab {
     padding: 0.5rem 0.6rem;
     font-size: 0.82rem;
+  }
+  .admin-bar-label {
+    width: 48px;
+    font-size: 0.78rem;
+  }
+  .admin-survival-fields {
+    grid-template-columns: 45px 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-stats-grid {
+    grid-template-columns: 1fr;
+  }
+  .admin-bar-row {
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+  .admin-bar-label {
+    width: 100%;
+    text-align: left;
+    font-size: 0.78rem;
+  }
+  .admin-bar-track {
+    flex: 1;
+  }
+  .admin-survival-fields {
+    grid-template-columns: 1fr;
+  }
+  .admin-survival-fields label {
+    text-align: left;
+  }
+  .admin-tabs {
+    flex-wrap: wrap;
+  }
+  .admin-tab {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.78rem;
   }
 }
