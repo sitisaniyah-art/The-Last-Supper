@@ -228,7 +228,7 @@
       var maxCount = 1;
       for (var cat in catCount) { if (catCount[cat] > maxCount) maxCount = catCount[cat]; }
 
-      var catColors = { '数学': '#6366f1', '编程': '#10b981', '英语': '#f59e0b', '物理': '#ef4444', '其他': '#8b5cf6' };
+      var catColors = { '数学': '#6366f1', '编程': '#10b981', '英语': '#f59e0b', '物理': '#ef4444', '电子信息': '#0ea5e9', '工程技术': '#f97316', '人文社科': '#ec4899', '其他': '#8b5cf6' };
       chart.innerHTML = '<div class="admin-bar-chart">' +
         Object.keys(catCount).map(function(cat) {
           var pct = Math.round((catCount[cat] / maxCount) * 100);

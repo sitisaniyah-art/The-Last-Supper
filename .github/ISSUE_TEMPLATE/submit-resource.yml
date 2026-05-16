@@ -28,6 +28,9 @@ body:
         - 编程
         - 英语
         - 物理
+        - 电子信息
+        - 工程技术
+        - 人文社科
         - 其他
     validations:
       required: true
@@ -39,20 +42,57 @@ body:
       options:
         - 高等数学
         - 线性代数
-        - 概率统计
+        - 概率论与数理统计
+        - 离散数学
+        - 数值分析
+        - 复变函数与积分变换
+        - 其他数学
         - Python
         - C/C++
         - Java
-        - 数据结构
-        - 算法
+        - 数据结构与算法
+        - 操作系统
+        - 计算机网络
+        - 数据库
+        - 机器学习
+        - 深度学习
+        - 计算机视觉
+        - 自然语言处理
+        - 其他计算机
         - 四级
         - 六级
         - 考研英语
         - 口语
+        - 听力
+        - 其他英语
         - 大学物理
         - 力学
         - 电磁学
-        - 其他
+        - 光学
+        - 热学
+        - 其他物理
+        - 电路原理
+        - 模拟电子技术
+        - 数字电子技术
+        - 信号与系统
+        - 数字信号处理
+        - 自动控制原理
+        - 其他电子信息
+        - 理论力学
+        - 材料力学
+        - 机械原理
+        - 机械设计
+        - 工程制图
+        - 工程热力学
+        - 流体力学
+        - 传热学
+        - 其他工程
+        - 马克思主义基本原理
+        - 毛泽东思想和中国特色社会主义理论体系概论
+        - 中国近现代史纲要
+        - 思想道德与法治
+        - 其他人文学科
+        - 其他学科
     validations:
       required: true
 
@@ -74,11 +114,12 @@ body:
     attributes:
       label: 资源类型
       options:
-        - PDF
-        - PPT
-        - DOC
+        - 真题
+        - 课件
+        - 笔记
+        - 习题
+        - 书籍
         - 视频
-        - 链接
         - 其他
     validations:
       required: true
@@ -95,8 +136,8 @@ body:
   - type: input
     id: link
     attributes:
-      label: 下载链接
-      description: 资源的下载地址（百度网盘、GitHub Release 等）
+      label: 资源链接
+      description: 资源的下载或访问地址（百度网盘、GitHub Release、在线播放链接等）
       placeholder: https://...
     validations:
       required: true

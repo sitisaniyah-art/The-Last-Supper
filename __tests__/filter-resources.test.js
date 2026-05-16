@@ -48,7 +48,7 @@ const fixtures = [
     id: 5,
     title: '数据结构与算法课程笔记',
     category: '编程',
-    subcategory: '数据结构',
+    subcategory: '数据结构与算法',
     grade: '大二',
     type: '笔记',
     description: '链表、树、图、排序算法等核心内容',
@@ -64,6 +64,36 @@ const fixtures = [
     description: '力学、热学、电磁学重点公式整理',
     tags: ['物理', '公式'],
   },
+  {
+    id: 7,
+    title: '电路原理基础课件',
+    category: '电子信息',
+    subcategory: '电路原理',
+    grade: '大二',
+    type: '课件',
+    description: '电路分析基础、交流电路、暂态分析',
+    tags: ['电路', '电子信息'],
+  },
+  {
+    id: 8,
+    title: '机械设计课程习题集',
+    category: '工程技术',
+    subcategory: '机械设计',
+    grade: '大三',
+    type: '习题',
+    description: '齿轮、轴承、联轴器等设计练习',
+    tags: ['机械', '设计'],
+  },
+  {
+    id: 9,
+    title: '马克思主义基本原理笔记',
+    category: '人文社科',
+    subcategory: '马克思主义基本原理',
+    grade: '大一',
+    type: '笔记',
+    description: '唯物辩证法、认识论、唯物史观重点整理',
+    tags: ['马原', '政治'],
+  },
 ];
 
 /* ============================================================
@@ -72,7 +102,7 @@ const fixtures = [
 describe('filterResources — category', () => {
   test('returns all when category is "all"', () => {
     const result = filterResources(fixtures, { category: 'all' });
-    expect(result).toHaveLength(6);
+    expect(result).toHaveLength(9);
   });
 
   test('filters by 数学', () => {
@@ -111,19 +141,19 @@ describe('filterResources — category', () => {
 describe('filterResources — grade', () => {
   test('returns all when grade is "all"', () => {
     const result = filterResources(fixtures, { grade: 'all' });
-    expect(result).toHaveLength(6);
+    expect(result).toHaveLength(9);
   });
 
   test('filters by 大一', () => {
     const result = filterResources(fixtures, { grade: '大一' });
-    expect(result).toHaveLength(4);
+    expect(result).toHaveLength(5);
     expect(result.every(r => r.grade === '大一')).toBe(true);
   });
 
   test('filters by 大二', () => {
     const result = filterResources(fixtures, { grade: '大二' });
-    expect(result).toHaveLength(1);
-    expect(result[0].id).toBe(5);
+    expect(result).toHaveLength(2);
+    expect(result.every(r => r.grade === '大二')).toBe(true);
   });
 
   test('filters by 通用', () => {
@@ -132,8 +162,8 @@ describe('filterResources — grade', () => {
     expect(result[0].id).toBe(2);
   });
 
-  test('returns empty for 大三 (no fixtures)', () => {
-    const result = filterResources(fixtures, { grade: '大三' });
+  test('returns empty for 大四 (no fixtures)', () => {
+    const result = filterResources(fixtures, { grade: '大四' });
     expect(result).toHaveLength(0);
   });
 });
@@ -144,7 +174,7 @@ describe('filterResources — grade', () => {
 describe('filterResources — type', () => {
   test('returns all when type is "all"', () => {
     const result = filterResources(fixtures, { type: 'all' });
-    expect(result).toHaveLength(6);
+    expect(result).toHaveLength(9);
   });
 
   test('filters by 真题', () => {
@@ -155,19 +185,20 @@ describe('filterResources — type', () => {
 
   test('filters by 笔记', () => {
     const result = filterResources(fixtures, { type: '笔记' });
-    expect(result).toHaveLength(3);
+    expect(result).toHaveLength(4);
     expect(result.every(r => r.type === '笔记')).toBe(true);
   });
 
   test('filters by 课件', () => {
     const result = filterResources(fixtures, { type: '课件' });
-    expect(result).toHaveLength(1);
-    expect(result[0].id).toBe(3);
+    expect(result).toHaveLength(2);
+    expect(result.every(r => r.type === '课件')).toBe(true);
   });
 
-  test('returns empty for 习题 (no fixtures)', () => {
+  test('filters by 习题', () => {
     const result = filterResources(fixtures, { type: '习题' });
-    expect(result).toHaveLength(0);
+    expect(result).toHaveLength(1);
+    expect(result[0].id).toBe(8);
   });
 });
 
@@ -176,9 +207,9 @@ describe('filterResources — type', () => {
    ============================================================ */
 describe('filterResources — keyword search', () => {
   test('returns all when term is empty', () => {
-    expect(filterResources(fixtures, { term: '' })).toHaveLength(6);
-    expect(filterResources(fixtures, { term: '   ' })).toHaveLength(6);
-    expect(filterResources(fixtures, {})).toHaveLength(6);
+    expect(filterResources(fixtures, { term: '' })).toHaveLength(9);
+    expect(filterResources(fixtures, { term: '   ' })).toHaveLength(9);
+    expect(filterResources(fixtures, {})).toHaveLength(9);
   });
 
   test('matches title (partial)', () => {
@@ -271,8 +302,8 @@ describe('filterResources — combined filters', () => {
       grade: '大一',
       type: '笔记',
     });
-    expect(result).toHaveLength(1);
-    expect(result[0].id).toBe(6);
+    expect(result).toHaveLength(2);
+    expect(result.map(r => r.id).sort()).toEqual([6, 9]);
   });
 
   test('category + grade + type', () => {
@@ -341,7 +372,7 @@ describe('filterResources — combined filters', () => {
       type: 'all',
       term: '',
     });
-    expect(result).toHaveLength(6);
+    expect(result).toHaveLength(9);
   });
 });
 
@@ -358,8 +389,8 @@ describe('filterResources — edge cases', () => {
   test('all filters set to non-matching values', () => {
     const result = filterResources(fixtures, {
       category: '化学',
-      grade: '大三',
-      type: '习题',
+      grade: '大四',
+      type: '书籍',
     });
     expect(result).toHaveLength(0);
   });
@@ -368,7 +399,7 @@ describe('filterResources — edge cases', () => {
     const original = fixtures.slice();
     filterResources(fixtures, { category: '数学' });
     expect(fixtures).toEqual(original);
-    expect(fixtures).toHaveLength(6);
+    expect(fixtures).toHaveLength(9);
   });
 
   test('resource with empty tags array', () => {
@@ -392,6 +423,35 @@ describe('filterResources — edge cases', () => {
 
   test('defaults missing filter fields to "all"', () => {
     const result = filterResources(fixtures, {});
-    expect(result).toHaveLength(6);
+    expect(result).toHaveLength(9);
+  });
+});
+
+/* ============================================================
+   7. New category tests
+   ============================================================ */
+describe('filterResources — new categories', () => {
+  test('filters by 电子信息', () => {
+    const result = filterResources(fixtures, { category: '电子信息' });
+    expect(result).toHaveLength(1);
+    expect(result[0].id).toBe(7);
+  });
+
+  test('filters by 工程技术', () => {
+    const result = filterResources(fixtures, { category: '工程技术' });
+    expect(result).toHaveLength(1);
+    expect(result[0].id).toBe(8);
+  });
+
+  test('filters by 人文社科', () => {
+    const result = filterResources(fixtures, { category: '人文社科' });
+    expect(result).toHaveLength(1);
+    expect(result[0].id).toBe(9);
+  });
+
+  test('subcategory filter works for new categories', () => {
+    const result = filterResources(fixtures, { category: '电子信息', term: '电路' });
+    expect(result).toHaveLength(1);
+    expect(result[0].id).toBe(7);
   });
 });
