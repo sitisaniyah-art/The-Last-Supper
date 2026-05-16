@@ -47,6 +47,7 @@ author_profile: false
     <button class="admin-tab" data-tab="resources"><i class="fas fa-boxes"></i> 资源管理</button>
     <button class="admin-tab" data-tab="places"><i class="fas fa-map-marker-alt"></i> 嗨玩项目</button>
     <button class="admin-tab" data-tab="comment-reports"><i class="fas fa-comment-slash"></i> 评论举报</button>
+    <button class="admin-tab" data-tab="survival"><i class="fas fa-compass"></i> 生存指南</button>
     <button class="admin-tab" data-tab="analytics"><i class="fas fa-chart-line"></i> 数据统计</button>
   </div>
 
@@ -85,6 +86,26 @@ author_profile: false
   <div class="admin-content" id="tab-comment-reports">
     <p style="color:var(--text-light);margin-bottom:1rem;">用户提交的评论举报，存储在本地浏览器中。</p>
     <div id="admin-comment-reports-list" class="admin-list"></div>
+  </div>
+
+  <!-- Survival Guide tab -->
+  <div class="admin-content" id="tab-survival">
+    <p style="color:var(--text-light);margin-bottom:1rem;">管理生存指南中的实用网站。可以修改名称、URL、描述和分类，也可以删除条目。</p>
+    <div style="display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap;">
+      <input type="text" id="admin-survival-search" placeholder="搜索网站名称..." class="admin-search-input" style="flex:1;min-width:200px;">
+      <select id="admin-survival-category-filter" class="admin-search-input" style="width:auto;">
+        <option value="all">全部分类</option>
+        <option value="教务类">教务类</option>
+        <option value="学习类">学习类</option>
+        <option value="生活类">生活类</option>
+        <option value="工具类">工具类</option>
+      </select>
+    </div>
+    <div id="admin-survival-list" class="admin-list"></div>
+    <div style="margin-top:1.5rem;display:flex;gap:.5rem;flex-wrap:wrap;">
+      <button class="btn btn-primary" id="admin-survival-export"><i class="fas fa-download"></i> 导出 YAML</button>
+      <button class="btn btn-outline" id="admin-survival-reset"><i class="fas fa-undo"></i> 恢复默认</button>
+    </div>
   </div>
 
   <!-- Analytics tab -->
@@ -150,6 +171,11 @@ var allLogs = [
 var allPlaces = [
   {% for p in site.data.zju-fun %}
   {"id":{{ p.id }},"name":"{{ p.name | escape }}","category":"{{ p.category }}","rating":{{ p.rating }},"image":"{{ p.image }}","address":"{{ p.address | escape }}"}{% unless forloop.last %},{% endunless %}
+  {% endfor %}
+];
+var allSurvivalWebsites = [
+  {% for w in site.data.zju-survival.websites %}
+  {"name":"{{ w.name | escape }}","icon":"{{ w.icon }}","description":"{{ w.description | escape }}","url":"{{ w.url }}","category":"{{ w.category }}"}{% unless forloop.last %},{% endunless %}
   {% endfor %}
 ];
 </script>

@@ -411,6 +411,56 @@
   margin-top: 0.2rem;
 }
 
+/* --- Survival guide items --- */
+.admin-survival-item {
+  align-items: flex-start;
+}
+
+.admin-survival-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(99,102,241,0.1);
+  color: var(--primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.9rem;
+}
+
+.admin-survival-fields {
+  display: grid;
+  grid-template-columns: 50px 1fr;
+  gap: 0.3rem 0.5rem;
+  align-items: center;
+}
+
+.admin-survival-fields label {
+  font-size: 0.75rem;
+  color: var(--text-lighter);
+  text-align: right;
+}
+
+.admin-survival-input {
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 0.82rem;
+  background: var(--bg-color);
+  color: var(--text-color);
+  width: 100%;
+  outline: none;
+}
+
+.admin-survival-input:focus {
+  border-color: var(--primary-color);
+}
+
+.admin-survival-actions {
+  padding-top: 4px;
+}
+
 /* --- Responsive --- */
 @media (max-width: 600px) {
   .admin-stats-grid {

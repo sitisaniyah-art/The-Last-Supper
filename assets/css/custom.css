@@ -2,6 +2,15 @@
    The Last Supper - Custom Styles
    ============================================================ */
 
+/* --- Hide RSS/Feed button (Minimal Mistakes theme default) --- */
+.greedy-nav .nav__feed,
+.greedy-nav__toggle svg.icon--rss,
+a[href*="feed.xml"],
+a[href*="atom.xml"],
+a[href*="/feed/"],
+.link--feed,
+.site-footer__feed-link { display: none !important; }
+
 /* --- CSS Custom Properties (Light Mode) --- */
 :root {
   --primary-color: #2563eb;

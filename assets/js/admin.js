@@ -178,6 +178,7 @@
     renderLogs();
     renderPlaces();
     renderCommentReports();
+    renderSurvivalGuides();
     renderAnalytics();
   }
 
@@ -555,6 +556,186 @@
         renderCommentReports();
       });
     });
+  }
+
+  // --- Survival Guide Websites ---
+  var SURVIVAL_KEY = 'tls_survival_websites';
+  var _defaultWebsites = (typeof allSurvivalWebsites !== 'undefined') ? JSON.parse(JSON.stringify(allSurvivalWebsites)) : [];
+
+  function _getSurvivalWebsites() {
+    try {
+      var stored = JSON.parse(localStorage.getItem(SURVIVAL_KEY));
+      if (stored && Array.isArray(stored) && stored.length > 0) return stored;
+    } catch(e) {}
+    return _defaultWebsites.slice();
+  }
+
+  function _saveSurvivalWebsites(data) {
+    localStorage.setItem(SURVIVAL_KEY, JSON.stringify(data));
+  }
+
+  function renderSurvivalGuides() {
+    var list = document.getElementById('admin-survival-list');
+    var search = document.getElementById('admin-survival-search');
+    var catFilter = document.getElementById('admin-survival-category-filter');
+    if (!list) return;
+
+    function doRender() {
+      var term = (search ? search.value : '').toLowerCase();
+      var cat = catFilter ? catFilter.value : 'all';
+      var websites = _getSurvivalWebsites();
+
+      var filtered = websites.filter(function(w) {
+        var matchTerm = !term || w.name.toLowerCase().includes(term) || w.description.toLowerCase().includes(term) || w.url.toLowerCase().includes(term);
+        var matchCat = cat === 'all' || w.category === cat;
+        return matchTerm && matchCat;
+      });
+
+      // Group by category
+      var groups = {};
+      filtered.forEach(function(w) {
+        if (!groups[w.category]) groups[w.category] = [];
+        groups[w.category].push(w);
+      });
+
+      var html = '';
+      var catOrder = ['教务类', '学习类', '生活类', '工具类'];
+      catOrder.forEach(function(catName) {
+        if (!groups[catName]) return;
+        html += '<div class="admin-survival-group"><h4 style="margin:1rem 0 .5rem;color:var(--text-light);font-size:.85rem;"><i class="fas fa-folder"></i> ' + catName + ' (' + groups[catName].length + ')</h4>';
+        groups[catName].forEach(function(w, idx) {
+          var globalIdx = websites.indexOf(w);
+          html += '<div class="admin-list-item admin-survival-item" data-idx="' + globalIdx + '">' +
+            '<div class="admin-survival-icon"><i class="' + (w.icon || 'fas fa-link') + '"></i></div>' +
+            '<div class="admin-list-main" style="flex:1;min-width:0;">' +
+              '<div class="admin-survival-view">' +
+                '<strong>' + w.name + '</strong>' +
+                '<span class="admin-list-meta">' + w.description + '</span>' +
+                '<a href="' + w.url + '" target="_blank" rel="noopener" class="admin-list-meta" style="color:var(--primary-color);word-break:break-all;">' + w.url + '</a>' +
+              '</div>' +
+              '<div class="admin-survival-edit" style="display:none;">' +
+                '<div class="admin-survival-fields">' +
+                  '<label>名称</label><input type="text" class="admin-survival-input" data-field="name" value="' + w.name.replace(/"/g, '&quot;') + '">' +
+                  '<label>URL</label><input type="text" class="admin-survival-input" data-field="url" value="' + w.url.replace(/"/g, '&quot;') + '">' +
+                  '<label>描述</label><input type="text" class="admin-survival-input" data-field="description" value="' + w.description.replace(/"/g, '&quot;') + '">' +
+                  '<label>分类</label>' +
+                  '<select class="admin-survival-input" data-field="category">' +
+                    '<option value="教务类"' + (w.category === '教务类' ? ' selected' : '') + '>教务类</option>' +
+                    '<option value="学习类"' + (w.category === '学习类' ? ' selected' : '') + '>学习类</option>' +
+                    '<option value="生活类"' + (w.category === '生活类' ? ' selected' : '') + '>生活类</option>' +
+                    '<option value="工具类"' + (w.category === '工具类' ? ' selected' : '') + '>工具类</option>' +
+                  '</select>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+            '<div class="admin-survival-actions" style="flex-shrink:0;display:flex;gap:4px;">' +
+              '<button class="btn btn-outline admin-survival-edit-btn" data-idx="' + globalIdx + '" style="font-size:.75rem;padding:4px 8px;"><i class="fas fa-edit"></i></button>' +
+              '<button class="btn btn-outline admin-survival-save-btn" data-idx="' + globalIdx + '" style="font-size:.75rem;padding:4px 8px;display:none;color:var(--success-color);"><i class="fas fa-check"></i></button>' +
+              '<button class="btn btn-outline admin-survival-cancel-btn" data-idx="' + globalIdx + '" style="font-size:.75rem;padding:4px 8px;display:none;"><i class="fas fa-times"></i></button>' +
+              '<button class="btn btn-outline admin-survival-delete-btn" data-idx="' + globalIdx + '" style="font-size:.75rem;padding:4px 8px;color:var(--danger-color);"><i class="fas fa-trash"></i></button>' +
+            '</div>' +
+          '</div>';
+        });
+        html += '</div>';
+      });
+
+      if (!html) html = '<p style="color:var(--text-light);">没有匹配的网站</p>';
+      list.innerHTML = html;
+
+      // Bind edit buttons
+      list.querySelectorAll('.admin-survival-edit-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var item = this.closest('.admin-survival-item');
+          item.querySelector('.admin-survival-view').style.display = 'none';
+          item.querySelector('.admin-survival-edit').style.display = 'block';
+          item.querySelector('.admin-survival-edit-btn').style.display = 'none';
+          item.querySelector('.admin-survival-delete-btn').style.display = 'none';
+          item.querySelector('.admin-survival-save-btn').style.display = '';
+          item.querySelector('.admin-survival-cancel-btn').style.display = '';
+        });
+      });
+
+      // Bind cancel buttons
+      list.querySelectorAll('.admin-survival-cancel-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          doRender(); // Re-render to discard changes
+        });
+      });
+
+      // Bind save buttons
+      list.querySelectorAll('.admin-survival-save-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var idx = parseInt(this.dataset.idx);
+          var item = this.closest('.admin-survival-item');
+          var websites = _getSurvivalWebsites();
+          var inputs = item.querySelectorAll('.admin-survival-input');
+          inputs.forEach(function(input) {
+            var field = input.dataset.field;
+            if (field) websites[idx][field] = input.value.trim();
+          });
+          _saveSurvivalWebsites(websites);
+          doRender();
+        });
+      });
+
+      // Bind delete buttons
+      list.querySelectorAll('.admin-survival-delete-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var idx = parseInt(this.dataset.idx);
+          var websites = _getSurvivalWebsites();
+          var name = websites[idx].name;
+          if (confirm('确定要删除「' + name + '」吗？')) {
+            websites.splice(idx, 1);
+            _saveSurvivalWebsites(websites);
+            doRender();
+          }
+        });
+      });
+    }
+
+    doRender();
+    if (search) search.addEventListener('input', doRender);
+    if (catFilter) catFilter.addEventListener('change', doRender);
+
+    // Export YAML
+    var exportBtn = document.getElementById('admin-survival-export');
+    if (exportBtn) {
+      exportBtn.addEventListener('click', function() {
+        var websites = _getSurvivalWebsites();
+        var yaml = '# --- 实用网站导航 ---\nwebsites:\n';
+        var currentCat = '';
+        websites.forEach(function(w) {
+          if (w.category !== currentCat) {
+            yaml += '  # ' + w.category + '\n';
+            currentCat = w.category;
+          }
+          yaml += '  - name: "' + w.name + '"\n';
+          yaml += '    icon: "' + w.icon + '"\n';
+          yaml += '    description: "' + w.description + '"\n';
+          yaml += '    url: "' + w.url + '"\n';
+          yaml += '    category: "' + w.category + '"\n\n';
+        });
+
+        var blob = new Blob([yaml], { type: 'text/yaml' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'zju-survival-websites.yml';
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+    }
+
+    // Reset to defaults
+    var resetBtn = document.getElementById('admin-survival-reset');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', function() {
+        if (confirm('确定要恢复默认数据吗？所有修改将丢失。')) {
+          localStorage.removeItem(SURVIVAL_KEY);
+          doRender();
+        }
+      });
+    }
   }
 
   // --- Analytics ---

@@ -17,6 +17,10 @@ plugins:
   - jekyll-include-cache
   - jekyll-paginate
 
+# Disable RSS feed (hide feed button from browsers)
+feed:
+  hidden: true
+
 # Site Settings
 locale: "zh-CN"
 permalink: /:categories/:title/
