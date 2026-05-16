@@ -216,11 +216,11 @@ author_profile: false
 <script>
 (function(){
   var CATEGORIES = {
-    '数学与统计类': ['基础数学','应用数学','概率与统计','工程数学','其他数学'],
-    '计算机科学与技术类': ['计算机基础','编程语言与开发','软件工程','人工智能与数据科学','系统与安全','计算机应用','其他计算机'],
-    '电子信息与电气工程类': ['电路与电子技术','信号与信息处理','电气工程','电子科学与技术','控制科学与工程','通信工程','其他电子信息'],
-    '机械与能源工程类': ['力学基础','机械设计与制造','机电一体化','能源与动力工程','车辆与运载工程','其他机械能源'],
-    '材料科学与工程类': ['材料基础','金属材料','无机非金属材料','高分子材料','复合材料','功能材料','其他材料'],
+    '数学与统计类': ['基础数学','高等数学','线性代数','应用数学','概率与统计','概率论与数理统计','离散数学','复变函数与积分变换','数值分析','工程数学','其他数学'],
+    '计算机科学与技术类': ['计算机基础','编程语言与开发','数据结构与算法','操作系统','计算机网络','数据库系统','软件工程','人工智能与数据科学','机器学习','深度学习','自然语言处理','计算机视觉','系统与安全','计算机应用','计算机语言','其他计算机'],
+    '电子信息与电气工程类': ['电路与电子技术','电路原理','模拟电子技术','数字电子技术','信号与信息处理','信号与系统','数字信号处理','电气工程','电子科学与技术','控制科学与工程','自动控制原理','通信工程','其他电子信息'],
+    '机械与能源工程类': ['力学基础','理论力学','材料力学','流体力学','机械设计与制造','机械原理','机械设计','工程制图','机电一体化','能源与动力工程','工程热力学','传热学','车辆与运载工程','其他机械能源'],
+    '材料科学与工程类': ['材料基础','材料科学基础','金属材料','无机非金属材料','高分子材料','复合材料','功能材料','其他材料'],
     '物理学类': ['基础物理','现代物理','应用物理','其他物理'],
     '化学与化工类': ['基础化学','应用化学','化学工程与技术','其他化学'],
     '生命科学与医学类': ['基础生命科学','生物工程与技术','基础医学','临床医学','其他医学'],
@@ -265,11 +265,11 @@ author_profile: false
     '综合类': 'fa-layer-group'
   };
   var SUBCAT_ICONS = {
-    '基础数学':'fa-superscript','应用数学':'fa-chart-bar','概率与统计':'fa-dice','工程数学':'fa-compass','其他数学':'fa-infinity',
-    '计算机基础':'fa-desktop','编程语言与开发':'fa-code','软件工程':'fa-sitemap','人工智能与数据科学':'fa-brain','系统与安全':'fa-shield-alt','计算机应用':'fa-window-restore','其他计算机':'fa-keyboard',
-    '电路与电子技术':'fa-bolt','信号与信息处理':'fa-wave-square','电气工程':'fa-plug','电子科学与技术':'fa-satellite-dish','控制科学与工程':'fa-sliders-h','通信工程':'fa-broadcast-tower','其他电子信息':'fa-wifi',
-    '力学基础':'fa-arrows-alt','机械设计与制造':'fa-cogs','机电一体化':'fa-robot','能源与动力工程':'fa-fire','车辆与运载工程':'fa-car','其他机械能源':'fa-battery-full',
-    '材料基础':'fa-cubes','金属材料':'fa-ring','无机非金属材料':'fa-gem','高分子材料':'fa-tint','复合材料':'fa-layer-group','功能材料':'fa-star','其他材料':'fa-boxes',
+    '基础数学':'fa-superscript','高等数学':'fa-infinity','线性代数':'fa-th','应用数学':'fa-chart-bar','概率与统计':'fa-dice','概率论与数理统计':'fa-chart-area','离散数学':'fa-project-diagram','复变函数与积分变换':'fa-wave-square','数值分析':'fa-calculator','工程数学':'fa-compass','其他数学':'fa-infinity',
+    '计算机基础':'fa-desktop','编程语言与开发':'fa-code','数据结构与算法':'fa-sort-amount-up','操作系统':'fa-server','计算机网络':'fa-network-wired','数据库系统':'fa-database','软件工程':'fa-sitemap','人工智能与数据科学':'fa-brain','机器学习':'fa-robot','深度学习':'fa-brain','自然语言处理':'fa-comments','计算机视觉':'fa-eye','系统与安全':'fa-shield-alt','计算机应用':'fa-window-restore','计算机语言':'fa-terminal','其他计算机':'fa-keyboard',
+    '电路与电子技术':'fa-bolt','电路原理':'fa-plug','模拟电子技术':'fa-wave-square','数字电子技术':'fa-microchip','信号与信息处理':'fa-signal','信号与系统':'fa-broadcast-tower','数字信号处理':'fa-satellite-dish','电气工程':'fa-plug','电子科学与技术':'fa-microchip','控制科学与工程':'fa-sliders-h','自动控制原理':'fa-cogs','通信工程':'fa-wifi','其他电子信息':'fa-wifi',
+    '力学基础':'fa-arrows-alt','理论力学':'fa-arrows-alt','材料力学':'fa-cubes','流体力学':'fa-water','机械设计与制造':'fa-cogs','机械原理':'fa-gear','机械设计':'fa-drafting-compass','工程制图':'fa-ruler-combined','机电一体化':'fa-robot','能源与动力工程':'fa-fire','工程热力学':'fa-thermometer-half','传热学':'fa-fire-alt','车辆与运载工程':'fa-car','其他机械能源':'fa-battery-full',
+    '材料基础':'fa-cubes','材料科学基础':'fa-atom','金属材料':'fa-ring','无机非金属材料':'fa-gem','高分子材料':'fa-tint','复合材料':'fa-layer-group','功能材料':'fa-star','其他材料':'fa-boxes',
     '基础物理':'fa-atom','现代物理':'fa-radiation','应用物理':'fa-magnet','其他物理':'fa-globe',
     '基础化学':'fa-flask','应用化学':'fa-vial','化学工程与技术':'fa-industry','其他化学':'fa-prescription-bottle',
     '基础生命科学':'fa-seedling','生物工程与技术':'fa-dna','基础医学':'fa-heartbeat','临床医学':'fa-stethoscope','其他医学':'fa-pills',
