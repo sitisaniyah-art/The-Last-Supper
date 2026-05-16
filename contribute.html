@@ -57,7 +57,7 @@ author_profile: false
 
   <!-- Step 3: 具体课程 -->
   <div class="wizard-step" id="wizard-step-3">
-    <label class="wizard-label" id="wizard-step3-label">第三步：选择具体课程</label>
+    <div class="wizard-step3-header" id="wizard-step3-header"></div>
     <div class="wizard-subject-grid" id="wizard-subject-grid"></div>
     <button class="wizard-back-btn" id="wizard-back-2"><i class="fas fa-arrow-left"></i> 返回上一步</button>
   </div>
@@ -186,9 +186,12 @@ author_profile: false
 .wizard-option small{font-size:.7rem;color:var(--text-lighter);}
 .wizard-option:hover{border-color:var(--primary-color);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.08);}
 .wizard-option.selected{border-color:var(--primary-color);background:rgba(99,102,241,.06);}
-.wizard-subject-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.5rem;}
-.wizard-subject-btn{padding:.5rem .75rem;border:1px solid var(--border-color);border-radius:8px;background:var(--bg-color);cursor:pointer;font-size:.82rem;color:var(--text-color);text-align:left;transition:var(--transition);}
-.wizard-subject-btn:hover{border-color:var(--primary-color);background:rgba(99,102,241,.04);}
+.wizard-subject-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.5rem;}
+.wizard-subject-btn{display:flex;align-items:center;gap:.5rem;padding:.6rem .75rem;border:1px solid var(--border-color);border-radius:8px;background:var(--bg-color);cursor:pointer;font-size:.82rem;color:var(--text-color);text-align:left;transition:var(--transition);}
+.wizard-subject-btn i{color:var(--primary-color);font-size:.9rem;width:18px;text-align:center;flex-shrink:0;}
+.wizard-subject-btn span{flex:1;}
+.wizard-subject-btn:hover{border-color:var(--primary-color);background:rgba(99,102,241,.04);transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.wizard-step3-header{margin-bottom:.75rem;}
 .wizard-category-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.5rem;}
 .wizard-category-btn{padding:.6rem .75rem;border:1px solid var(--border-color);border-radius:8px;background:var(--bg-color);cursor:pointer;font-size:.82rem;color:var(--text-color);text-align:left;transition:var(--transition);display:flex;align-items:center;gap:.4rem;}
 .wizard-category-btn i{color:var(--primary-color);font-size:.9rem;width:18px;text-align:center;}
@@ -204,6 +207,7 @@ author_profile: false
 [data-theme="dark"] .upload-wizard{background:rgba(255,255,255,.03);}
 [data-theme="dark"] .wizard-option{background:rgba(255,255,255,.04);}
 [data-theme="dark"] .wizard-subject-btn{background:rgba(255,255,255,.04);}
+[data-theme="dark"] .wizard-subject-btn:hover{background:rgba(99,102,241,.1);}
 [data-theme="dark"] .wizard-category-btn{background:rgba(255,255,255,.04);}
 [data-theme="dark"] .wizard-result{background:rgba(255,255,255,.04);}
 @media(max-width:480px){.upload-wizard{padding:1rem;}.wizard-options{grid-template-columns:repeat(auto-fit,minmax(75px,1fr));gap:.5rem;}.wizard-option{padding:.75rem .25rem;font-size:.78rem;}.wizard-option i{font-size:1.2rem;}.wizard-subject-grid{grid-template-columns:1fr;}.wizard-category-grid{grid-template-columns:1fr;}.wizard-result .wizard-code{font-size:.7rem;}}
@@ -260,6 +264,28 @@ author_profile: false
     '公共基础类': 'fa-book-open',
     '综合类': 'fa-layer-group'
   };
+  var SUBCAT_ICONS = {
+    '基础数学':'fa-superscript','应用数学':'fa-chart-bar','概率与统计':'fa-dice','工程数学':'fa-compass','其他数学':'fa-infinity',
+    '计算机基础':'fa-desktop','编程语言与开发':'fa-code','软件工程':'fa-sitemap','人工智能与数据科学':'fa-brain','系统与安全':'fa-shield-alt','计算机应用':'fa-window-restore','其他计算机':'fa-keyboard',
+    '电路与电子技术':'fa-bolt','信号与信息处理':'fa-wave-square','电气工程':'fa-plug','电子科学与技术':'fa-satellite-dish','控制科学与工程':'fa-sliders-h','通信工程':'fa-broadcast-tower','其他电子信息':'fa-wifi',
+    '力学基础':'fa-arrows-alt','机械设计与制造':'fa-cogs','机电一体化':'fa-robot','能源与动力工程':'fa-fire','车辆与运载工程':'fa-car','其他机械能源':'fa-battery-full',
+    '材料基础':'fa-cubes','金属材料':'fa-ring','无机非金属材料':'fa-gem','高分子材料':'fa-tint','复合材料':'fa-layer-group','功能材料':'fa-star','其他材料':'fa-boxes',
+    '基础物理':'fa-atom','现代物理':'fa-radiation','应用物理':'fa-magnet','其他物理':'fa-globe',
+    '基础化学':'fa-flask','应用化学':'fa-vial','化学工程与技术':'fa-industry','其他化学':'fa-prescription-bottle',
+    '基础生命科学':'fa-seedling','生物工程与技术':'fa-dna','基础医学':'fa-heartbeat','临床医学':'fa-stethoscope','其他医学':'fa-pills',
+    '地理学':'fa-map','地质学':'fa-mountain','地球物理学':'fa-globe-americas','大气科学':'fa-cloud-sun','海洋科学':'fa-water','空间科学':'fa-rocket',
+    '土木工程':'fa-hard-hat','水利工程':'fa-tint','建筑学':'fa-building','城乡规划':'fa-city','其他土木建筑':'fa-road',
+    '交通运输工程':'fa-truck','航空航天工程':'fa-plane','船舶与海洋工程':'fa-ship','其他交通运输':'fa-route',
+    '环境科学':'fa-leaf','环境工程':'fa-recycle','安全科学与工程':'fa-hard-hat','其他环境安全':'fa-shield-alt',
+    '农学':'fa-seedling','林学':'fa-tree','畜牧兽医':'fa-paw','食品科学与工程':'fa-utensils','其他农学':'fa-tractor',
+    '经济学':'fa-coins','管理学':'fa-tasks','工商管理':'fa-briefcase','公共管理':'fa-landmark','其他经济管理':'fa-chart-pie',
+    '法学':'fa-gavel','政治学':'fa-landmark','社会学':'fa-users','马克思主义理论':'fa-book','其他法学政治':'fa-balance-scale',
+    '哲学':'fa-brain','中国语言文学':'fa-language','外国语言文学':'fa-globe','新闻传播学':'fa-newspaper','历史学':'fa-monument','教育学':'fa-chalkboard-teacher','心理学':'fa-smile','体育学':'fa-running',
+    '艺术学理论':'fa-palette','美术学':'fa-paint-brush','设计学':'fa-pen-nib','音乐与舞蹈学':'fa-music','戏剧与影视学':'fa-film','其他艺术':'fa-masks-theater',
+    '人工智能':'fa-robot','数据科学与大数据技术':'fa-database','生物医学工程':'fa-microscope','环境科学与工程':'fa-seedling','金融科技':'fa-money-bill-wave','数字人文':'fa-laptop','其他交叉学科':'fa-project-diagram',
+    '大学英语':'fa-book-reader','思想政治理论':'fa-landmark','计算机基础':'fa-desktop','体育':'fa-running','军事理论':'fa-shield-alt','其他公共基础':'fa-book-open',
+    '其他学科':'fa-folder'
+  };
 
   var selectedType = '';
   var selectedCategory = '';
@@ -312,15 +338,19 @@ author_profile: false
 
   // Step 3: subcategory (course) selection
   function showStep3(){
-    var label = document.getElementById('wizard-step3-label');
-    label.textContent = '第三步：选择具体课程（' + selectedCategory + '）';
+    var header = document.getElementById('wizard-step3-header');
+    var catIcon = CAT_ICONS[selectedCategory] || 'fa-folder';
+    header.innerHTML =
+      '<div class="wizard-breadcrumb"><span>' + selectedType + '</span> / <span>' + selectedCategory + '</span> / 选择课程</div>' +
+      '<label class="wizard-label"><i class="fas ' + catIcon + '" style="color:var(--primary-color);margin-right:.35rem;"></i>' + selectedCategory + ' · 选择具体课程</label>';
     var grid = document.getElementById('wizard-subject-grid');
     grid.innerHTML = '';
     var subs = CATEGORIES[selectedCategory] || [];
     subs.forEach(function(sub){
       var btn = document.createElement('button');
       btn.className = 'wizard-subject-btn';
-      btn.textContent = sub;
+      var icon = SUBCAT_ICONS[sub] || 'fa-book';
+      btn.innerHTML = '<i class="fas ' + icon + '"></i><span>' + sub + '</span>';
       btn.addEventListener('click', function(){
         selectedSub = sub;
         showStep4();
