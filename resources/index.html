@@ -212,7 +212,8 @@ document.addEventListener('DOMContentLoaded', function() {
     historyDropdown.style.display = 'none';
 
     if (!query) {
-      // No query: show default filtered resources
+      // No query: show default filtered resources, clear highlight
+      currentSearchQuery = '';
       placesResults.style.display = 'none';
       if (typeof filterAndRender === 'function') filterAndRender();
       return;
@@ -220,6 +221,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Save to history
     TLSearch.addToHistory(query);
+
+    // Set current query for keyword highlighting
+    currentSearchQuery = query;
 
     // Show loading
     loadingEl.style.display = 'block';
@@ -308,8 +312,9 @@ document.addEventListener('DOMContentLoaded', function() {
     var query = searchInput.value.trim();
     if (query) {
       performSearch();
-    } else if (origFilter) {
-      origFilter();
+    } else {
+      currentSearchQuery = '';
+      if (origFilter) origFilter();
     }
   };
 });

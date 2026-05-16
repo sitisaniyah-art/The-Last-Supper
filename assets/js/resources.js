@@ -107,15 +107,23 @@ function bindStarEvents(container) {
   });
 }
 
+/* 当前搜索关键词（用于高亮） */
+var currentSearchQuery = '';
+
 function buildCardHTML(r) {
   var tagsHtml = r.tags.map(function(t) {
-    return '<span class="tag">' + t + '</span>';
+    var displayTag = currentSearchQuery && typeof TLSearch !== 'undefined' ? TLSearch.highlightMatch(t, currentSearchQuery) : t;
+    return '<span class="tag">' + displayTag + '</span>';
   }).join('');
 
   var fav = Favorites.isFavorited(r.id);
   var heartClass = fav ? 'fas fa-heart favorited' : 'far fa-heart';
-  var heartTitle = fav ? '取消收藏' : '收藏';
   var accents = CATEGORY_ACCENTS[r.category] || CATEGORY_ACCENTS['其他'];
+
+  /* 关键词高亮：标题、作者、描述 */
+  var title = currentSearchQuery && typeof TLSearch !== 'undefined' ? TLSearch.highlightMatch(r.title, currentSearchQuery) : r.title;
+  var uploader = currentSearchQuery && typeof TLSearch !== 'undefined' ? TLSearch.highlightMatch(r.uploader, currentSearchQuery) : r.uploader;
+  var desc = currentSearchQuery && typeof TLSearch !== 'undefined' ? TLSearch.highlightMatch(r.description, currentSearchQuery) : r.description;
 
   return '<div class="resource-card" style="--card-accent:' + accents[0] + ';--card-accent-end:' + accents[1] + ';">' +
     '<div class="resource-card-body">' +
@@ -125,13 +133,13 @@ function buildCardHTML(r) {
           '<i class="' + heartClass + '"></i>' +
         '</button>' +
       '</div>' +
-      '<h3 class="resource-title">' + r.title + '</h3>' +
+      '<h3 class="resource-title">' + title + '</h3>' +
       '<div class="resource-meta">' +
-        '<span class="meta-user"><i class="fas fa-user"></i> ' + r.uploader + '</span>' +
+        '<span class="meta-user"><i class="fas fa-user"></i> ' + uploader + '</span>' +
         '<span class="meta-date"><i class="fas fa-calendar"></i> ' + r.date + '</span>' +
         '<span class="resource-rating">' + renderStars(r.rating, r.id) + '<span class="rating-num">' + r.rating + '</span></span>' +
       '</div>' +
-      '<p class="resource-description">' + r.description + '</p>' +
+      '<p class="resource-description">' + desc + '</p>' +
       '<div class="resource-tags">' + tagsHtml + '</div>' +
     '</div>' +
     '<div class="resource-actions">' +

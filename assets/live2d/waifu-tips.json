@@ -1,0 +1,140 @@
+{
+  "mouseover": [{
+    "selector": "#waifu-tool-hitokoto",
+    "text": ["猜猜我要说些什么？", "想要听听一言吗？", "来点心灵鸡汤？"]
+  }, {
+    "selector": "#waifu-tool-switch-model",
+    "text": ["想换个角色看看吗？", "下一个会更可爱哦！", "要不要见见其他小伙伴？"]
+  }, {
+    "selector": "#waifu-tool-switch-texture",
+    "text": ["想给我换身衣服吗？", "这次要换什么风格呢？", "变装时间到！"]
+  }, {
+    "selector": "#waifu-tool-photo",
+    "text": ["要给我拍照吗？一、二、三～茄子！", "来合影留念吧！", "记得开美颜哦～"]
+  }, {
+    "selector": "#waifu-tool-quit",
+    "text": ["要走了吗？", "呜呜，别丢下我呀……", "下次再来找我玩哦！", "学习加油，我等你回来！"]
+  }, {
+    "selector": ".download-btn",
+    "text": ["要下载这个资源吗？点击即可获取！", "这个资料看起来很有用呢～"]
+  }, {
+    "selector": ".favorite-btn",
+    "text": ["喜欢这个资源就收藏吧！", "收藏起来下次好找哦～"]
+  }, {
+    "selector": ".btn-primary",
+    "text": ["点这里可以开始操作哦！", "试试看吧～"]
+  }, {
+    "selector": "a[href*='questions']",
+    "text": ["有问题就来这里提问吧！", "大家一起解答疑惑～"]
+  }, {
+    "selector": "a[href*='resources']",
+    "text": ["学习资源库，各科资料应有尽有！", "来找找你需要的资料吧～"]
+  }, {
+    "selector": "a[href*='contribute']",
+    "text": ["你也来贡献一份力量吧！", "分享资源帮助更多同学～"]
+  }, {
+    "selector": ".filter-bar select",
+    "text": ["用筛选条件快速找到目标资源！", "试试不同的筛选组合？"]
+  }, {
+    "selector": "#resource-search",
+    "text": ["输入关键词搜索资源吧！", "支持拼音搜索哦，试试看！", "可以搜书名、作者、标签～"]
+  }, {
+    "selector": ".search-box input",
+    "text": ["输入关键词开始搜索吧！", "试试输入拼音首字母？"]
+  }, {
+    "selector": ".page__content",
+    "text": ["有什么需要帮助的吗？", "找不到资料的话可以搜索哦～"]
+  }],
+  "click": [{
+    "selector": "#waifu-canvas",
+    "text": ["哎呀，被发现了！", "戳我干嘛呀～", "不要欺负我嘛！", "嘿嘿，好开心！", "再戳我就不理你了哦！", "摸摸头～"]
+  }],
+  "seasons": [{
+    "date": "01/01",
+    "text": "<span>元旦</span>快乐！新的一年，学习进步！"
+  }, {
+    "date": "02/14",
+    "text": "今天是<span>情人节</span>，不过别忘了学习哦～"
+  }, {
+    "date": "03/08",
+    "text": "今天是<span>国际妇女节</span>，向所有女同学致敬！"
+  }, {
+    "date": "03/12",
+    "text": "今天是<span>植树节</span>，种下一棵知识树吧！"
+  }, {
+    "date": "05/01",
+    "text": "<span>劳动节</span>快乐！学习也是一种劳动呢～"
+  }, {
+    "date": "06/01",
+    "text": "<span>儿童节</span>快乐！保持童心，快乐学习！"
+  }, {
+    "date": "09/10",
+    "text": "今天是<span>教师节</span>，感谢老师们的辛勤付出！"
+  }, {
+    "date": "10/01",
+    "text": "<span>国庆节</span>到了，假期也别忘了复习哦！"
+  }, {
+    "date": "12/20-12/31",
+    "text": "快到<span>年底</span>了，今年的学习目标完成了吗？"
+  }],
+  "time": [{
+    "hour": "6-7",
+    "text": "早上好！一日之计在于晨，起来学习吧～"
+  }, {
+    "hour": "8-11",
+    "text": "上午好！这是学习效率最高的时间，加油！"
+  }, {
+    "hour": "12-13",
+    "text": "中午了，先吃饭，休息一下再继续学习吧！"
+  }, {
+    "hour": "14-17",
+    "text": "下午好！困了的话站起来走走，回来继续努力！"
+  }, {
+    "hour": "18-19",
+    "text": "傍晚了！今天的任务完成了吗？"
+  }, {
+    "hour": "20-21",
+    "text": "晚上好！夜深了还在学习，真棒！"
+  }, {
+    "hour": "22-23",
+    "text": ["这么晚了，注意休息哦！", "学习重要，身体更重要呢～"]
+  }, {
+    "hour": "0-5",
+    "text": "你是夜猫子呀？这么晚还不睡，明天起得来嘛？"
+  }],
+  "message": {
+    "default": ["欢迎来到「最后的晚餐」！", "在这里找资料、提问题，我都会陪着你～", "学习辛苦了，来和我聊聊天吧！", "你今天学习了吗？", "有什么需要帮忙的尽管说！"],
+    "console": "哈哈，你打开了控制台，是想研究这个网站吗？",
+    "copy": "你复制了什么呢？转载记得注明出处哦！",
+    "visibilitychange": "你终于回来了！我还以为你走了呢～",
+    "changeSuccess": "新衣服好看吗？",
+    "changeFail": "我还没有其他衣服可以换呢！",
+    "photo": "拍好了！是不是很可爱？",
+    "goodbye": "下次再来找我玩哦！祝你学习顺利～",
+    "hitokoto": "这句一言来自 <span>「$1」</span>，是 <span>$2</span> 在 hitokoto.cn 投稿的。",
+    "welcome": "欢迎来到<span>「$1」</span>",
+    "referrer": "你好呀！来自 <span>$1</span> 的朋友",
+    "hoverBody": ["别乱摸呀！", "你…你在摸哪里！", "讨厌啦～", "不要动手动脚的！", "我会生气的哦！", "再摸就咬你！"],
+    "tapBody": ["是不小心碰到的吧？", "你看到我的小熊了吗？", "不要一直戳我啦！", "呜呜，被欺负了！", "再戳我就哭了哦！", "坏蛋！不理你了！"]
+  },
+  "models": [{
+    "name": "Pio",
+    "paths": ["https://fastly.jsdelivr.net/gh/fghrsh/live2d_api/model/Potion-Maker/Pio/index.json"],
+    "message": "我是 Pio，来陪你学习啦！"
+  }, {
+    "name": "Tia",
+    "paths": ["https://fastly.jsdelivr.net/gh/fghrsh/live2d_api/model/Potion-Maker/Tia/index.json"],
+    "message": "我是 Tia，今天也要加油哦！"
+  }, {
+    "name": "Neptune",
+    "paths": [
+      "https://fastly.jsdelivr.net/gh/fghrsh/live2d_api/model/HyperdimensionNeptunia/neptune_classic/index.json",
+      "https://fastly.jsdelivr.net/gh/fghrsh/live2d_api/model/HyperdimensionNeptunia/nepnep/index.json"
+    ],
+    "message": "Nep! Nep! 我是涅普顿！"
+  }, {
+    "name": "Hiyori",
+    "paths": ["https://fastly.jsdelivr.net/gh/Live2D/CubismWebSamples/Samples/Resources/Hiyori/Hiyori.model3.json"],
+    "message": "我是 Hiyori，请多关照～"
+  }]
+}

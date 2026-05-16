@@ -1,6 +1,6 @@
 /**
- * search-enhanced.js — 全局搜索引擎模块
- * 支持: 模糊搜索、拼音搜索、搜索建议、排序、历史记录、关键词高亮
+ * search-enhanced.js — 全局搜索引擎模块 v2
+ * 支持: 模糊搜索、拼音搜索（含首字母）、搜索建议、5种排序、历史记录、关键词高亮、相关度评分
  * 依赖: pinyin-pro (CDN) 可选，无依赖时退化为纯中文搜索
  * 数据源: allResources (学习资源) + tlsPlacesIndex/allPlaces (嗨玩榜)
  */
@@ -34,20 +34,71 @@ var TLSearch = (function() {
     return [];
   }
 
-  // --- Match function ---
-  function _matchField(text, query, queryPinyin, queryInitials) {
-    if (!text || !query) return false;
+  // --- Match function: returns match quality score (0=no match, 1=partial, 2=exact) ---
+  function _matchScore(text, query, queryPinyin, queryInitials) {
+    if (!text || !query) return 0;
     var lt = text.toLowerCase();
-    if (lt.includes(query)) return true;
+    // Exact match
+    if (lt === query) return 3;
+    // Starts with query
+    if (lt.indexOf(query) === 0) return 2.5;
+    // Contains query
+    if (lt.includes(query)) return 2;
+    // Pinyin match
     if (queryPinyin) {
       var tp = _toPinyin(lt);
-      if (tp.includes(queryPinyin)) return true;
+      if (tp === queryPinyin) return 2.5;
+      if (tp.includes(queryPinyin)) return 1.5;
     }
+    // First letter match (only for queries >= 2 chars)
     if (queryInitials && query.length >= 2) {
       var ti = _getFirstLetter(lt);
-      if (ti.includes(queryInitials)) return true;
+      if (ti.includes(queryInitials)) return 1;
     }
-    return false;
+    return 0;
+  }
+
+  // Simple boolean match (backward compat)
+  function _matchField(text, query, queryPinyin, queryInitials) {
+    return _matchScore(text, query, queryPinyin, queryInitials) > 0;
+  }
+
+  // --- Relevance scoring for resources ---
+  function _resourceRelevance(r, query, queryPinyin, queryInitials) {
+    var score = 0;
+    // Title match (highest weight)
+    var titleScore = _matchScore(r.title, query, queryPinyin, queryInitials);
+    score += titleScore * 10;
+    // Uploader/author match (high weight for author search)
+    var uploaderScore = _matchScore(r.uploader, query, queryPinyin, queryInitials);
+    score += uploaderScore * 7;
+    // Subcategory match
+    score += _matchScore(r.subcategory, query, queryPinyin, queryInitials) * 4;
+    // Category match
+    score += _matchScore(r.category, query, queryPinyin, queryInitials) * 3;
+    // Tags match
+    (r.tags || []).forEach(function(t) {
+      score += _matchScore(t, query, queryPinyin, queryInitials) * 3;
+    });
+    // Description match
+    score += _matchScore(r.description, query, queryPinyin, queryInitials) * 1;
+    // Boost by rating
+    score += (r.rating || 0) * 0.5;
+    return score;
+  }
+
+  // --- Relevance scoring for places ---
+  function _placeRelevance(p, query, queryPinyin, queryInitials) {
+    var score = 0;
+    score += _matchScore(p.name, query, queryPinyin, queryInitials) * 10;
+    score += _matchScore(p.address, query, queryPinyin, queryInitials) * 4;
+    score += _matchScore(p.category, query, queryPinyin, queryInitials) * 3;
+    (p.tags || []).forEach(function(t) {
+      score += _matchScore(t, query, queryPinyin, queryInitials) * 3;
+    });
+    score += _matchScore(p.description, query, queryPinyin, queryInitials) * 1;
+    score += (p.rating || 0) * 0.5;
+    return score;
   }
 
   // --- Search resources ---
@@ -64,6 +115,11 @@ var TLSearch = (function() {
              _matchField(r.category, q, qPinyin, qInitials) ||
              _matchField(r.subcategory, q, qPinyin, qInitials) ||
              (r.tags || []).some(function(t) { return _matchField(t, q, qPinyin, qInitials); });
+    });
+
+    // Add relevance scores
+    results.forEach(function(r) {
+      r._relevance = _resourceRelevance(r, q, qPinyin, qInitials);
     });
 
     return _sortResults(results, sort, 'resource');
@@ -84,6 +140,10 @@ var TLSearch = (function() {
              (p.tags || []).some(function(t) { return _matchField(t, q, qPinyin, qInitials); });
     });
 
+    results.forEach(function(p) {
+      p._relevance = _placeRelevance(p, q, qPinyin, qInitials);
+    });
+
     return _sortResults(results, sort, 'place');
   }
 
@@ -92,8 +152,7 @@ var TLSearch = (function() {
     switch (sort) {
       case 'name-asc':
         return results.sort(function(a, b) {
-          var na = (a.title || a.name || '').localeCompare(b.title || b.name || '', 'zh-CN');
-          return na;
+          return (a.title || a.name || '').localeCompare(b.title || b.name || '', 'zh-CN');
         });
       case 'name-desc':
         return results.sort(function(a, b) {
@@ -109,16 +168,14 @@ var TLSearch = (function() {
         });
       case 'relevance':
       default:
-        // Relevance: exact title match first, then by rating
-        var q = ''; // we can't re-access query here easily, so sort by rating
-        if (type === 'resource') {
-          return results.sort(function(a, b) { return (b.rating || 0) - (a.rating || 0); });
-        }
-        return results.sort(function(a, b) { return (b.rating || 0) - (a.rating || 0); });
+        // Relevance: use computed relevance score
+        return results.sort(function(a, b) {
+          return (b._relevance || 0) - (a._relevance || 0);
+        });
     }
   }
 
-  // --- Highlight ---
+  // --- Highlight: supports pinyin-aware partial matching ---
   function highlightMatch(text, query) {
     if (!text || !query) return text || '';
     var escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -145,32 +202,38 @@ var TLSearch = (function() {
       results = results.concat(pls);
     }
 
-    // For 'all' section, sort combined results by rating
-    if (section === 'all') {
-      results.sort(function(a, b) { return (b.rating || 0) - (a.rating || 0); });
+    // For 'all' section with relevance, sort by combined relevance score
+    if (section === 'all' && sort === 'relevance') {
+      results.sort(function(a, b) { return (b._relevance || 0) - (a._relevance || 0); });
+    } else if (section === 'all') {
+      // For other sorts, apply the sort to combined results
+      results = _sortResults(results, sort, 'mixed');
     }
 
     return results.slice(0, limit);
   }
 
+  // --- Suggestions with pinyin support ---
   function suggest(query) {
     var q = (query || '').toLowerCase().trim();
     if (!q || q.length < 1) return [];
+    var qPinyin = _toPinyin(q);
+    var qInitials = _getFirstLetter(q);
     var suggestions = [];
 
-    // Resource title + author suggestions
+    // Resource title + author suggestions (pinyin-aware)
     _getResources().forEach(function(r) {
-      if ((r.title || '').toLowerCase().includes(q)) {
+      if (_matchField(r.title, q, qPinyin, qInitials)) {
         suggestions.push({ text: r.title, type: 'resource', icon: 'fa-book' });
       }
-      if ((r.uploader || '').toLowerCase().includes(q)) {
+      if (_matchField(r.uploader, q, qPinyin, qInitials)) {
         suggestions.push({ text: r.uploader + ' 的资源', type: 'author', icon: 'fa-user', raw: r.uploader });
       }
     });
 
-    // Place name suggestions
+    // Place name suggestions (pinyin-aware)
     _getPlaces().forEach(function(p) {
-      if ((p.name || '').toLowerCase().includes(q)) {
+      if (_matchField(p.name, q, qPinyin, qInitials)) {
         suggestions.push({ text: p.name, type: 'place', icon: 'fa-map-marker-alt' });
       }
     });
@@ -183,7 +246,7 @@ var TLSearch = (function() {
       if (!seen[key]) { seen[key] = true; unique.push(s); }
     });
 
-    return unique.slice(0, 5);
+    return unique.slice(0, 8);
   }
 
   // --- Search history ---
@@ -196,11 +259,8 @@ var TLSearch = (function() {
     if (!query || !query.trim()) return;
     var q = query.trim();
     var hist = getHistory();
-    // Remove duplicate
     hist = hist.filter(function(h) { return h !== q; });
-    // Add to front
     hist.unshift(q);
-    // Cap
     if (hist.length > MAX_HISTORY) hist = hist.slice(0, MAX_HISTORY);
     localStorage.setItem(HISTORY_KEY, JSON.stringify(hist));
   }

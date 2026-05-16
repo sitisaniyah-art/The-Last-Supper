@@ -600,6 +600,22 @@ details .answer {
   color: var(--primary-color);
 }
 
+/* 搜索关键词高亮 */
+.resource-card mark {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #fff;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(245, 158, 11, 0.3);
+}
+
+[data-theme="dark"] .resource-card mark,
+.dark .resource-card mark {
+  background: linear-gradient(135deg, #d97706, #b45309);
+  color: #fef3c7;
+}
+
 .resource-actions {
   display: flex;
   justify-content: space-between;
