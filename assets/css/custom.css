@@ -1513,3 +1513,429 @@ a[href*="atom.xml"],
 a[href*="/feed/"],
 .link--feed,
 .site-footer__feed-link { display: none !important; }
+
+/* ============================================================
+   ✨ 酷炫效果增强
+   ============================================================ */
+
+/* --- 1. 渐变色系统（6种主题渐变）--- */
+.gradient-primary { background: var(--gradient-primary); }
+.gradient-accent { background: var(--gradient-accent); }
+.gradient-warm { background: var(--gradient-warm); }
+.gradient-cool { background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%); }
+.gradient-sunset { background: linear-gradient(135deg, #f97316 0%, #ec4899 100%); }
+.gradient-aurora { background: linear-gradient(135deg, #10b981 0%, #6366f1 100%); }
+
+/* --- 2. 霓虹发光效果（紫、蓝、粉三种颜色）--- */
+.neon-purple {
+  text-shadow: 0 0 7px rgba(139, 92, 246, 0.6), 0 0 10px rgba(139, 92, 246, 0.4), 0 0 21px rgba(139, 92, 246, 0.3);
+}
+
+.neon-blue {
+  text-shadow: 0 0 7px rgba(59, 130, 246, 0.6), 0 0 10px rgba(59, 130, 246, 0.4), 0 0 21px rgba(59, 130, 246, 0.3);
+}
+
+.neon-pink {
+  text-shadow: 0 0 7px rgba(236, 72, 153, 0.6), 0 0 10px rgba(236, 72, 153, 0.4), 0 0 21px rgba(236, 72, 153, 0.3);
+}
+
+/* 霓虹边框 */
+.neon-border-purple {
+  box-shadow: 0 0 5px rgba(139, 92, 246, 0.5), 0 0 20px rgba(139, 92, 246, 0.3), inset 0 0 5px rgba(139, 92, 246, 0.1);
+}
+
+.neon-border-blue {
+  box-shadow: 0 0 5px rgba(59, 130, 246, 0.5), 0 0 20px rgba(59, 130, 246, 0.3), inset 0 0 5px rgba(59, 130, 246, 0.1);
+}
+
+.neon-border-pink {
+  box-shadow: 0 0 5px rgba(236, 72, 153, 0.5), 0 0 20px rgba(236, 72, 153, 0.3), inset 0 0 5px rgba(236, 72, 153, 0.1);
+}
+
+/* --- 3. 流光文字动画 --- */
+.hero-title-text {
+  background: linear-gradient(90deg, #6366f1, #8b5cf6, #a78bfa, #c084fc, #8b5cf6, #6366f1);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-flow 3s ease infinite;
+}
+
+@keyframes gradient-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* --- 4. 装饰性浮动元素 --- */
+.hero-float-elements {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.float-element {
+  position: absolute;
+  font-size: 2rem;
+  opacity: 0.15;
+  animation: float-element 6s ease-in-out infinite;
+}
+
+.float-1 {
+  top: 15%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.float-2 {
+  top: 25%;
+  right: 15%;
+  animation-delay: 1.5s;
+}
+
+.float-3 {
+  bottom: 20%;
+  left: 20%;
+  animation-delay: 3s;
+}
+
+.float-4 {
+  bottom: 30%;
+  right: 10%;
+  animation-delay: 4.5s;
+}
+
+@keyframes float-element {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-15px) rotate(5deg); }
+  50% { transform: translateY(-25px) rotate(-5deg); }
+  75% { transform: translateY(-10px) rotate(3deg); }
+}
+
+/* --- 5. 涟漪点击效果 --- */
+.ripple-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-effect::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 70%);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+
+.ripple-effect:active::after {
+  width: 300px;
+  height: 300px;
+  opacity: 1;
+  transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+}
+
+/* 涟漪动画（由 JS 触发）*/
+@keyframes ripple-animation {
+  0% { transform: scale(0); opacity: 1; }
+  100% { transform: scale(1); opacity: 0; }
+}
+
+/* --- 6. 磁性按钮效果 --- */
+.magnetic-btn {
+  transition: transform 0.3s ease;
+}
+
+.magnetic-btn:hover {
+  transform: translate(var(--magnetic-x, 0), var(--magnetic-y, 0));
+}
+
+/* --- 7. 滚动触发入场动画 --- */
+.reveal-up,
+.reveal-left,
+.reveal-right,
+.reveal-scale,
+.reveal-rotate {
+  opacity: 0;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal-up { transform: translateY(40px); }
+.reveal-left { transform: translateX(-40px); }
+.reveal-right { transform: translateX(40px); }
+.reveal-scale { transform: scale(0.9); }
+.reveal-rotate { transform: rotate(-10deg) scale(0.9); }
+
+.reveal-up.revealed,
+.reveal-left.revealed,
+.reveal-right.revealed,
+.reveal-scale.revealed,
+.reveal-rotate.revealed {
+  opacity: 1;
+  transform: translateY(0) translateX(0) scale(1) rotate(0);
+}
+
+/* --- 8. 收藏按钮粒子爆炸 --- */
+.favorite-btn.active::before {
+  content: '❤️';
+  position: absolute;
+  font-size: 0.8rem;
+  animation: particle-explode 0.6s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes particle-explode {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translate(10px, -20px) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(20px, -40px) scale(0.5);
+  }
+}
+
+/* 多个粒子效果 */
+.favorite-btn.active::after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--danger);
+  animation: particle-burst 0.5s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes particle-burst {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+    box-shadow:
+      0 0 0 0 rgba(239, 68, 68, 0.4),
+      10px -10px 0 0 rgba(239, 68, 68, 0.3),
+      -10px -10px 0 0 rgba(239, 68, 68, 0.3),
+      10px 10px 0 0 rgba(239, 68, 68, 0.3),
+      -10px 10px 0 0 rgba(239, 68, 68, 0.3);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(0, -20px) scale(0);
+    box-shadow:
+      0 -20px 0 0 rgba(239, 68, 68, 0),
+      20px -30px 0 0 rgba(239, 68, 68, 0),
+      -20px -30px 0 0 rgba(239, 68, 68, 0),
+      20px -10px 0 0 rgba(239, 68, 68, 0),
+      -20px -10px 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+/* --- 9. 下载按钮弹跳动画 --- */
+.download-btn:hover i {
+  animation: bounce-download 0.5s ease infinite;
+}
+
+@keyframes bounce-download {
+  0%, 100% { transform: translateY(0); }
+  25% { transform: translateY(-4px); }
+  50% { transform: translateY(0); }
+  75% { transform: translateY(-2px); }
+}
+
+/* --- 10. 卡片 3D 悬浮效果 --- */
+.tilt-card {
+  transform-style: preserve-3d;
+  transition: transform 0.3s ease;
+}
+
+.tilt-card:hover {
+  transform: perspective(1000px) rotateX(5deg) rotateY(5deg) scale(1.02);
+}
+
+/* --- 11. 暗黑模式星空主题增强 --- */
+[data-theme="dark"] .hero-title-text,
+.dark .hero-title-text {
+  text-shadow: 0 0 10px rgba(129, 140, 248, 0.5), 0 0 20px rgba(129, 140, 248, 0.3);
+}
+
+[data-theme="dark"] .btn-primary,
+.dark .btn-primary {
+  box-shadow: 0 0 20px rgba(129, 140, 248, 0.4), 0 0 40px rgba(129, 140, 248, 0.2);
+}
+
+[data-theme="dark"] .resource-card:hover,
+.dark .resource-card:hover {
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5), 0 0 40px rgba(129, 140, 248, 0.15);
+}
+
+/* 星星闪烁效果 */
+[data-theme="dark"] .hero-section::before,
+.dark .hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(2px 2px at 50px 160px, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(2px 2px at 90px 40px, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(2px 2px at 130px 80px, rgba(255, 255, 255, 0.5), transparent);
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  animation: twinkle 5s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* --- 12. 脉冲发光动画 --- */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(99, 102, 241, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.6), 0 0 40px rgba(99, 102, 241, 0.3); }
+}
+
+.pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* --- 13. 渐变边框动画 --- */
+.gradient-border {
+  position: relative;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: calc(var(--radius-lg) + 2px);
+  background: var(--gradient-primary);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.gradient-border:hover::before {
+  opacity: 1;
+}
+
+/* --- 14. 悬浮发光效果 --- */
+@keyframes float-glow {
+  0%, 100% {
+    transform: translateY(0);
+    box-shadow: 0 5px 15px rgba(99, 102, 241, 0.2);
+  }
+  50% {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(99, 102, 241, 0.4);
+  }
+}
+
+.float-glow {
+  animation: float-glow 3s ease-in-out infinite;
+}
+
+/* --- 15. 旋转渐变背景 --- */
+@keyframes gradient-rotate {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.gradient-animate {
+  background-size: 200% 200%;
+  animation: gradient-rotate 3s ease infinite;
+}
+
+/* --- 16. 打字机光标 --- */
+.typewriter-text::after {
+  content: '|';
+  animation: blink-cursor 0.7s infinite;
+  color: var(--primary);
+}
+
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* --- 17. 卡片入场动画延迟 --- */
+.resource-card:nth-child(1) { animation-delay: 0.05s; }
+.resource-card:nth-child(2) { animation-delay: 0.1s; }
+.resource-card:nth-child(3) { animation-delay: 0.15s; }
+.resource-card:nth-child(4) { animation-delay: 0.2s; }
+.resource-card:nth-child(5) { animation-delay: 0.25s; }
+.resource-card:nth-child(6) { animation-delay: 0.3s; }
+
+.feature-card:nth-child(1) { animation-delay: 0.1s; }
+.feature-card:nth-child(2) { animation-delay: 0.2s; }
+.feature-card:nth-child(3) { animation-delay: 0.3s; }
+
+/* --- 18. 链接下划线动画 --- */
+a:not(.btn):not(.download-btn):not(.agent-result-card) {
+  position: relative;
+}
+
+a:not(.btn):not(.download-btn):not(.agent-result-card)::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--gradient-primary);
+  transition: width 0.3s ease;
+}
+
+a:not(.btn):not(.download-btn):not(.agent-result-card):hover::after {
+  width: 100%;
+}
+
+/* --- 19. 标题装饰线 --- */
+.section-title {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0.75rem;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: var(--gradient-primary);
+  border-radius: 2px;
+}
+
+/* --- 20. 页面加载动画 --- */
+.page,
+.archive {
+  animation: page-fade-in 0.5s ease;
+}
+
+@keyframes page-fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
