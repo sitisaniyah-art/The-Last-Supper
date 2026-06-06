@@ -60,17 +60,17 @@ var ResourceAgent = (function() {
     var widget = document.createElement('div');
     widget.id = 'resource-agent-widget';
     widget.className = 'search-agent-widget';
-    widget.style.cssText = 'position:fixed;bottom:90px;right:20px;z-index:9990;cursor:pointer;';
+    widget.style.cssText = 'position:fixed;bottom:20px;left:160px;z-index:9990;cursor:pointer;';
     widget.innerHTML =
-      '<div class="agent-character">' +
-        '<div class="agent-body">' +
+      '<div class="agent-character" style="width:60px;height:60px;">' +
+        '<div class="agent-body" style="width:45px;height:45px;left:8px;">' +
           '<div class="agent-face">' +
-            '<div class="agent-eye agent-eye-left"></div>' +
-            '<div class="agent-eye agent-eye-right"></div>' +
-            '<div class="agent-mouth"></div>' +
+            '<div class="agent-eye agent-eye-left" style="width:6px;height:8px;top:-6px;left:-10px;"></div>' +
+            '<div class="agent-eye agent-eye-right" style="width:6px;height:8px;top:-6px;right:-10px;"></div>' +
+            '<div class="agent-mouth" style="width:10px;height:5px;top:5px;left:-5px;"></div>' +
           '</div>' +
         '</div>' +
-        '<div class="agent-shadow"></div>' +
+        '<div class="agent-shadow" style="width:40px;left:10px;"></div>' +
       '</div>';
 
     widget.addEventListener('click', function(e) {

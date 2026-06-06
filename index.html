@@ -7,34 +7,26 @@ read_time: false
 share: false
 ---
 
-<div class="hero-section" id="particles-hero" style="text-align:center;padding:clamp(2rem,6vw,4rem) clamp(1rem,3vw,2rem) clamp(1.5rem,4vw,3rem);position:relative;overflow:hidden;">
+<div class="hero-section" id="particles-hero">
   <!-- 粒子背景会自动注入到这里 -->
 
   <div style="position:relative;z-index:1;">
-    <h1 class="hero-title" style="font-size:clamp(2rem,6vw,3rem);font-weight:800;margin-bottom:1rem;">
-      <i class="fas fa-utensils" style="color:var(--primary-color);filter:drop-shadow(0 0 10px rgba(var(--primary-rgb), 0.5));"></i>
+    <h1 class="hero-title">
+      <i class="fas fa-utensils"></i>
       <span class="hero-title-text">最后的晚餐</span>
     </h1>
 
-    <p class="hero-subtitle reveal-up" style="font-size:clamp(1rem,2vw,1.35rem);color:var(--text-light);max-width:650px;margin:0 auto clamp(1.5rem,3vw,2.5rem);line-height:1.8;">
-      <span class="typewriter-text" data-text="分享知识，解答疑惑，一起进步 ✨">分享知识，解答疑惑，一起进步 ✨</span>
+    <p class="hero-subtitle fade-in-up">
+      分享知识，解答疑惑，一起进步 ✨
     </p>
 
-    <div class="hero-buttons reveal-up" data-delay="200" style="display:flex;gap:clamp(0.75rem,2vw,1.25rem);justify-content:center;flex-wrap:wrap;">
-      <a href="{{ '/resources/' | relative_url }}" class="btn btn-primary btn-glow">
+    <div class="hero-buttons fade-in-up" style="animation-delay: 0.2s;">
+      <a href="{{ '/resources/' | relative_url }}" class="btn btn-primary">
         <i class="fas fa-book-open"></i> 浏览资源
       </a>
-      <a href="{{ '/questions/' | relative_url }}" class="btn btn-outline btn-glow">
+      <a href="{{ '/questions/' | relative_url }}" class="btn btn-outline">
         <i class="fas fa-question-circle"></i> 我要提问
       </a>
-    </div>
-
-    <!-- 装饰性浮动元素 -->
-    <div class="hero-float-elements">
-      <div class="float-element float-1">📚</div>
-      <div class="float-element float-2">💡</div>
-      <div class="float-element float-3">🎓</div>
-      <div class="float-element float-4">✨</div>
     </div>
   </div>
 </div>

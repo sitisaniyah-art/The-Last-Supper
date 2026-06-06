@@ -105,7 +105,6 @@ var SearchAgent = (function() {
       '</div>' +
       '<div class="agent-panel-messages" id="agent-messages"></div>' +
       '<div class="agent-panel-quick">' +
-        '<button class="agent-quick-btn" data-action="nearby"><i class="fas fa-location-crosshairs"></i> 附近推荐</button>' +
         '<button class="agent-quick-btn" data-action="popular"><i class="fas fa-fire"></i> 热门榜单</button>' +
         '<button class="agent-quick-btn" data-action="latest"><i class="fas fa-clock"></i> 最新添加</button>' +
         '<button class="agent-quick-btn" data-action="random"><i class="fas fa-dice"></i> 随机推荐</button>' +
@@ -172,7 +171,7 @@ var SearchAgent = (function() {
   }
 
   function _handleQuickAction(action) {
-    var labels = { nearby: '附近推荐', popular: '热门榜单', latest: '最新添加', random: '随机推荐' };
+    var labels = { popular: '热门榜单', latest: '最新添加', random: '随机推荐' };
     _addUserMessage(labels[action]);
     _showThinking();
 
@@ -181,10 +180,6 @@ var SearchAgent = (function() {
       var results;
       var msg;
       switch (action) {
-        case 'nearby':
-          results = _getRandom(5);
-          msg = '为你推荐附近的热门地点：';
-          break;
         case 'popular':
           results = _getPopular(5);
           msg = '最受欢迎的地点：';
