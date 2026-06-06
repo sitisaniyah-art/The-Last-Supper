@@ -1,6 +1,6 @@
 ---
 ---
-var CACHE_NAME = 'tls-v2';
+var CACHE_NAME = 'tls-v3-clean';
 var BASE = '{{ site.baseurl }}';
 var STATIC_ASSETS = [
   BASE + '/',

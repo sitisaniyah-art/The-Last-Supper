@@ -1,212 +1,229 @@
 /**
- * 🪨 Magic Stone - 魔法石板效果
- * 浮空、3D 鼠标交互、星空鎏金文字
+ * 🪨 Magic Stone — 魔法石板
+ * 真正的3D交互：鼠标追踪、浮空、粒子、鎏金文字
  */
-
 (function() {
   'use strict';
 
-  class MagicStone {
-    constructor(container) {
-      this.container = container;
-      this.mouseX = 0;
-      this.mouseY = 0;
-      this.targetRotateX = 0;
-      this.targetRotateY = 0;
-      this.currentRotateX = 0;
-      this.currentRotateY = 0;
-      this.isHovering = false;
-      this.particles = [];
-      this.animationId = null;
+  var stone = null;
+  var canvas = null;
+  var ctx = null;
+  var particles = [];
+  var mouseX = 0.5, mouseY = 0.5;
+  var targetRX = 0, targetRY = 0;
+  var currentRX = 0, currentRY = 0;
+  var floatPhase = 0;
+  var running = false;
 
-      this.init();
+  function init() {
+    var container = document.querySelector('.magic-stone-container');
+    if (!container) return;
+
+    // 创建石板HTML
+    stone = document.createElement('div');
+    stone.className = 'magic-stone';
+    stone.innerHTML =
+      '<div class="ms-glow"></div>' +
+      '<canvas class="ms-canvas"></canvas>' +
+      '<div class="ms-surface">' +
+        '<div class="ms-rune ms-rune-tl"></div>' +
+        '<div class="ms-rune ms-rune-tr"></div>' +
+        '<div class="ms-rune ms-rune-bl"></div>' +
+        '<div class="ms-rune ms-rune-br"></div>' +
+        '<div class="ms-title">最后的晚餐</div>' +
+        '<div class="ms-subtitle">The Last Supper</div>' +
+      '</div>' +
+      '<div class="ms-shadow"></div>';
+
+    container.appendChild(stone);
+
+    canvas = stone.querySelector('.ms-canvas');
+    ctx = canvas.getContext('2d');
+    resizeCanvas();
+    createParticles(60);
+    bindEvents();
+    running = true;
+    animate();
+  }
+
+  function resizeCanvas() {
+    if (!canvas || !stone) return;
+    var rect = stone.getBoundingClientRect();
+    canvas.width = rect.width * (window.devicePixelRatio || 1);
+    canvas.height = rect.height * (window.devicePixelRatio || 1);
+    canvas.style.width = rect.width + 'px';
+    canvas.style.height = rect.height + 'px';
+    ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+  }
+
+  function createParticles(count) {
+    particles = [];
+    var w = canvas.width / (window.devicePixelRatio || 1);
+    var h = canvas.height / (window.devicePixelRatio || 1);
+    for (var i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        size: Math.random() * 2 + 0.5,
+        opacity: Math.random() * 0.6 + 0.1,
+        hue: 220 + Math.random() * 60,
+        pulse: Math.random() * Math.PI * 2
+      });
     }
+  }
 
-    init() {
-      this.createStone();
-      this.createParticles();
-      this.bindEvents();
-      this.animate();
-    }
+  function bindEvents() {
+    var parent = stone.parentElement;
+    parent.addEventListener('mousemove', function(e) {
+      var rect = parent.getBoundingClientRect();
+      mouseX = (e.clientX - rect.left) / rect.width;
+      mouseY = (e.clientY - rect.top) / rect.height;
+      targetRX = (mouseY - 0.5) * 25;
+      targetRY = (mouseX - 0.5) * -25;
+    });
 
-    createStone() {
-      // 创建石板容器
-      this.stone = document.createElement('div');
-      this.stone.className = 'magic-stone';
-      this.stone.innerHTML = `
-        <div class="magic-stone-glow"></div>
-        <div class="magic-stone-surface">
-          <div class="magic-stone-text">最后的晚餐</div>
-          <div class="magic-stone-subtitle">The Last Supper</div>
-        </div>
-        <div class="magic-stone-shadow"></div>
-        <canvas class="magic-stone-particles"></canvas>
-      `;
+    parent.addEventListener('mouseleave', function() {
+      targetRX = 0;
+      targetRY = 0;
+      mouseX = 0.5;
+      mouseY = 0.5;
+    });
 
-      this.container.appendChild(this.stone);
+    window.addEventListener('resize', function() {
+      resizeCanvas();
+      createParticles(60);
+    });
+  }
 
-      // 获取 canvas
-      this.canvas = this.stone.querySelector('.magic-stone-particles');
-      this.ctx = this.canvas.getContext('2d');
-      this.resizeCanvas();
-    }
+  function updateParticles() {
+    var w = canvas.width / (window.devicePixelRatio || 1);
+    var h = canvas.height / (window.devicePixelRatio || 1);
+    var cx = mouseX * w;
+    var cy = mouseY * h;
 
-    resizeCanvas() {
-      const rect = this.stone.getBoundingClientRect();
-      this.canvas.width = rect.width;
-      this.canvas.height = rect.height;
-    }
+    for (var i = 0; i < particles.length; i++) {
+      var p = particles[i];
+      p.pulse += 0.02;
+      p.x += p.vx;
+      p.y += p.vy;
 
-    createParticles() {
-      this.particles = [];
-      for (let i = 0; i < 50; i++) {
-        this.particles.push({
-          x: Math.random() * this.canvas.width,
-          y: Math.random() * this.canvas.height,
-          size: Math.random() * 2 + 0.5,
-          speedX: (Math.random() - 0.5) * 0.5,
-          speedY: (Math.random() - 0.5) * 0.5,
-          opacity: Math.random() * 0.5 + 0.2,
-          hue: Math.random() * 60 + 200 // 蓝紫色调
-        });
+      if (p.x < 0 || p.x > w) p.vx *= -1;
+      if (p.y < 0 || p.y > h) p.vy *= -1;
+
+      var dx = cx - p.x;
+      var dy = cy - p.y;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 120) {
+        var force = (120 - dist) / 120 * 0.02;
+        p.vx += dx * force;
+        p.vy += dy * force;
       }
-    }
 
-    bindEvents() {
-      // 鼠标移动
-      this.container.addEventListener('mousemove', (e) => {
-        const rect = this.container.getBoundingClientRect();
-        this.mouseX = (e.clientX - rect.left) / rect.width;
-        this.mouseY = (e.clientY - rect.top) / rect.height;
-
-        // 计算目标旋转角度
-        this.targetRotateX = (this.mouseY - 0.5) * 30;
-        this.targetRotateY = (this.mouseX - 0.5) * -30;
-      });
-
-      // 鼠标进入
-      this.container.addEventListener('mouseenter', () => {
-        this.isHovering = true;
-        this.stone.classList.add('hovering');
-      });
-
-      // 鼠标离开
-      this.container.addEventListener('mouseleave', () => {
-        this.isHovering = false;
-        this.targetRotateX = 0;
-        this.targetRotateY = 0;
-        this.stone.classList.remove('hovering');
-      });
-
-      // 窗口大小改变
-      window.addEventListener('resize', () => {
-        this.resizeCanvas();
-      });
-    }
-
-    updateParticles() {
-      this.particles.forEach(p => {
-        p.x += p.speedX;
-        p.y += p.speedY;
-
-        // 边界检测
-        if (p.x < 0 || p.x > this.canvas.width) p.speedX *= -1;
-        if (p.y < 0 || p.y > this.canvas.height) p.speedY *= -1;
-
-        // 鼠标交互
-        if (this.isHovering) {
-          const dx = this.mouseX * this.canvas.width - p.x;
-          const dy = this.mouseY * this.canvas.height - p.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-
-          if (distance < 100) {
-            p.speedX += dx * 0.001;
-            p.speedY += dy * 0.001;
-          }
-        }
-
-        // 速度限制
-        const speed = Math.sqrt(p.speedX * p.speedX + p.speedY * p.speedY);
-        if (speed > 1) {
-          p.speedX = (p.speedX / speed) * 1;
-          p.speedY = (p.speedY / speed) * 1;
-        }
-      });
-    }
-
-    drawParticles() {
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-      this.particles.forEach(p => {
-        this.ctx.beginPath();
-        this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        this.ctx.fillStyle = `hsla(${p.hue}, 80%, 70%, ${p.opacity})`;
-        this.ctx.fill();
-
-        // 发光效果
-        if (p.size > 1) {
-          this.ctx.beginPath();
-          this.ctx.arc(p.x, p.y, p.size * 2, 0, Math.PI * 2);
-          this.ctx.fillStyle = `hsla(${p.hue}, 80%, 70%, ${p.opacity * 0.3})`;
-          this.ctx.fill();
-        }
-      });
-
-      // 绘制连线
-      for (let i = 0; i < this.particles.length; i++) {
-        for (let j = i + 1; j < this.particles.length; j++) {
-          const dx = this.particles[i].x - this.particles[j].x;
-          const dy = this.particles[i].y - this.particles[j].y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-
-          if (distance < 80) {
-            const opacity = (1 - distance / 80) * 0.2;
-            this.ctx.beginPath();
-            this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
-            this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
-            this.ctx.strokeStyle = `rgba(147, 130, 255, ${opacity})`;
-            this.ctx.lineWidth = 0.5;
-            this.ctx.stroke();
-          }
-        }
-      }
-    }
-
-    animate() {
-      // 平滑插值
-      this.currentRotateX += (this.targetRotateX - this.currentRotateX) * 0.1;
-      this.currentRotateY += (this.targetRotateY - this.currentRotateY) * 0.1;
-
-      // 应用变换
-      this.stone.style.transform = `
-        perspective(1000px)
-        rotateX(${this.currentRotateX}deg)
-        rotateY(${this.currentRotateY}deg)
-        translateZ(${this.isHovering ? 20 : 0}px)
-      `;
-
-      // 更新粒子
-      this.updateParticles();
-      this.drawParticles();
-
-      this.animationId = requestAnimationFrame(() => this.animate());
-    }
-
-    destroy() {
-      if (this.animationId) {
-        cancelAnimationFrame(this.animationId);
+      var speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+      if (speed > 1.5) {
+        p.vx = (p.vx / speed) * 1.5;
+        p.vy = (p.vy / speed) * 1.5;
       }
     }
   }
 
-  // 导出
-  window.MagicStone = MagicStone;
+  function drawParticles() {
+    var w = canvas.width / (window.devicePixelRatio || 1);
+    var h = canvas.height / (window.devicePixelRatio || 1);
+    ctx.clearRect(0, 0, w, h);
 
-  // 自动初始化
-  document.addEventListener('DOMContentLoaded', function() {
-    const containers = document.querySelectorAll('.magic-stone-container');
-    containers.forEach(container => {
-      new MagicStone(container);
-    });
-  });
+    for (var i = 0; i < particles.length; i++) {
+      var p = particles[i];
+      var glow = 0.5 + 0.5 * Math.sin(p.pulse);
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size * (0.8 + glow * 0.4), 0, Math.PI * 2);
+      ctx.fillStyle = 'hsla(' + p.hue + ', 80%, 70%, ' + (p.opacity * glow) + ')';
+      ctx.fill();
+
+      if (p.size > 1) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
+        ctx.fillStyle = 'hsla(' + p.hue + ', 80%, 70%, ' + (p.opacity * 0.15) + ')';
+        ctx.fill();
+      }
+    }
+
+    // 连线
+    for (var i = 0; i < particles.length; i++) {
+      for (var j = i + 1; j < particles.length; j++) {
+        var dx = particles[i].x - particles[j].x;
+        var dy = particles[i].y - particles[j].y;
+        var dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 80) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = 'rgba(139, 120, 255, ' + ((1 - dist / 80) * 0.15) + ')';
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+
+    // 鼠标光晕
+    var mx = mouseX * w;
+    var my = mouseY * h;
+    var gradient = ctx.createRadialGradient(mx, my, 0, mx, my, 80);
+    gradient.addColorStop(0, 'rgba(139, 120, 255, 0.15)');
+    gradient.addColorStop(1, 'rgba(139, 120, 255, 0)');
+    ctx.beginPath();
+    ctx.arc(mx, my, 80, 0, Math.PI * 2);
+    ctx.fillStyle = gradient;
+    ctx.fill();
+  }
+
+  function animate() {
+    if (!running) return;
+
+    currentRX += (targetRX - currentRX) * 0.08;
+    currentRY += (targetRY - currentRY) * 0.08;
+
+    floatPhase += 0.015;
+    var floatY = Math.sin(floatPhase) * 8;
+    var floatRX = Math.sin(floatPhase * 0.7) * 1.5;
+    var floatRY = Math.cos(floatPhase * 0.5) * 1.5;
+
+    var finalRX = currentRX + floatRX;
+    var finalRY = currentRY + floatRY;
+    var hoverZ = (targetRX !== 0 || targetRY !== 0) ? 30 : 0;
+
+    stone.style.transform =
+      'translateY(' + floatY + 'px) ' +
+      'perspective(1000px) ' +
+      'rotateX(' + finalRX + 'deg) ' +
+      'rotateY(' + finalRY + 'deg) ' +
+      'translateZ(' + hoverZ + 'px)';
+
+    // 阴影跟随
+    var shadow = stone.querySelector('.ms-shadow');
+    if (shadow) {
+      var shadowScale = 1 - Math.abs(floatY) / 20;
+      var shadowOpacity = 0.3 * shadowScale;
+      shadow.style.transform = 'scaleX(' + shadowScale + ')';
+      shadow.style.opacity = shadowOpacity;
+    }
+
+    // 发光跟随鼠标
+    var glow = stone.querySelector('.ms-glow');
+    if (glow) {
+      glow.style.background =
+        'radial-gradient(ellipse at ' + (mouseX * 100) + '% ' + (mouseY * 100) + '%, ' +
+        'rgba(139, 120, 255, 0.4) 0%, rgba(99, 102, 241, 0.15) 40%, transparent 70%)';
+    }
+
+    updateParticles();
+    drawParticles();
+
+    requestAnimationFrame(animate);
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
 })();
