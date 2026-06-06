@@ -155,12 +155,13 @@ a:hover {
 
 /* --- 导航栏毛玻璃效果 --- */
 .masthead {
-  background: var(--glass-bg) !important;
-  backdrop-filter: var(--glass-blur) !important;
-  -webkit-backdrop-filter: var(--glass-blur) !important;
-  border-bottom: 1px solid var(--glass-border) !important;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3) !important;
+  background: rgba(5, 5, 16, 0.9) !important;
+  backdrop-filter: blur(30px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
+  border-bottom: 1px solid rgba(99, 102, 241, 0.2) !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4), 0 0 40px rgba(99, 102, 241, 0.1) !important;
   transition: var(--transition-normal) !important;
+  padding: 0.5rem 0 !important;
 }
 
 .masthead__inner-wrap {
@@ -1938,4 +1939,269 @@ a:not(.btn):not(.download-btn):not(.agent-result-card):hover::after {
 @keyframes page-fade-in {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   🪨 魔法石板效果
+   ============================================================ */
+
+.magic-stone-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  padding: 2rem;
+  perspective: 1000px;
+}
+
+.magic-stone {
+  position: relative;
+  width: 500px;
+  max-width: 90vw;
+  height: 200px;
+  transform-style: preserve-3d;
+  transition: transform 0.1s ease-out;
+  cursor: pointer;
+  animation: stone-float 4s ease-in-out infinite;
+}
+
+.magic-stone.hovering {
+  animation-play-state: paused;
+}
+
+/* 浮空动画 */
+@keyframes stone-float {
+  0%, 100% {
+    transform: translateY(0) rotateX(0) rotateY(0);
+  }
+  25% {
+    transform: translateY(-10px) rotateX(2deg) rotateY(-2deg);
+  }
+  50% {
+    transform: translateY(-5px) rotateX(-1deg) rotateY(1deg);
+  }
+  75% {
+    transform: translateY(-12px) rotateX(1deg) rotateY(-1deg);
+  }
+}
+
+/* 石板发光效果 */
+.magic-stone-glow {
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(ellipse at center, rgba(99, 102, 241, 0.4) 0%, rgba(139, 92, 246, 0.2) 40%, transparent 70%);
+  border-radius: 30px;
+  filter: blur(20px);
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.magic-stone.hovering .magic-stone-glow {
+  opacity: 1;
+}
+
+/* 石板表面 */
+.magic-stone-surface {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg,
+    rgba(15, 15, 35, 0.95) 0%,
+    rgba(20, 20, 50, 0.9) 25%,
+    rgba(25, 25, 60, 0.85) 50%,
+    rgba(20, 20, 50, 0.9) 75%,
+    rgba(15, 15, 35, 0.95) 100%
+  );
+  border-radius: 20px;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  box-shadow:
+    0 0 30px rgba(99, 102, 241, 0.3),
+    0 0 60px rgba(99, 102, 241, 0.1),
+    inset 0 0 30px rgba(99, 102, 241, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(10px);
+}
+
+.magic-stone.hovering .magic-stone-surface {
+  border-color: rgba(99, 102, 241, 0.5);
+  box-shadow:
+    0 0 40px rgba(99, 102, 241, 0.5),
+    0 0 80px rgba(99, 102, 241, 0.2),
+    inset 0 0 40px rgba(99, 102, 241, 0.15);
+}
+
+/* 石板纹理 */
+.magic-stone-surface::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, transparent 49.5%, rgba(99, 102, 241, 0.05) 49.5%, rgba(99, 102, 241, 0.05) 50.5%, transparent 50.5%),
+    linear-gradient(0deg, transparent 49.5%, rgba(99, 102, 241, 0.05) 49.5%, rgba(99, 102, 241, 0.05) 50.5%, transparent 50.5%);
+  background-size: 20px 20px;
+  opacity: 0.5;
+}
+
+/* 星空鎏金文字 */
+.magic-stone-text {
+  font-size: 3.5rem;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  background: linear-gradient(135deg,
+    #fcd34d 0%,
+    #fbbf24 20%,
+    #f59e0b 40%,
+    #d97706 60%,
+    #b45309 80%,
+    #92400e 100%
+  );
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gold-shimmer 3s ease-in-out infinite;
+  text-shadow: none;
+  position: relative;
+  z-index: 2;
+  font-family: 'STKaiti', 'KaiTi', '楷体', serif;
+}
+
+/* 鎏金动画 */
+@keyframes gold-shimmer {
+  0%, 100% {
+    background-position: 0% 50%;
+    filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.5));
+  }
+  50% {
+    background-position: 100% 50%;
+    filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.8));
+  }
+}
+
+/* 英文副标题 */
+.magic-stone-subtitle {
+  font-size: 1rem;
+  letter-spacing: 0.3em;
+  color: rgba(147, 130, 255, 0.6);
+  margin-top: 0.5rem;
+  font-weight: 300;
+  position: relative;
+  z-index: 2;
+}
+
+/* 石板阴影 */
+.magic-stone-shadow {
+  position: absolute;
+  bottom: -20px;
+  left: 10%;
+  right: 10%;
+  height: 40px;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.4) 0%, transparent 70%);
+  filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.magic-stone.hovering .magic-stone-shadow {
+  bottom: -30px;
+  opacity: 0.6;
+}
+
+/* 粒子画布 */
+.magic-stone-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: 20px;
+  z-index: 1;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .magic-stone {
+    width: 350px;
+    height: 150px;
+  }
+
+  .magic-stone-text {
+    font-size: 2.5rem;
+  }
+
+  .magic-stone-subtitle {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .magic-stone {
+    width: 280px;
+    height: 120px;
+  }
+
+  .magic-stone-text {
+    font-size: 2rem;
+  }
+
+  .magic-stone-subtitle {
+    font-size: 0.7rem;
+  }
+}
+
+/* 导航栏链接美化 */
+.masthead__menu-item a {
+  color: var(--text-secondary) !important;
+  font-weight: 500;
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative;
+  padding: 0.5rem 0 !important;
+}
+
+.masthead__menu-item a:hover {
+  color: var(--text-primary) !important;
+  text-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+}
+
+.masthead__menu-item a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--gradient-primary);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(-50%);
+  border-radius: 1px;
+}
+
+.masthead__menu-item a:hover::after,
+.masthead__menu-item.active a::after {
+  width: 100%;
+}
+
+.masthead__menu-item.active a {
+  color: var(--primary-light) !important;
+}
+
+/* 导航栏 Logo 美化 */
+.masthead__inner-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.site-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.05em;
 }
