@@ -7,21 +7,35 @@ read_time: false
 share: false
 ---
 
-<div style="text-align:center;padding:clamp(1.5rem,4vw,3rem) clamp(1rem,3vw,2rem) clamp(1rem,3vw,2rem);">
-  <h1 class="hero-title" style="font-size:clamp(1.8rem,5vw,2.5rem);font-weight:800;margin-bottom:0.5rem;">
-    <i class="fas fa-utensils" style="color:var(--primary-color);"></i> <span class="hero-title-text">最后的晚餐</span>
-  </h1>
-  <p style="font-size:clamp(1rem,1.8vw,1.25rem);color:var(--text-light);max-width:600px;margin:0 auto clamp(1rem,3vw,2rem);line-height:1.7;">
-    "最后的晚餐"是一个AI协助搭建的资源互助社区<br>
-    分享知识，解答疑惑，一起进步
-  </p>
-  <div style="display:flex;gap:clamp(0.5rem,1.5vw,1rem);justify-content:center;flex-wrap:wrap;">
-    <a href="{{ '/resources/' | relative_url }}" class="btn btn-primary">
-      <i class="fas fa-book-open"></i> 浏览资源
-    </a>
-    <a href="{{ '/questions/' | relative_url }}" class="btn btn-outline">
-      <i class="fas fa-question-circle"></i> 我要提问
-    </a>
+<div class="hero-section" id="particles-hero" style="text-align:center;padding:clamp(2rem,6vw,4rem) clamp(1rem,3vw,2rem) clamp(1.5rem,4vw,3rem);position:relative;overflow:hidden;">
+  <!-- 粒子背景会自动注入到这里 -->
+
+  <div style="position:relative;z-index:1;">
+    <h1 class="hero-title" style="font-size:clamp(2rem,6vw,3rem);font-weight:800;margin-bottom:1rem;">
+      <i class="fas fa-utensils" style="color:var(--primary-color);filter:drop-shadow(0 0 10px rgba(var(--primary-rgb), 0.5));"></i>
+      <span class="hero-title-text">最后的晚餐</span>
+    </h1>
+
+    <p class="hero-subtitle reveal-up" style="font-size:clamp(1rem,2vw,1.35rem);color:var(--text-light);max-width:650px;margin:0 auto clamp(1.5rem,3vw,2.5rem);line-height:1.8;">
+      <span class="typewriter-text" data-text="分享知识，解答疑惑，一起进步 ✨">分享知识，解答疑惑，一起进步 ✨</span>
+    </p>
+
+    <div class="hero-buttons reveal-up" data-delay="200" style="display:flex;gap:clamp(0.75rem,2vw,1.25rem);justify-content:center;flex-wrap:wrap;">
+      <a href="{{ '/resources/' | relative_url }}" class="btn btn-primary btn-glow">
+        <i class="fas fa-book-open"></i> 浏览资源
+      </a>
+      <a href="{{ '/questions/' | relative_url }}" class="btn btn-outline btn-glow">
+        <i class="fas fa-question-circle"></i> 我要提问
+      </a>
+    </div>
+
+    <!-- 装饰性浮动元素 -->
+    <div class="hero-float-elements">
+      <div class="float-element float-1">📚</div>
+      <div class="float-element float-2">💡</div>
+      <div class="float-element float-3">🎓</div>
+      <div class="float-element float-4">✨</div>
+    </div>
   </div>
 </div>
 
