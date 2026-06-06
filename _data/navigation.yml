@@ -3,16 +3,10 @@ main:
     url: /
   - title: "学习资源"
     url: /resources/
-  - title: "我的收藏"
-    url: /favorites/
-  - title: "疑问区"
-    url: /questions/
   - title: "嗨玩榜"
     url: /zju-fun/
   - title: "生存指南"
-    url: /zju-survival/
-  - title: "社区"
-    url: /community/
+    url: /guide/
   - title: "常见问题"
     url: /faq/
   - title: "关于我们"

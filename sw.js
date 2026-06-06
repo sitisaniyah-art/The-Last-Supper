@@ -1,11 +1,10 @@
 ---
 ---
-var CACHE_NAME = 'tls-v1';
+var CACHE_NAME = 'tls-v2';
 var BASE = '{{ site.baseurl }}';
 var STATIC_ASSETS = [
   BASE + '/',
   BASE + '/assets/css/custom.css',
-  BASE + '/assets/js/favorites.js',
   BASE + '/assets/js/resources.js',
   BASE + '/assets/js/lib/filter-resources.js',
   BASE + '/offline.html'

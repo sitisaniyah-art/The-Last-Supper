@@ -42,8 +42,6 @@ function buildCardHTML(r) {
     return '<span class="tag">' + displayTag + '</span>';
   }).join('');
 
-  var fav = Favorites.isFavorited(r.id);
-  var heartClass = fav ? 'fas fa-heart favorited' : 'far fa-heart';
   var accents = CATEGORY_ACCENTS[r.category] || CATEGORY_ACCENTS['其他'];
 
   /* 关键词高亮：标题、作者、描述 */
@@ -55,9 +53,6 @@ function buildCardHTML(r) {
     '<div class="resource-card-body">' +
       '<div class="resource-header">' +
         '<span class="resource-category-badge">' + r.category + '</span>' +
-        '<button class="favorite-btn' + (fav ? ' active' : '') + '" data-id="' + r.id + '" data-tooltip="收藏">' +
-          '<i class="' + heartClass + '"></i>' +
-        '</button>' +
       '</div>' +
       '<h3 class="resource-title">' + title + '</h3>' +
       '<div class="resource-meta">' +
@@ -69,7 +64,6 @@ function buildCardHTML(r) {
     '</div>' +
     '<div class="resource-actions">' +
       '<a href="' + r.link + '" class="download-btn" target="_blank" rel="noopener" data-tooltip="下载资源"><i class="fas fa-download"></i> 下载资源</a>' +
-      '<a href="' + reportUrl('学习资源', r.title) + '" class="report-btn" target="_blank" rel="noopener" data-tooltip="举报"><i class="fas fa-flag"></i></a>' +
       '<span class="resource-grade">' + r.grade + ' · ' + r.subcategory + '</span>' +
     '</div>' +
   '</div>';
@@ -91,24 +85,6 @@ function renderResources(resources) {
   countEl.textContent = '共 ' + resources.length + ' 个资源';
 
   grid.innerHTML = resources.map(buildCardHTML).join('');
-  bindFavoriteEvents(grid);
-}
-
-function bindFavoriteEvents(container) {
-  container.querySelectorAll('.favorite-btn').forEach(function(btn) {
-    btn.addEventListener('click', function(e) {
-      e.preventDefault();
-      var id = parseInt(this.getAttribute('data-id'));
-      var nowFav = Favorites.toggle(id);
-      this.classList.toggle('active', nowFav);
-      this.querySelector('i').className = nowFav ? 'fas fa-heart favorited' : 'far fa-heart';
-      this.setAttribute('data-tooltip', nowFav ? '取消收藏' : '收藏');
-
-      this.classList.add('pulse');
-      var self = this;
-      setTimeout(function() { self.classList.remove('pulse'); }, 350);
-    });
-  });
 }
 
 function setupFilters(resources) {
