@@ -153,51 +153,7 @@ a:hover {
   text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
 }
 
-/* --- 导航栏毛玻璃效果 --- */
-.masthead {
-  background: rgba(5, 5, 16, 0.9) !important;
-  backdrop-filter: blur(30px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
-  border-bottom: 1px solid rgba(99, 102, 241, 0.2) !important;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4), 0 0 40px rgba(99, 102, 241, 0.1) !important;
-  transition: var(--transition-normal) !important;
-  padding: 0.5rem 0 !important;
-}
-
-.masthead__inner-wrap {
-  max-width: 100% !important;
-  padding-left: clamp(1rem, 3vw, 3rem) !important;
-  padding-right: clamp(1rem, 3vw, 3rem) !important;
-}
-
-/* 导航链接 */
-.masthead__menu-item a {
-  color: var(--text-secondary) !important;
-  font-weight: 500;
-  transition: var(--transition-fast) !important;
-  position: relative;
-}
-
-.masthead__menu-item a:hover {
-  color: var(--text-primary) !important;
-}
-
-.masthead__menu-item a::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 50%;
-  width: 0;
-  height: 2px;
-  background: var(--gradient-primary);
-  transition: var(--transition-fast);
-  transform: translateX(-50%);
-}
-
-.masthead__menu-item a:hover::after,
-.masthead__menu-item.active a::after {
-  width: 80%;
-}
+/* 导航栏样式统一在下方 酷炫效果 区块中 */
 
 /* --- 页面容器 --- */
 .page, .archive {
@@ -538,6 +494,7 @@ a:hover {
   max-width: 700px;
   margin: 0 auto 2rem;
   line-height: 1.8;
+  text-align: center;
 }
 
 .hero-buttons {
@@ -1520,37 +1477,38 @@ a[href*="/feed/"],
    ============================================================ */
 
 /* ==================== 导航栏统一美化 ==================== */
-.masthead {
-  background: rgba(5, 5, 16, 0.85) !important;
-  backdrop-filter: blur(30px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
+/* 使用 html body 前缀提高优先级，覆盖 Minimal Mistakes 主题 */
+html body .masthead {
+  background: rgba(5, 5, 16, 0.92) !important;
+  backdrop-filter: blur(40px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(200%) !important;
   border-bottom: 1px solid rgba(99, 102, 241, 0.15) !important;
-  box-shadow: 0 1px 20px rgba(0, 0, 0, 0.3) !important;
-  padding: 0.3rem 0 !important;
+  box-shadow: 0 1px 30px rgba(0, 0, 0, 0.4) !important;
+  padding: 0 !important;
 }
 
-.masthead__inner-wrap {
+html body .masthead__inner-wrap {
   max-width: 1200px !important;
   margin: 0 auto !important;
-  display: flex;
-  align-items: center;
+  padding-left: clamp(1rem, 3vw, 2rem) !important;
+  padding-right: clamp(1rem, 3vw, 2rem) !important;
 }
 
-.masthead__menu-item a {
+html body .masthead__menu-item a {
   color: rgba(226, 232, 240, 0.7) !important;
-  font-weight: 500;
-  font-size: 0.88rem;
-  letter-spacing: 0.03em;
+  font-weight: 500 !important;
+  font-size: 0.88rem !important;
+  letter-spacing: 0.03em !important;
   transition: all 0.3s ease !important;
-  position: relative;
-  padding: 0.5rem 0.25rem !important;
+  position: relative !important;
+  padding: 0.75rem 0.5rem !important;
 }
 
-.masthead__menu-item a:hover {
+html body .masthead__menu-item a:hover {
   color: #e2e8f0 !important;
 }
 
-.masthead__menu-item a::after {
+html body .masthead__menu-item a::after {
   content: '';
   position: absolute;
   bottom: 0;
@@ -1562,29 +1520,30 @@ a[href*="/feed/"],
   border-radius: 1px;
 }
 
-.masthead__menu-item a:hover::after,
-.masthead__menu-item.active a::after {
+html body .masthead__menu-item a:hover::after,
+html body .masthead__menu-item.active a::after {
   width: 100%;
 }
 
-.masthead__menu-item.active a {
+html body .masthead__menu-item.active a {
   color: #a5b4fc !important;
 }
 
-.site-title {
-  font-size: 1.15rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, #818cf8, #a78bfa);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing: 0.08em;
+html body .site-title {
+  font-size: 1.15rem !important;
+  font-weight: 700 !important;
+  background: linear-gradient(135deg, #818cf8, #a78bfa) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  letter-spacing: 0.08em !important;
 }
 
+/* 亮色主题导航栏 */
 [data-theme="light"] .masthead {
-  background: rgba(255, 255, 255, 0.85) !important;
+  background: rgba(248, 250, 252, 0.92) !important;
   border-bottom-color: rgba(99, 102, 241, 0.1) !important;
-  box-shadow: 0 1px 15px rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 1px 20px rgba(0, 0, 0, 0.06) !important;
 }
 
 [data-theme="light"] .masthead__menu-item a {
@@ -1711,8 +1670,8 @@ a[href*="/feed/"],
 /* 鎏金标题 */
 .ms-title {
   font-size: 3.2rem;
-  font-weight: 900;
-  letter-spacing: 0.15em;
+  font-weight: 800;
+  letter-spacing: 0.12em;
   background: linear-gradient(135deg,
     #fcd34d 0%, #fbbf24 15%, #f59e0b 30%,
     #d4a017 45%, #fbbf24 60%, #fcd34d 75%,
@@ -1725,7 +1684,7 @@ a[href*="/feed/"],
   animation: gold-shimmer 4s ease infinite;
   position: relative;
   z-index: 3;
-  font-family: 'STKaiti', 'KaiTi', '楷体', 'Noto Serif SC', serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   text-shadow: none;
   filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.4));
 }
@@ -1738,13 +1697,14 @@ a[href*="/feed/"],
 
 .ms-subtitle {
   font-size: 0.95rem;
-  letter-spacing: 0.35em;
+  letter-spacing: 0.3em;
   color: rgba(165, 180, 252, 0.5);
   margin-top: 0.6rem;
-  font-weight: 300;
+  font-weight: 400;
   text-transform: uppercase;
   position: relative;
   z-index: 3;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 /* 石板阴影 */

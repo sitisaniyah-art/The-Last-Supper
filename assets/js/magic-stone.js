@@ -33,7 +33,10 @@
         '<div class="ms-title">最后的晚餐</div>' +
         '<div class="ms-subtitle">The Last Supper</div>' +
       '</div>' +
-      '<div class="ms-shadow"></div>';
+      '<div class="ms-shadow"></div>' +
+      '<style>' +
+        '.ms-title, .ms-subtitle { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important; }' +
+      '</style>';
 
     container.appendChild(stone);
 
