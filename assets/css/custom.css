@@ -886,15 +886,18 @@ details .answer {
 #dark-mode-toggle {
   min-width: 44px;
   min-height: 44px;
-  display: flex !important;
+  display: inline-flex !important;
   align-items: center;
   justify-content: center;
-  background: transparent;
+  gap: 0.4rem;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-full);
   color: var(--text-secondary);
   cursor: pointer;
-  transition: var(--transition-fast);
+  transition: var(--transition-normal);
 }
 
 #dark-mode-toggle:hover {
@@ -2172,20 +2175,17 @@ html body .site-title {
   75% { transform: translateY(-2px); }
 }
 
-/* 暗黑模式增强 */
-[data-theme="dark"] .hero-title-text,
-.dark .hero-title-text {
+/* 暗黑模式增强 / Dark Mode Enhancements */
+[data-theme="dark"] .hero-title-text {
   filter: drop-shadow(0 0 20px rgba(129,140,248,0.4));
 }
 
-[data-theme="dark"] .btn-primary,
-.dark .btn-primary {
+[data-theme="dark"] .btn-primary {
   box-shadow: 0 0 20px rgba(129,140,248,0.3), 0 0 40px rgba(129,140,248,0.1);
 }
 
-/* 星星闪烁 */
-[data-theme="dark"] .hero-section::before,
-.dark .hero-section::before {
+/* 星星闪烁 — 仅在深色模式下显示 */
+[data-theme="dark"] .hero-section::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -2252,4 +2252,83 @@ a:not(.btn):not(.download-btn):not(.agent-result-card):not(.zj-card-address):hov
 @keyframes ripple-animation {
   0% { transform: scale(0); opacity: 1; }
   100% { transform: scale(1); opacity: 0; }
+}
+
+/* ============================================================
+   Utility Classes — 将内联样式迁移至 CSS 选择器
+   ============================================================ */
+
+/* --- Footer --- */
+.tls-footer {
+  text-align: center;
+  margin-top: 2rem;
+  padding: 1.5rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.tls-footer-links {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+}
+
+.tls-footer-links a {
+  color: var(--text-secondary);
+}
+
+.tls-footer-copyright {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+/* --- Resources page header --- */
+.resources-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.resources-header h2 {
+  margin: 0;
+}
+
+.resources-header .btn {
+  font-size: 0.9rem;
+}
+
+/* --- Search history button --- */
+/* Override .search-box button default absolute positioning */
+#search-history-btn {
+  position: static;
+  margin-left: 4px;
+  background: var(--bg-alt);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 0 10px;
+  cursor: pointer;
+  color: var(--text-light);
+}
+
+/* --- Search suggestions dropdown --- */
+.search-suggestions {
+  display: none;
+}
+
+/* --- Search loading indicator --- */
+#search-loading {
+  display: none;
+  text-align: center;
+  padding: 1rem;
+  color: var(--text-light);
+}
+
+/* --- Resource count text --- */
+#resource-count {
+  margin-bottom: 1rem;
+  color: var(--text-light);
+  font-size: 0.9rem;
 }

@@ -4,8 +4,15 @@
 <link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}">
 <script>
 (function(){
+  // Priority: localStorage > OS preference > dark (default)
   var t=localStorage.getItem('theme');
-  if(t==='dark') document.documentElement.setAttribute('data-theme','dark');
+  if(t==='dark'||t==='light'){
+    document.documentElement.setAttribute('data-theme',t);
+  }else if(window.matchMedia&&window.matchMedia('(prefers-color-scheme:light)').matches){
+    document.documentElement.setAttribute('data-theme','light');
+  }else{
+    document.documentElement.setAttribute('data-theme','dark');
+  }
 })();
 </script>
 <!-- Service Worker registration -->
